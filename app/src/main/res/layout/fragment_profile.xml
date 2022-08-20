@@ -40,13 +40,6 @@
                     android:textStyle="bold|italic"
                     android:textColor="@android:color/black"
                     />
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/options"
-                    />
-
-
 
             </LinearLayout>
 
