@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.editProfileFragment"
+    android:orientation="vertical"
+    android:weightSum="22"
+    >
+
+    <ImageButton
+        android:id="@+id/image_btn_edit_profile_fragment"
+        android:layout_width="125dp"
+        android:layout_height="0dp"
+        android:src="@drawable/profile"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:backgroundTint="@color/white"
+        android:layout_weight="4"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="Change Image"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:textColor="@color/purple_700"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:hint="Enter new username"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:hint="Enter new full name"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:hint="Enter new Bio"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/update_btn_edit_profile_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:text="Update"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        />
+
+
+
+
+</LinearLayout>
