@@ -1,13 +1,25 @@
 package com.example.sharencare.fragments
 
+import android.annotation.SuppressLint
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.app.DownloadManager
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import com.example.sharencare.R
+import kotlinx.android.synthetic.main.fragment_create_post.*
 import kotlinx.android.synthetic.main.fragment_create_post.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,6 +37,9 @@ class CreatePostFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private val pickImage = 100
+    private var imageUri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -41,11 +56,9 @@ class CreatePostFragment : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_create_post, container, false)
 
         view.uploadImage_btn_create_post_fragment.setOnClickListener {
-            val intent = Intent()
-            intent.action = Intent.ACTION_VIEW
-            intent.type = "image/*"
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
+
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, pickImage)
         }
 
         view.uploadPdf_btn_create_post_fragment.setOnClickListener {
@@ -55,6 +68,15 @@ class CreatePostFragment : Fragment() {
 
         return view
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage) {
+            imageUri = data?.data
+            requireView().image_view_create_post_fragment.setImageURI(imageUri)
+        }
+    }
+
 
     companion object {
         /**

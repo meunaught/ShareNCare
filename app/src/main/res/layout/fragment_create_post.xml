@@ -6,13 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".fragments.CreatePostFragment"
     android:orientation="vertical"
+    android:weightSum="15"
     >
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout_create_post_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@color/white"
+        android:layout_weight="1.5"
         >
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_create_post_fragment"
@@ -47,39 +49,68 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height= "120dp"
+        android:layout_height= "0dp"
+        android:layout_weight="2"
         android:hint="Write your text here"
-        android:layout_marginBottom="20dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         />
 
+    <ImageView
+        android:id="@+id/image_view_create_post_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
+        android:layout_gravity="center"
+        android:src="@drawable/profile"
+        >
+
+    </ImageView>
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/uploadImage_btn_create_post_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
         android:text="Upload Image"
         android:layout_marginStart="60dp"
         android:layout_marginEnd="60dp"
-        android:layout_marginBottom="20dp"
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:hint="Pdf will be shown here"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        >
+
+    </TextView>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/uploadPdf_btn_create_post_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
         android:text="Upload PDF"
         android:layout_marginStart="60dp"
         android:layout_marginEnd="60dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="20dp"
         />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/post_btn_create_post_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
         android:text="Post"
-        android:layout_marginBottom="20dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         />

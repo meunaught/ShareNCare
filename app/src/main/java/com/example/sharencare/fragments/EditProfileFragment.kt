@@ -1,12 +1,16 @@
 package com.example.sharencare.fragments
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.sharencare.R
+import kotlinx.android.synthetic.main.fragment_create_post.view.*
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.fragment_edit_profile.view.*
 
@@ -26,6 +30,9 @@ class editProfileFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private val pickImage = 100
+    private var imageUri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -42,16 +49,35 @@ class editProfileFragment : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
         view.image_btn_edit_profile_fragment.setOnClickListener{
-            val intent = Intent()
+            /*val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.type = "image/*"
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
+            */
+            */
+            /*val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivity(intent)
+            */
+             */
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, pickImage)
+
         }
         view.update_btn_edit_profile_fragment.setOnClickListener {
 
         }
         return view
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == pickImage) {
+            imageUri = data?.data
+            requireView().image_btn_edit_profile_fragment.setImageURI(imageUri)
+        }
     }
 
     companion object {
