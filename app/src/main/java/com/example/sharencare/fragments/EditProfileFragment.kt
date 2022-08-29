@@ -49,19 +49,6 @@ class editProfileFragment : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
         view.image_btn_edit_profile_fragment.setOnClickListener{
-            /*val intent = Intent()
-            intent.action = Intent.ACTION_VIEW
-            intent.type = "image/*"
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            */
-            */
-            /*val intent = Intent()
-            intent.type = "image/*"
-            intent.action = Intent.ACTION_GET_CONTENT
-            startActivity(intent)
-            */
-             */
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
 
