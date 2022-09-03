@@ -1,11 +1,25 @@
 package com.example.sharencare.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.example.sharencare.adapter.UserAdapter
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +36,10 @@ class SearchFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private var recyclerview : RecyclerView ?= null
+    private var userAdapter : UserAdapter? = null
+    private var mUser : MutableList<User>?= null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,7 +53,98 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        val view =  inflater.inflate(R.layout.fragment_search, container, false)
+        recyclerview = view.findViewById(R.id.recycler_view_search_fragment)
+        recyclerview?.setHasFixedSize(true)
+        recyclerview?.layoutManager = LinearLayoutManager(context)
+
+        mUser = ArrayList()
+        userAdapter = context?.let { UserAdapter(it,mUser as ArrayList<User>,true) }
+        recyclerview?.adapter = userAdapter
+
+        view.search_editText_search_fragment.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if(view.search_editText_search_fragment.text.toString()== "")
+                {
+
+                }
+                else
+                {
+                    recyclerview?.visibility = View.VISIBLE
+                    retriveUsers()
+                    searchUsers(p0.toString())
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+        return view
+    }
+
+    private fun searchUsers( input :String) {
+        val query = FirebaseDatabase.getInstance().getReference().child("Users").
+                orderByChild("username").startAt(input).endAt(input + "\uf8ff")
+
+        query.addValueEventListener(object : ValueEventListener
+        {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    mUser?.clear()
+
+                    for(snapshot in dataSnapshot.children)
+                    {
+                        val user = snapshot.getValue(User::class.java)
+                        if(user!=null)
+                        {
+                            mUser?.add(user)
+                        }
+                    }
+                    userAdapter?.notifyDataSetChanged()
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    private fun retriveUsers() {
+        val userRef = FirebaseDatabase.getInstance().getReference().child("Users")
+        userRef.addValueEventListener(object : ValueEventListener
+        {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(search_editText_search_fragment.text.toString() == "")
+                {
+                    mUser?.clear()
+
+                    for(snapshot in dataSnapshot.children)
+                    {
+                        val user = snapshot.getValue(User::class.java)
+                        if(user!=null)
+                        {
+                            mUser?.add(user)
+                        }
+                    }
+                    userAdapter?.notifyDataSetChanged()
+                }
+                else
+                {
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     companion object {
