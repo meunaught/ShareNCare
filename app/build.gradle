@@ -51,10 +51,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-<<<<<<< HEAD
     implementation 'com.squareup.picasso:picasso:2.71828'
-=======
->>>>>>> 21be2ea03b96964ba727d577e8e128e22db66e97
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-auth:21.0.8'
