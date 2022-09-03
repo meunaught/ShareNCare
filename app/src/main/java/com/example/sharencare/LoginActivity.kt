@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.example.sharencare.fragments.SignInFragment
 
 import com.example.sharencare.fragments.SignUpFragment
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -34,4 +35,5 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
+
 }

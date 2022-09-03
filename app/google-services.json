@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "329275097066",
+    "firebase_url": "https://sharencare-54c4e-default-rtdb.firebaseio.com",
+    "project_id": "sharencare-54c4e",
+    "storage_bucket": "sharencare-54c4e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329275097066:android:bbcceaf1d38358cf34bc93",
+        "android_client_info": {
+          "package_name": "com.example.sharencare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329275097066-3n4llb8ksv8uooud8ho1ingnu6g8784e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEiyaBQuDgKG8JpSfAapwrGFTyvHfi4SY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "329275097066-3n4llb8ksv8uooud8ho1ingnu6g8784e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
