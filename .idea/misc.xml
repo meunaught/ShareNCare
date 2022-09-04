@@ -6,9 +6,14 @@
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/fragment_profile.xml" value="0.1762917933130699" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3625" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/sex/ShareNCare/app/src/main/res/layout/activity_chat_list.xml" value="0.17980072463768115" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/sex/ShareNCare/app/src/main/res/layout/fragment_search.xml" value="0.17980072463768115" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/sex/ShareNCare/app/src/main/res/layout/user_info_layout.xml" value="0.17980072463768115" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/sex/ShareNCare/app/src/main/res/layout/user_layout.xml" value="0.17980072463768115" />
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
