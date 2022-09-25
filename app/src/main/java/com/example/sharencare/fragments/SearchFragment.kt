@@ -3,11 +3,11 @@ package com.example.sharencare.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sharencare.Model.User
@@ -17,7 +17,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
 
@@ -39,6 +38,7 @@ class SearchFragment : Fragment() {
     private var recyclerview : RecyclerView ?= null
     private var userAdapter : UserAdapter? = null
     private var mUser : MutableList<User>?= null
+    private var sUser : MutableList<User> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +61,7 @@ class SearchFragment : Fragment() {
         mUser = ArrayList()
         userAdapter = context?.let { UserAdapter(it,mUser as ArrayList<User>,true) }
         recyclerview?.adapter = userAdapter
+        retriveUsers()
 
         view.search_editText_search_fragment.addTextChangedListener(object : TextWatcher
         {
@@ -71,13 +72,13 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if(view.search_editText_search_fragment.text.toString()== "")
                 {
-
+                    recyclerview?.visibility = View.INVISIBLE
                 }
                 else
                 {
-                    recyclerview?.visibility = View.VISIBLE
-                    retriveUsers()
                     searchUsers(p0.toString())
+                    recyclerview?.visibility = View.VISIBLE
+                    Log.d("myTag", "On Text Change");
                 }
             }
 
@@ -90,30 +91,92 @@ class SearchFragment : Fragment() {
     }
 
     private fun searchUsers( input :String) {
-        val query = FirebaseDatabase.getInstance().getReference().child("Users").
-                orderByChild("username").startAt(input).endAt(input + "\uf8ff")
-
-        query.addValueEventListener(object : ValueEventListener
+        mUser?.clear()
+        for(user in sUser)
         {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    mUser?.clear()
+            if(KMP(user.getFullname().lowercase(),input.lowercase()))
+            {
+                mUser?.add(user)
+                Log.d("myTag", "This is my message");
+            }
+            else if(KMP(user.getUsername().lowercase(),input.lowercase()))
+            {
+                mUser?.add(user)
+                Log.d("myTag", "This is my message");
+            }
+            else
+            {
+                Log.d("myTag", "This is my message");
+            }
+        }
 
-                    for(snapshot in dataSnapshot.children)
-                    {
-                        val user = snapshot.getValue(User::class.java)
-                        if(user!=null)
-                        {
-                            mUser?.add(user)
-                        }
-                    }
-                    userAdapter?.notifyDataSetChanged()
+        userAdapter?.notifyDataSetChanged()
+    }
 
+    private fun KMP(txt : String ,pattern : String) : Boolean
+    {
+        val pat_len  = pattern.length
+        val txt_len  = txt.length
+
+        var lps : ArrayList<Int> = arrayListOf()
+        lps = computeLPSArray(pattern,pat_len,lps)
+
+        var i = 0 // index for txt[]
+        var j = 0 // index for pat[]
+
+        while ((txt_len - i) >= (pat_len - j)) {
+            if (pattern[j] == txt[i]) {
+                j++
+                i++
+            }
+            if (j == pat_len) {
+                return true
+            }
+            else if (i < txt_len && pattern[j] != txt[i]) {
+
+                if(j != 0)
+                {
+                    j = lps [j - 1]
+                }
+                else
+                {
+                    i = i + 1
+                }
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+        }
+        return false
+        //return true
+    }
+
+    private fun computeLPSArray(pattern : String ,length : Int ,lps : ArrayList<Int>) : ArrayList<Int>
+    {
+        var len = 0
+        lps.add(0,0)
+        var i  = 1
+
+        while(i<length)
+        {
+            if(pattern[i] == pattern[len])
+            {
+                len++
+                lps.add(i,len)
+                i++
+
             }
-        })
+            else
+            {
+                if (len != 0) {
+                    len = lps[len-1]
+                }
+                else
+                {
+                    lps.add(i,0)
+                    i++;
+                }
+            }
+        }
+        return lps
     }
 
     private fun retriveUsers() {
@@ -121,24 +184,17 @@ class SearchFragment : Fragment() {
         userRef.addValueEventListener(object : ValueEventListener
         {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if(search_editText_search_fragment.text.toString() == "")
+                sUser.clear()
+                for(snapshot in dataSnapshot.children)
                 {
-                    mUser?.clear()
-
-                    for(snapshot in dataSnapshot.children)
+                    val user = snapshot.getValue(User::class.java)
+                    if(user!=null)
                     {
-                        val user = snapshot.getValue(User::class.java)
-                        if(user!=null)
-                        {
-                            mUser?.add(user)
-                        }
+                        sUser.add(user)
                     }
-                    userAdapter?.notifyDataSetChanged()
                 }
-                else
-                {
+                //userAdapter?.notifyDataSetChanged()
 
-                }
             }
 
             override fun onCancelled(error: DatabaseError) {
