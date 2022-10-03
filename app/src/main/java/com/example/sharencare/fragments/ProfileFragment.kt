@@ -1,5 +1,6 @@
 package com.example.sharencare.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,9 +8,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.sharencare.EditProfileActivity
+import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +37,9 @@ class ProfileFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var profileId : String
+    private var firebaseUser: FirebaseUser ?= FirebaseAuth.getInstance().currentUser
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -41,11 +55,137 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_profile, container, false)
 
+        val preferences = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
+        if(preferences != null)
+        {
+            this.profileId = preferences.getString("profileId","none").toString()
+        }
+
+        if(profileId == firebaseUser?.uid)
+        {
+            view.editProfile_btn_profile_fragment.text = "Edit Profile"
+        }
+        else if(profileId != firebaseUser?.uid)
+        {
+            checkIsFollowing()
+        }
+
         view.editProfile_btn_profile_fragment.setOnClickListener{
             startActivity(Intent(context,EditProfileActivity::class.java))
         }
 
+        getFollowers()
+        getFollowing()
+        userInfo()
+
         return view
+    }
+
+    private fun checkIsFollowing(){
+        val followRef = firebaseUser?.uid.let {
+            FirebaseDatabase.getInstance().reference.child("Follow").child(it.toString()).child("Following")
+        }
+
+        followRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.child(profileId).exists())
+                {
+                    view?.editProfile_btn_profile_fragment?.text = "Following"
+                }
+                else
+                {
+                    view?.editProfile_btn_profile_fragment?.text = "Follow"
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+    }
+
+    private fun getFollowers() {
+        val followersRef = FirebaseDatabase.getInstance().reference.child("Follow").child(profileId)
+                .child("Followers")
+
+
+        followersRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists())
+                {
+                    view?.followers_textView_profile_fragment?.text = snapshot.childrenCount.toString()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    private fun getFollowing() {
+        val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(profileId)
+                .child("Following")
+
+
+        followingRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists())
+                {
+                    view?.following_textView_profile_fragment?.text = snapshot.childrenCount.toString()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    private fun userInfo()
+    {
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(profileId)
+
+        userRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists())
+                {
+                    val user = snapshot.getValue<User>(User :: class.java)
+                    Picasso.get().load(user!!.getImage()).placeholder(R.drawable.profile).into(view?.profile_picture_profile_fragment)
+                    view?.username_textView_profile_fragment?.text = user.getUsername()
+                    view?.fullName_textView_profile_fragment?.text = user.getFullname()
+                    view?.bio_textView_profile_fragment?.text = user.getBio()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val preference = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)?.edit()
+        preference?.putString("profileId",firebaseUser?.uid)
+        preference?.apply()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val preference = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)?.edit()
+        preference?.putString("profileId",firebaseUser?.uid)
+        preference?.apply()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val preference = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)?.edit()
+        preference?.putString("profileId",firebaseUser?.uid)
+        preference?.apply()
     }
 
     companion object {

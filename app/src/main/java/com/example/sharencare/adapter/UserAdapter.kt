@@ -1,5 +1,6 @@
 package com.example.sharencare.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +10,12 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.example.sharencare.fragments.ProfileFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -36,14 +39,23 @@ class UserAdapter(private var mContext : Context,
         return mUser.size
     }
 
-
-
+    @SuppressLint("CommitPrefEdits")
     override fun onBindViewHolder(holder: UserAdapter.ViewHolder, position: Int) {
         val user = mUser[position]
         holder.usernameTextView.text = user.getUsername()
         holder.fullnameTextView.text = user.getFullname()
         Picasso.get().load(user.getImage()).placeholder(R.drawable.profile).into(holder.profileImage)
         checkFollowingStatus(user.getUid(),holder.followButton)
+
+        holder.itemView.setOnClickListener {
+            val preference = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+            preference.putString("profileId",user.getUid())
+            preference.apply()
+
+            (mContext as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                R.id.frame_layout_activity_main,ProfileFragment()).commit()
+        }
+
 
         holder.followButton.setOnClickListener {
             if (holder.followButton.text.toString().lowercase() == "follow") {
