@@ -23,6 +23,8 @@ class User {
         this.uid = uid
     }
 
+
+
     fun getUsername() : String
     {
         return this.username
