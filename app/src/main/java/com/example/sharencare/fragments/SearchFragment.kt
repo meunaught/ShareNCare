@@ -78,7 +78,6 @@ class SearchFragment : Fragment() {
                 {
                     searchUsers(p0.toString())
                     recyclerview?.visibility = View.VISIBLE
-                    Log.d("myTag", "On Text Change");
                 }
             }
 
@@ -97,16 +96,14 @@ class SearchFragment : Fragment() {
             if(KMP(user.getFullname().lowercase(),input.lowercase()))
             {
                 mUser?.add(user)
-                Log.d("myTag", "This is my message");
             }
             else if(KMP(user.getUsername().lowercase(),input.lowercase()))
             {
                 mUser?.add(user)
-                Log.d("myTag", "This is my message");
             }
             else
             {
-                Log.d("myTag", "This is my message");
+
             }
         }
 

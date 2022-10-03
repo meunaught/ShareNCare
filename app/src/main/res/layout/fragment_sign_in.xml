@@ -11,6 +11,7 @@
     >
 
     <EditText
+        android:id="@+id/email_editText_signIn_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
@@ -20,6 +21,7 @@
         />
 
     <EditText
+        android:id="@+id/password_editText_signIn_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
@@ -30,8 +32,8 @@
         />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:layout_marginTop="15dp"
         android:id="@+id/signIn_btn_sign_in_fragment"
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign In"

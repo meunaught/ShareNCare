@@ -2,13 +2,18 @@ package com.example.sharencare.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.sharencare.MainActivity
 import com.example.sharencare.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_sign_in.view.*
+import kotlinx.android.synthetic.main.fragment_sign_up.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,6 +38,15 @@ class SignInFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if(FirebaseAuth.getInstance().currentUser!=null)
+        {
+            startActivity(Intent(context,MainActivity::class.java))
+            this.activity?.finish()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,7 +55,30 @@ class SignInFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_sign_in, container, false)
 
         view.signIn_btn_sign_in_fragment.setOnClickListener {
-            startActivity(Intent(context,MainActivity::class.java))
+            val email = view?.email_editText_signIn_fragment?.text.toString()
+            val password = view?.password_editText_signIn_fragment?.text.toString()
+            when{
+                TextUtils.isEmpty(email)-> Toast.makeText(context,"Email is required", Toast.LENGTH_LONG).show()
+                TextUtils.isEmpty(password)-> Toast.makeText(context,"Password Name is required",
+                    Toast.LENGTH_LONG).show()
+
+                else->{
+                    val userAuth : FirebaseAuth = FirebaseAuth.getInstance()
+                    userAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener{ task->
+                        if(task.isSuccessful)
+                        {
+                            startActivity(Intent(context,MainActivity::class.java))
+                            this.activity?.finish()
+                        }
+                        else
+                        {
+                            val message = task.exception!!.toString()
+                            Toast.makeText(context,"Error : $message", Toast.LENGTH_LONG).show()
+                            userAuth.signOut()
+                        }
+                    }
+                }
+            }
         }
 
         return view
