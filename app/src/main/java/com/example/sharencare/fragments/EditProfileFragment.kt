@@ -55,6 +55,7 @@ class editProfileFragment : Fragment() {
     private var imageUri: Uri? = null
     private var firebaseUser : FirebaseUser = FirebaseAuth.getInstance().currentUser!!
     private var imageUrl = ""
+    private var checker = false
 
     private var storageReference : StorageReference?=null
 
@@ -77,11 +78,11 @@ class editProfileFragment : Fragment() {
         storageReference = FirebaseStorage.getInstance().reference.child("Profile Pictures")
 
         view.image_btn_edit_profile_fragment.setOnClickListener{
+            checker = true
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
         }
         view.update_btn_edit_profile_fragment.setOnClickListener {
-
             val fullname = view?.new_fullname_editText_edit_profile_fragment?.text.toString()
             val username = view?.new_username_editText_edit_profile_fragment?.text.toString()
             val bio = view?.new_bio_editText_edit_profile_fragment?.text.toString()
@@ -89,37 +90,20 @@ class editProfileFragment : Fragment() {
                 TextUtils.isEmpty(fullname)-> Toast.makeText(context,"Full Name is required", Toast.LENGTH_LONG).show()
                 TextUtils.isEmpty(username)-> Toast.makeText(context,"Username is required", Toast.LENGTH_LONG).show()
                 TextUtils.isEmpty(bio)-> Toast.makeText(context,"Email is required", Toast.LENGTH_LONG).show()
+                (!checker)->{
+                    updateUserIntoFirebase(fullname,username,bio)
+                }
                 (imageUri == null) -> Toast.makeText(context,"Please select an image", Toast.LENGTH_LONG).show()
                 else->{
                     Log.d("myTag", "inside else of update btn edit profile");
                     uploadImageIntoFirebase(fullname,username,bio)
                 }
-
             }
         }
         return view
     }
 
     private fun uploadImageIntoFirebase(fullname : String,username: String,bio: String) {
-        /*storageReference = FirebaseStorage.getInstance().getReference("profilePictures/myImage")
-        storageReference?.putFile(imageUri!!)?.addOnCompleteListener{task->
-            if(task.isSuccessful)
-            {
-                Log.d("profileImage", "successfully uploaded");
-                Toast.makeText(context,"Account has been updated successfully.",Toast.LENGTH_LONG).show()
-            }
-            else
-            {
-                Log.d("profileImage", "upload failed");
-            }
-        }*/
-
-        /*storageReference?.putFile(imageUri!!)?.addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot>{
-            override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
-                storageReference?.downloadUrl?.addOnCompleteListener({})
-            }
-        })*/
-
         val fileReference = storageReference!!.child(firebaseUser.uid + ".jpg")
         var uploadTask : StorageTask<*>
         uploadTask = fileReference.putFile(imageUri!!)
@@ -158,7 +142,10 @@ class editProfileFragment : Fragment() {
         userMap["fullname"] = fullname
         userMap["username"] = username
         userMap["bio"] = bio
-        userMap["image"] = imageUrl
+        if(checker)
+        {
+            userMap["image"] = imageUrl
+        }
 
         usersRef.child(currentUserID).updateChildren(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
@@ -182,6 +169,7 @@ class editProfileFragment : Fragment() {
                 if(snapshot.exists())
                 {
                     val user = snapshot.getValue<User>(User :: class.java)
+                    Picasso.get().load(user?.getImage()).placeholder(R.drawable.profile).into(view?.image_btn_edit_profile_fragment)
                     view?.new_username_editText_edit_profile_fragment?.setText(user?.getUsername())
                     view?.new_fullname_editText_edit_profile_fragment?.setText(user?.getFullname())
                     view?.new_bio_editText_edit_profile_fragment?.setText(user?.getBio())

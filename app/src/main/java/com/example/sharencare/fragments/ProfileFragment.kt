@@ -2,15 +2,20 @@ package com.example.sharencare.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.icu.number.NumberFormatter.with
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.sharencare.EditProfileActivity
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -18,9 +23,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_edit_profile.view.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
+import java.lang.Exception
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -203,8 +212,18 @@ class ProfileFragment : Fragment() {
                         view?.username_textView_profile_fragment?.text = user?.getUsername()
                         view?.fullName_textView_profile_fragment?.text = user?.getFullname()
                         view?.bio_textView_profile_fragment?.text = user?.getBio()
-                    }
 
+                        val storageRef : StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(user.getImage())
+                        storageRef.downloadUrl.addOnSuccessListener ( object : OnSuccessListener<Uri> {
+                            override fun onSuccess(p0: Uri?) {
+                                Picasso.get().load(user.getImage()).placeholder(R.drawable.profile).into(view?.profile_picture_profile_fragment)
+                            }
+                        }).addOnFailureListener(object : OnFailureListener{
+                            override fun onFailure(p0: Exception) {
+                                Toast.makeText(context,"Exception Found while loading image in profile fragment", Toast.LENGTH_LONG).show()
+                            }
+                        })
+                    }
                 }
             }
 
