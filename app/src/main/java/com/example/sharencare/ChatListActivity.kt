@@ -11,6 +11,7 @@ import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_search.*
 
+
 class ChatListActivity : AppCompatActivity() {
 
     private lateinit var userRecyclerview : RecyclerView

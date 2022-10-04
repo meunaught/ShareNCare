@@ -200,7 +200,6 @@ class ProfileFragment : Fragment() {
                     }
                     else
                     {
-                        //Picasso.get().load(user?.getImage()).placeholder(R.drawable.profile).into(view?.profile_picture_profile_fragment)
                         view?.username_textView_profile_fragment?.text = user?.getUsername()
                         view?.fullName_textView_profile_fragment?.text = user?.getFullname()
                         view?.bio_textView_profile_fragment?.text = user?.getBio()

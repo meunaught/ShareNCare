@@ -7,6 +7,7 @@ class User {
     private var bio : String = ""
     private var image : String = ""
     private var uid : String = ""
+    private var password : String = ""
 
     constructor()
     {
@@ -21,6 +22,17 @@ class User {
         this.bio = bio
         this.image = image
         this.uid = uid
+    }
+
+    constructor(username : String,fullname : String,email :String,bio : String,image : String,uid : String,password :String)
+    {
+        this.username = username
+        this.fullname = fullname
+        this.email = email
+        this.bio = bio
+        this.image = image
+        this.uid = uid
+        this.password = password
     }
 
 
@@ -77,6 +89,16 @@ class User {
 
     fun setUid(uid : String){
         this.uid = uid
+    }
+
+    fun setPassword(password: String)
+    {
+        this.password = password
+    }
+
+    fun getPassword() : String
+    {
+        return this.password
     }
 
 }
