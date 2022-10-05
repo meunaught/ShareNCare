@@ -32,7 +32,7 @@ class EditPasswordFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private var firebaseUser : FirebaseUser = FirebaseAuth.getInstance().currentUser!!
+    private lateinit var firebaseUser : FirebaseUser
     private var user : User?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,27 +50,10 @@ class EditPasswordFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_edit_password, container, false)
 
+        firebaseUser = FirebaseAuth.getInstance().currentUser!!
         userInfo()
 
         view?.password_btn_edit_password_fragment?.setOnClickListener {
-            val previous_password = view?.previous_password_btn_edit_password_fragment?.text.toString()
-            val new_password = view?.new_password_btn_edit_password_fragment?.text.toString()
-            val confirm_password = view?.confirm_password_btn_edit_password_fragment?.text.toString()
-            val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser.uid)
-            when{
-                TextUtils.isEmpty(previous_password)-> Toast.makeText(context,"Previous password is required", Toast.LENGTH_LONG).show()
-                TextUtils.isEmpty(new_password)-> Toast.makeText(context,"Enter your new password", Toast.LENGTH_LONG).show()
-                TextUtils.isEmpty(confirm_password)-> Toast.makeText(context,"Confirm your new password", Toast.LENGTH_LONG).show()
-                (user?.getPassword() != previous_password)-> {
-                    Toast.makeText(context,"Wrong Previous Password", Toast.LENGTH_LONG).show()
-                }
-                (new_password != confirm_password)->{
-                    Toast.makeText(context,"New password and confirmed password doesn't match", Toast.LENGTH_LONG).show()
-                }
-                else->{
-                       updatePasswordIntoFirebase(new_password)
-                }
-            }
 
         }
 

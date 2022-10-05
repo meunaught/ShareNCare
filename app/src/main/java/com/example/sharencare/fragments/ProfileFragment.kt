@@ -48,7 +48,7 @@ class ProfileFragment : Fragment() {
     private var param2: String? = null
 
     private lateinit var profileId : String
-    private var firebaseUser: FirebaseUser ?= FirebaseAuth.getInstance().currentUser
+    private lateinit var firebaseUser: FirebaseUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +64,7 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_profile, container, false)
+        firebaseUser =  FirebaseAuth.getInstance().currentUser!!
 
         val preferences = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
         if(preferences != null)
@@ -105,6 +106,7 @@ class ProfileFragment : Fragment() {
                     }
                 }
                 edit_follow_btn.lowercase()=="following"->{
+                    firebaseUser = FirebaseAuth.getInstance().currentUser!!
                     firebaseUser?.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(it1.toString())
@@ -124,12 +126,11 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
-        getFollowers()
-        getFollowing()
-        userInfo()
 
         return view
     }
+
+
 
     private fun checkIsFollowing(){
         val followRef = firebaseUser?.uid.let {
@@ -194,6 +195,7 @@ class ProfileFragment : Fragment() {
         })
     }
 
+    //called in onStart method
     private fun userInfo()
     {
         val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(profileId)
@@ -246,6 +248,10 @@ class ProfileFragment : Fragment() {
         val preference = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)?.edit()
         preference?.putString("profileId",firebaseUser?.uid)
         preference?.apply()
+
+        getFollowers()
+        getFollowing()
+        userInfo()
     }
 
     override fun onDestroy() {

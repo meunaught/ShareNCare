@@ -53,11 +53,10 @@ class editProfileFragment : Fragment() {
 
     private val pickImage = 100
     private var imageUri: Uri? = null
-    private var firebaseUser : FirebaseUser = FirebaseAuth.getInstance().currentUser!!
+    private lateinit var firebaseUser : FirebaseUser
     private var imageUrl = ""
     private var checker = false
-
-    private var storageReference : StorageReference?=null
+    private lateinit var storageReference : StorageReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,15 +66,19 @@ class editProfileFragment : Fragment() {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_edit_profile, container, false)
-
-        userInfo()
+        firebaseUser = FirebaseAuth.getInstance().currentUser!!
         storageReference = FirebaseStorage.getInstance().reference.child("Profile Pictures")
+
+        //Calling of userInfo method
+        userInfo()
+
 
         view.image_btn_edit_profile_fragment.setOnClickListener{
             checker = true
@@ -133,7 +136,6 @@ class editProfileFragment : Fragment() {
 
 
     private fun updateUserIntoFirebase(fullname: String, username: String,bio:String) {
-
         val currentUserID = firebaseUser.uid
         val usersRef : DatabaseReference = FirebaseDatabase.getInstance().reference.child("Users")
 

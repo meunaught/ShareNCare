@@ -96,7 +96,7 @@ class SignUpFragment : Fragment() {
         userMap["email"] = email
         userMap["password"] = password
         userMap["bio"] = "Hi, I am using shareNcare app"
-        userMap["image"] = "https://firebasestorage.googleapis.com/v0/b/sharencare-54c4e.appspot.com/o/Default%20Images%2Fprofile.png?alt=media&token=f96c2376-3d4b-4026-b1cc-5e5e4499ccc1"
+        userMap["image"] = "https://firebasestorage.googleapis.com/v0/b/sharencare-54c4e.appspot.com/o/Default%20Images%2Fprofile.png?alt=media&token=ca02e7f0-b372-40c0-bc63-cfb0d38a2ae0"
 
         usersRef.child(currentUserID).setValue(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
