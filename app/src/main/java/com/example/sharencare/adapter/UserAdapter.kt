@@ -44,7 +44,7 @@ class UserAdapter(private var mContext : Context,
         val user = mUser[position]
         holder.usernameTextView.text = user.getUsername()
         holder.fullnameTextView.text = user.getFullname()
-        Picasso.get().load(user.getImage()).placeholder(R.drawable.profile).into(holder.profileImage)
+        Picasso.get().load(user.getImage()).into(holder.profileImage)
         checkFollowingStatus(user.getUid(),holder.followButton)
 
         holder.itemView.setOnClickListener {
@@ -142,5 +142,4 @@ class UserAdapter(private var mContext : Context,
 
         })
     }
-
 }

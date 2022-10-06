@@ -3,21 +3,27 @@ package com.example.sharencare
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageButton
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import com.example.sharencare.fragments.EditPasswordFragment
 import com.example.sharencare.fragments.editProfileFragment
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_edit_profile.*
-import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import kotlinx.android.synthetic.main.fragment_profile.*
 
 class EditProfileActivity : AppCompatActivity() {
 
     private var selectedFragment : Fragment? = null
 
+    private lateinit var profileUpdate_btn_activity_edit_profile : AppCompatButton
+    private lateinit var passwordUpdate_btn_activity_edit_password : AppCompatButton
+    private lateinit var logout_btn_activity_edit_profile : ImageButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+        profileUpdate_btn_activity_edit_profile = findViewById(R.id.profileUpdate_btn_activity_edit_profile)
+        passwordUpdate_btn_activity_edit_password = findViewById(R.id.passwordUpdate_btn_activity_edit_password)
+        logout_btn_activity_edit_profile = findViewById(R.id.logout_btn_activity_edit_profile)
 
         profileUpdate_btn_activity_edit_profile.setOnClickListener {
             selectedFragment = editProfileFragment()

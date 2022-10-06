@@ -4,13 +4,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_forget_password.*
+import androidx.appcompat.widget.AppCompatButton
 
 
 class ForgetPasswordActivity : AppCompatActivity() {
+
+    private lateinit var contactUs_btn_activity_forget_password : AppCompatButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forget_password)
+
+        contactUs_btn_activity_forget_password = findViewById(R.id.contactUs_btn_activity_forget_password)
 
         contactUs_btn_activity_forget_password.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO)

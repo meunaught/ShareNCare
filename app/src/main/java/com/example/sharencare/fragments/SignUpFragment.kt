@@ -1,21 +1,19 @@
 package com.example.sharencare.fragments
 
-import android.app.Notification
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.FragmentTransaction
 import com.example.sharencare.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.android.synthetic.main.fragment_sign_up.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,6 +30,13 @@ class SignUpFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var signUp_btn_sign_up_fragment : AppCompatButton
+    private lateinit var fullname_editText_signUp_fragment : EditText
+    private lateinit var username_editText_signUp_fragment : EditText
+    private lateinit var password_editText_signUp_fragment : EditText
+    private lateinit var email_editText_signUp_fragment : EditText
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -46,8 +51,13 @@ class SignUpFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_sign_up, container, false)
+        signUp_btn_sign_up_fragment = view.findViewById(R.id.signUp_btn_sign_up_fragment)
+        fullname_editText_signUp_fragment = view.findViewById(R.id.fullname_editText_signUp_fragment)
+        username_editText_signUp_fragment = view.findViewById(R.id.username_editText_signUp_fragment)
+        password_editText_signUp_fragment = view.findViewById(R.id.password_editText_signUp_fragment)
+        email_editText_signUp_fragment = view.findViewById(R.id.email_editText_signUp_fragment)
 
-        view.signUp_btn_sign_up_fragment.setOnClickListener {
+        signUp_btn_sign_up_fragment.setOnClickListener {
             createUser()
         }
 
@@ -56,10 +66,10 @@ class SignUpFragment : Fragment() {
 
     private fun createUser() {
 
-        val fullname = view?.fullname_editText_signUp_fragment?.text.toString()
-        val username = view?.username_editText_signUp_fragment?.text.toString()
-        val email = view?.email_editText_signUp_fragment?.text.toString()
-        val password = view?.password_editText_signUp_fragment?.text.toString()
+        val fullname = fullname_editText_signUp_fragment?.text.toString()
+        val username = username_editText_signUp_fragment?.text.toString()
+        val email = email_editText_signUp_fragment?.text.toString()
+        val password = password_editText_signUp_fragment?.text.toString()
 
         when{
             TextUtils.isEmpty(fullname)->Toast.makeText(context,"Full Name is required",Toast.LENGTH_LONG).show()

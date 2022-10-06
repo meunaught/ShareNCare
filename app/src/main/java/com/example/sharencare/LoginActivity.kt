@@ -3,16 +3,23 @@ package com.example.sharencare
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.widget.AppCompatButton
 import com.example.sharencare.fragments.SignInFragment
-
 import com.example.sharencare.fragments.SignUpFragment
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var signIn_btn_activity_login : AppCompatButton
+    private lateinit var signUp_btn_activity_login : AppCompatButton
+    private lateinit var forgetPassword_btn_activity_login : AppCompatButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        signIn_btn_activity_login = findViewById(R.id.signIn_btn_activity_login)
+        signUp_btn_activity_login = findViewById(R.id.signUp_btn_activity_login)
+        forgetPassword_btn_activity_login = findViewById(R.id.forgetPassword_btn_activity_login)
 
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout_activity_login,
             SignInFragment()

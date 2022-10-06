@@ -10,14 +10,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -27,13 +28,6 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_create_post.view.*
-import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import kotlinx.android.synthetic.main.fragment_edit_profile.view.*
-import kotlinx.android.synthetic.main.fragment_profile.view.*
-import kotlinx.android.synthetic.main.fragment_sign_up.view.*
-import java.net.URL
-import kotlin.concurrent.timerTask
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -57,6 +51,11 @@ class editProfileFragment : Fragment() {
     private var imageUrl = ""
     private var checker = false
     private lateinit var storageReference : StorageReference
+    private lateinit var image_btn_edit_profile_fragment : ImageButton
+    private lateinit var update_btn_edit_profile_fragment : AppCompatButton
+    private lateinit var new_fullname_editText_edit_profile_fragment : EditText
+    private lateinit var new_username_editText_edit_profile_fragment : EditText
+    private lateinit var new_bio_editText_edit_profile_fragment : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,25 +69,29 @@ class editProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_edit_profile, container, false)
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
         storageReference = FirebaseStorage.getInstance().reference.child("Profile Pictures")
+        image_btn_edit_profile_fragment = view.findViewById(R.id.image_btn_edit_profile_fragment)
+        update_btn_edit_profile_fragment = view.findViewById(R.id.update_btn_edit_profile_fragment)
+        new_fullname_editText_edit_profile_fragment = view.findViewById(R.id.new_fullname_editText_edit_profile_fragment)
+        new_username_editText_edit_profile_fragment = view.findViewById(R.id.new_username_editText_edit_profile_fragment)
+        new_bio_editText_edit_profile_fragment = view.findViewById(R.id.new_bio_editText_edit_profile_fragment)
 
         //Calling of userInfo method
         userInfo()
 
-
-        view.image_btn_edit_profile_fragment.setOnClickListener{
+        image_btn_edit_profile_fragment.setOnClickListener{
             checker = true
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
         }
-        view.update_btn_edit_profile_fragment.setOnClickListener {
-            val fullname = view?.new_fullname_editText_edit_profile_fragment?.text.toString()
-            val username = view?.new_username_editText_edit_profile_fragment?.text.toString()
-            val bio = view?.new_bio_editText_edit_profile_fragment?.text.toString()
+        update_btn_edit_profile_fragment.setOnClickListener {
+            val fullname = new_fullname_editText_edit_profile_fragment.text.toString()
+            val username = new_username_editText_edit_profile_fragment.text.toString()
+            val bio = new_bio_editText_edit_profile_fragment.text.toString()
             when{
                 TextUtils.isEmpty(fullname)-> Toast.makeText(context,"Full Name is required", Toast.LENGTH_LONG).show()
                 TextUtils.isEmpty(username)-> Toast.makeText(context,"Username is required", Toast.LENGTH_LONG).show()
@@ -171,10 +174,10 @@ class editProfileFragment : Fragment() {
                 if(snapshot.exists())
                 {
                     val user = snapshot.getValue<User>(User :: class.java)
-                    Picasso.get().load(user?.getImage()).placeholder(R.drawable.profile).into(view?.image_btn_edit_profile_fragment)
-                    view?.new_username_editText_edit_profile_fragment?.setText(user?.getUsername())
-                    view?.new_fullname_editText_edit_profile_fragment?.setText(user?.getFullname())
-                    view?.new_bio_editText_edit_profile_fragment?.setText(user?.getBio())
+                    Picasso.get().load(user?.getImage()).into(image_btn_edit_profile_fragment)
+                    new_username_editText_edit_profile_fragment.setText(user?.getUsername())
+                    new_fullname_editText_edit_profile_fragment.setText(user?.getFullname())
+                    new_bio_editText_edit_profile_fragment.setText(user?.getBio())
                 }
             }
 
@@ -189,7 +192,7 @@ class editProfileFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
-            requireView().image_btn_edit_profile_fragment.setImageURI(imageUri)
+            image_btn_edit_profile_fragment.setImageURI(imageUri)
         }
     }
 

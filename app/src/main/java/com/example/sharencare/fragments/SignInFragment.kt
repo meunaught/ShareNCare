@@ -7,13 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import com.example.sharencare.MainActivity
 import com.example.sharencare.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.fragment_sign_in.view.*
-import kotlinx.android.synthetic.main.fragment_sign_up.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,6 +28,10 @@ class SignInFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var signIn_btn_sign_in_fragment :AppCompatButton
+    private lateinit var email_editText_signIn_fragment : EditText
+    private lateinit var password_editText_signIn_fragment : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +56,13 @@ class SignInFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sign_in, container, false)
+        signIn_btn_sign_in_fragment = view.findViewById(R.id.signIn_btn_sign_in_fragment)
+        email_editText_signIn_fragment = view.findViewById(R.id.email_editText_signIn_fragment)
+        password_editText_signIn_fragment = view.findViewById(R.id.password_editText_signIn_fragment)
 
-        view.signIn_btn_sign_in_fragment.setOnClickListener {
-            val email = view?.email_editText_signIn_fragment?.text.toString()
-            val password = view?.password_editText_signIn_fragment?.text.toString()
+        signIn_btn_sign_in_fragment.setOnClickListener {
+            val email = email_editText_signIn_fragment.text.toString()
+            val password = password_editText_signIn_fragment.text.toString()
             when{
                 TextUtils.isEmpty(email)-> Toast.makeText(context,"Email is required", Toast.LENGTH_LONG).show()
                 TextUtils.isEmpty(password)-> Toast.makeText(context,"Password Name is required",

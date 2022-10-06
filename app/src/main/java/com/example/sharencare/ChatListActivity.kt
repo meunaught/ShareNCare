@@ -8,8 +8,6 @@ import com.example.sharencare.Model.User
 import com.example.sharencare.adapter.ChatUserAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.fragment_search.*
 
 
 class ChatListActivity : AppCompatActivity() {

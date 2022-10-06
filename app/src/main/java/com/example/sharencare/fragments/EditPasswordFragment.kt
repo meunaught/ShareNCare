@@ -1,21 +1,18 @@
 package com.example.sharencare.fragments
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_edit_profile.view.*
-import kotlinx.android.synthetic.main.fragment_edit_password.view.*
-import kotlinx.android.synthetic.main.fragment_edit_profile.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +31,7 @@ class EditPasswordFragment : Fragment() {
 
     private lateinit var firebaseUser : FirebaseUser
     private var user : User?=null
+    private lateinit var password_btn_edit_password_fragment : AppCompatButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +44,15 @@ class EditPasswordFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_edit_password, container, false)
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
+        password_btn_edit_password_fragment = view?.findViewById(R.id.password_btn_edit_password_fragment)!!
         userInfo()
 
-        view?.password_btn_edit_password_fragment?.setOnClickListener {
+        password_btn_edit_password_fragment.setOnClickListener {
 
         }
 
@@ -72,7 +71,7 @@ class EditPasswordFragment : Fragment() {
         usersRef.child(currentUserID).updateChildren(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
-                Log.d("myTag", "inside task succesful");
+                Log.d("myTag", "inside task succesful")
                 Toast.makeText(context,"Password has been updated successfully.",Toast.LENGTH_LONG).show()
             }
             else

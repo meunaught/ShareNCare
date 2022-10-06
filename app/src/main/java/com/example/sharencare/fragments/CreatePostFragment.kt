@@ -1,14 +1,8 @@
 package com.example.sharencare.fragments
 
-import android.annotation.SuppressLint
-import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
 import android.app.DownloadManager
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,11 +10,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatButton
 import com.example.sharencare.R
-import kotlinx.android.synthetic.main.fragment_create_post.*
-import kotlinx.android.synthetic.main.fragment_create_post.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +32,10 @@ class CreatePostFragment : Fragment() {
     private val pickImage = 100
     private var imageUri: Uri? = null
 
+    private lateinit var uploadImage_btn_create_post_fragment : AppCompatButton
+    private lateinit var uploadPdf_btn_create_post_fragment : AppCompatButton
+    private lateinit var image_view_create_post_fragment : ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -51,17 +47,19 @@ class CreatePostFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_create_post, container, false)
+        uploadImage_btn_create_post_fragment = view.findViewById(R.id.uploadImage_btn_create_post_fragment)
+        uploadPdf_btn_create_post_fragment = view.findViewById(R.id.uploadPdf_btn_create_post_fragment)
+        image_view_create_post_fragment = view.findViewById(R.id.image_view_create_post_fragment)
 
-        view.uploadImage_btn_create_post_fragment.setOnClickListener {
-
+        uploadImage_btn_create_post_fragment.setOnClickListener {
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
         }
 
-        view.uploadPdf_btn_create_post_fragment.setOnClickListener {
+        uploadPdf_btn_create_post_fragment.setOnClickListener {
             val intent = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
             startActivity(intent)
         }
@@ -69,11 +67,12 @@ class CreatePostFragment : Fragment() {
         return view
     }
 
+    @Deprecated("")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
-            requireView().image_view_create_post_fragment.setImageURI(imageUri)
+            image_view_create_post_fragment.setImageURI(imageUri)
         }
     }
 

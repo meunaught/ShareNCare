@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,8 +18,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.fragment_search.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +39,8 @@ class SearchFragment : Fragment() {
     private var mUser : MutableList<User>?= null
     private var sUser : MutableList<User> = ArrayList()
 
+    private lateinit var search_editText_search_fragment : EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -54,6 +55,7 @@ class SearchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_search, container, false)
+        search_editText_search_fragment = view.findViewById(R.id.search_editText_search_fragment)
         recyclerview = view.findViewById(R.id.recycler_view_search_fragment)
         recyclerview?.setHasFixedSize(true)
         recyclerview?.layoutManager = LinearLayoutManager(context)
@@ -63,14 +65,14 @@ class SearchFragment : Fragment() {
         recyclerview?.adapter = userAdapter
         retriveUsers()
 
-        view.search_editText_search_fragment.addTextChangedListener(object : TextWatcher
+        search_editText_search_fragment.addTextChangedListener(object : TextWatcher
         {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(view.search_editText_search_fragment.text.toString()== "")
+                if(search_editText_search_fragment.text.toString()== "")
                 {
                     recyclerview?.visibility = View.INVISIBLE
                 }

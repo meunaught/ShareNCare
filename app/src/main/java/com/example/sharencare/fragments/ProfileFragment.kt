@@ -2,7 +2,6 @@ package com.example.sharencare.fragments
 
 import android.content.Context
 import android.content.Intent
-import android.icu.number.NumberFormatter.with
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import com.example.sharencare.EditProfileActivity
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
@@ -22,13 +24,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_edit_profile.view.*
-import kotlinx.android.synthetic.main.fragment_profile.*
-import kotlinx.android.synthetic.main.fragment_profile.view.*
 import java.lang.Exception
 
 
@@ -49,6 +47,13 @@ class ProfileFragment : Fragment() {
 
     private lateinit var profileId : String
     private lateinit var firebaseUser: FirebaseUser
+    private lateinit var editProfile_btn_profile_fragment : AppCompatButton
+    private lateinit var followers_textView_profile_fragment : TextView
+    private lateinit var following_textView_profile_fragment : TextView
+    private lateinit var username_textView_profile_fragment : TextView
+    private lateinit var fullName_textView_profile_fragment : TextView
+    private lateinit var bio_textView_profile_fragment : TextView
+    private lateinit var profile_picture_profile_fragment : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +70,13 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_profile, container, false)
         firebaseUser =  FirebaseAuth.getInstance().currentUser!!
+        editProfile_btn_profile_fragment = view.findViewById(R.id.editProfile_btn_profile_fragment)
+        followers_textView_profile_fragment = view.findViewById(R.id.followers_textView_profile_fragment)
+        following_textView_profile_fragment = view.findViewById(R.id.following_textView_profile_fragment)
+        username_textView_profile_fragment = view.findViewById(R.id.username_textView_profile_fragment)
+        fullName_textView_profile_fragment = view.findViewById(R.id.fullName_textView_profile_fragment)
+        bio_textView_profile_fragment = view.findViewById(R.id.bio_textView_profile_fragment)
+        profile_picture_profile_fragment = view.findViewById(R.id.profile_picture_profile_fragment)
 
         val preferences = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
         if(preferences != null)
@@ -72,34 +84,34 @@ class ProfileFragment : Fragment() {
             this.profileId = preferences.getString("profileId","none").toString()
         }
 
-        if(profileId == firebaseUser?.uid)
+        if(profileId == firebaseUser.uid)
         {
-            view.editProfile_btn_profile_fragment.text = "Edit Profile"
+            editProfile_btn_profile_fragment.text = "Edit Profile"
         }
         else if(profileId != firebaseUser?.uid)
         {
             checkIsFollowing()
         }
 
-        view.editProfile_btn_profile_fragment.setOnClickListener{
-            val edit_follow_btn = view?.editProfile_btn_profile_fragment?.text.toString()
+        editProfile_btn_profile_fragment.setOnClickListener{
+            val edit_follow_btn = editProfile_btn_profile_fragment.text.toString()
             when{
                 edit_follow_btn.lowercase() == "edit profile" ->{
                     startActivity(Intent(context,EditProfileActivity::class.java))
                 }
                 edit_follow_btn.lowercase()=="follow"->{
-                    firebaseUser?.uid.let { it1 ->
+                    firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(it1.toString())
                             .child("Following").child(profileId).setValue(true).addOnCompleteListener{task->
                                 if(task.isSuccessful)
                                 {
-                                    view?.editProfile_btn_profile_fragment?.text = "Following"
+                                    editProfile_btn_profile_fragment.text = "Following"
                                 }
                             }
                     }
 
-                    firebaseUser?.uid.let { it1 ->
+                    firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(profileId)
                             .child("Followers").child(it1.toString()).setValue(true)
@@ -107,18 +119,18 @@ class ProfileFragment : Fragment() {
                 }
                 edit_follow_btn.lowercase()=="following"->{
                     firebaseUser = FirebaseAuth.getInstance().currentUser!!
-                    firebaseUser?.uid.let { it1 ->
+                    firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(it1.toString())
                             .child("Following").child(profileId).removeValue().addOnCompleteListener{task->
                                 if(task.isSuccessful)
                                 {
-                                    view?.editProfile_btn_profile_fragment?.text = "Follow"
+                                    editProfile_btn_profile_fragment.text = "Follow"
                                 }
                             }
                     }
 
-                    firebaseUser?.uid.let { it1 ->
+                    firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(profileId)
                             .child("Followers").child(it1.toString()).removeValue()
@@ -133,7 +145,7 @@ class ProfileFragment : Fragment() {
 
 
     private fun checkIsFollowing(){
-        val followRef = firebaseUser?.uid.let {
+        val followRef = firebaseUser.uid.let {
             FirebaseDatabase.getInstance().reference.child("Follow").child(it.toString()).child("Following")
         }
 
@@ -141,11 +153,11 @@ class ProfileFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.child(profileId).exists())
                 {
-                    view?.editProfile_btn_profile_fragment?.text = "Following"
+                    editProfile_btn_profile_fragment.text = "Following"
                 }
                 else
                 {
-                    view?.editProfile_btn_profile_fragment?.text = "Follow"
+                    editProfile_btn_profile_fragment.text = "Follow"
                 }
             }
 
@@ -166,7 +178,7 @@ class ProfileFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists())
                 {
-                    view?.followers_textView_profile_fragment?.text = snapshot.childrenCount.toString()
+                    followers_textView_profile_fragment.text = snapshot.childrenCount.toString()
                 }
             }
 
@@ -185,7 +197,7 @@ class ProfileFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists())
                 {
-                    view?.following_textView_profile_fragment?.text = snapshot.childrenCount.toString()
+                    following_textView_profile_fragment.text = snapshot.childrenCount.toString()
                 }
             }
 
@@ -211,14 +223,14 @@ class ProfileFragment : Fragment() {
                     }
                     else
                     {
-                        view?.username_textView_profile_fragment?.text = user?.getUsername()
-                        view?.fullName_textView_profile_fragment?.text = user?.getFullname()
-                        view?.bio_textView_profile_fragment?.text = user?.getBio()
+                        username_textView_profile_fragment.text = user.getUsername()
+                        fullName_textView_profile_fragment.text = user.getFullname()
+                        bio_textView_profile_fragment.text = user.getBio()
 
                         val storageRef : StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(user.getImage())
                         storageRef.downloadUrl.addOnSuccessListener ( object : OnSuccessListener<Uri> {
                             override fun onSuccess(p0: Uri?) {
-                                Picasso.get().load(user.getImage()).placeholder(R.drawable.profile).into(view?.profile_picture_profile_fragment)
+                                Picasso.get().load(user.getImage()).into(profile_picture_profile_fragment)
                             }
                         }).addOnFailureListener(object : OnFailureListener{
                             override fun onFailure(p0: Exception) {
