@@ -88,7 +88,12 @@ class ProfileFragment : Fragment() {
         {
             editProfile_btn_profile_fragment.text = "Edit Profile"
         }
-        else if(profileId != firebaseUser?.uid)
+        else if(profileId == "Logout Has Been Done")
+        {
+            editProfile_btn_profile_fragment.text = "Edit Profile"
+            profileId = firebaseUser.uid
+        }
+        else if(profileId != firebaseUser.uid)
         {
             checkIsFollowing()
         }
@@ -141,8 +146,6 @@ class ProfileFragment : Fragment() {
 
         return view
     }
-
-
 
     private fun checkIsFollowing(){
         val followRef = firebaseUser.uid.let {
@@ -210,6 +213,7 @@ class ProfileFragment : Fragment() {
     //called in onStart method
     private fun userInfo()
     {
+
         val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(profileId)
 
         userRef.addValueEventListener(object : ValueEventListener{
@@ -258,7 +262,7 @@ class ProfileFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         val preference = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)?.edit()
-        preference?.putString("profileId",firebaseUser?.uid)
+        preference?.putString("profileId",firebaseUser.uid)
         preference?.apply()
 
         getFollowers()
@@ -269,7 +273,7 @@ class ProfileFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         val preference = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)?.edit()
-        preference?.putString("profileId",firebaseUser?.uid)
+        preference?.putString("profileId","Logout Has Been Done")
         preference?.apply()
     }
 

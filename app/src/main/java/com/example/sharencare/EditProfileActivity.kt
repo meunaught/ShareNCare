@@ -45,7 +45,7 @@ class EditProfileActivity : AppCompatActivity() {
             FirebaseAuth.getInstance().signOut()
             val i = Intent(this, LoginActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(i)
             finish()
         }
@@ -53,6 +53,5 @@ class EditProfileActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout_activity_edit_profile,
             editProfileFragment()
         ).commit()
-
     }
 }
