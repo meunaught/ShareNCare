@@ -55,6 +55,7 @@ class CreatePostFragment : Fragment() {
     private var imageUrl = ""
     private var pdfUrl = ""
     private var timeStamp = ""
+    private var pdfName = ""
 
     private lateinit var pdfTextView : TextView
     private lateinit var uploadImage_btn_create_post_fragment : AppCompatButton
@@ -202,6 +203,7 @@ class CreatePostFragment : Fragment() {
         userMap["description"] = description.toString()
         userMap["postImage"] = imageUrl
         userMap["postPdf"] = pdfUrl
+        userMap["postPdfName"] = pdfName
 
         usersRef.child(timeStamp).updateChildren(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
@@ -229,7 +231,6 @@ class CreatePostFragment : Fragment() {
             pdfUri = data?.data
             val uri : Uri? = data?.data
             val uriString : String = uri.toString()
-            var pdfName : String?= null
             if(uriString.startsWith("content://")){
                 var myCursor : Cursor?= null
                 try{
