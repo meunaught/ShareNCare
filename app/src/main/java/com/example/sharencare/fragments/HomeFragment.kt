@@ -111,19 +111,17 @@ class HomeFragment : Fragment() {
                 postList?.clear()
                 for(temp_snapshot in snapshot.children){
                     val post = temp_snapshot.getValue(Post :: class.java)
-                    for(id in (followingList as ArrayList<*>)){
+                    postList?.add(post!!)
+                    /*for(id in (followingList as ArrayList<*>)){
                         if(id == post?.getPublisher())
                         {
-                            if (post != null) {
-                                postList?.add(post)
-                                System.out.println("Shamik "+ post.getPostPdfName())
-                                System.out.println("Shamik" + post.getPostPdf() + "\n" + post.getPostID())
-
-                                Log.d("mytag",post.getPostPdfName())
-                            }
-                            postAdapter?.notifyDataSetChanged()
+                            postList?.add(post!!)
+                            System.out.println("Shamik "+ post?.getPostPdfName())
+                            System.out.println("Shamik" + post?.getPostPdf() + "\n" + post?.getPostID())
                         }
-                    }
+                        postAdapter?.notifyDataSetChanged()
+                    }*/
+                    postAdapter?.notifyDataSetChanged()
                 }
             }
 

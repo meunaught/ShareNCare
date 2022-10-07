@@ -198,12 +198,12 @@ class CreatePostFragment : Fragment() {
         val description = editText_create_post_fragment.text
 
         val userMap = HashMap<String,Any>()
-        userMap["postID"] = timeStamp
-        userMap["publisher"] = currentUserID
+        userMap["postID"] = timeStamp.toString()
+        userMap["publisher"] = currentUserID.toString()
         userMap["description"] = description.toString()
-        userMap["postImage"] = imageUrl
-        userMap["postPdf"] = pdfUrl
-        userMap["postPdfName"] = pdfName
+        userMap["postImage"] = imageUrl.toString()
+        userMap["postPdf"] = pdfUrl.toString()
+        userMap["postPdfName"] = pdfName.toString()
 
         usersRef.child(timeStamp).updateChildren(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)

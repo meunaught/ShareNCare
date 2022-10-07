@@ -5,12 +5,12 @@ class Post {
     private var description : String = ""
     private var postImage : String = ""
     private var postPdf : String = ""
-    private var postPdfName : String = ""
     private var publisher : String = ""
+    private var postPdfName : String = ""
 
     constructor()
 
-    constructor(postID : String,description: String,postImage: String,postPdf: String,postPdfName: String,publisher: String){
+    constructor(description: String ,postID :  String,postImage: String,postPdf: String,postPdfName: String,publisher: String){
         this.postID = postID
         this.description = description
         this.postImage = postImage
@@ -60,7 +60,7 @@ class Post {
     }
 
     fun setPostPdfName(postPdfName : String){
-        this.postPdfName
+        this.postPdfName = postPdfName
     }
 
     fun setPublisher(publisher : String){
