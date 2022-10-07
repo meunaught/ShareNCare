@@ -2,13 +2,26 @@ package com.example.sharencare.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sharencare.ChatListActivity
+import com.example.sharencare.MainActivity
+import com.example.sharencare.Model.Post
 import com.example.sharencare.R
+import com.example.sharencare.adapter.PostAdapter
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +39,10 @@ class HomeFragment : Fragment() {
     private var param2: String? = null
 
     private lateinit var message_btn_home_fragment : ImageButton
+    private var postAdapter : PostAdapter ?= null
+    private var postList : MutableList<Post> ?= null
+    private var followingList : MutableList<Post>?= null
+    private var firebaseUser : FirebaseUser ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +58,79 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_home, container, false)
-        message_btn_home_fragment = view.findViewById(R.id.message_btn_home_fragment)
+        firebaseUser = FirebaseAuth.getInstance().currentUser
 
+        var recyclerView : RecyclerView?= null
+        recyclerView = view.findViewById(R.id.recycler_view_home_fragment)
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        recyclerView.layoutManager =linearLayoutManager
+
+        postList = ArrayList()
+        postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>) }
+        recyclerView.adapter = postAdapter
+
+        checkFollowings()
+
+        message_btn_home_fragment = view.findViewById(R.id.message_btn_home_fragment)
         message_btn_home_fragment.setOnClickListener{
             startActivity(Intent(context,ChatListActivity::class.java))
         }
 
         return view
+    }
+
+    private fun checkFollowings() {
+        followingList = ArrayList()
+        val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser?.uid.toString())
+                .child("Following")
+        followingRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists())
+                {
+                    (followingList as ArrayList<String>).clear()
+                    for(temp_snapshot in snapshot.children){
+                        temp_snapshot.key?.let{(followingList as ArrayList<String>).add(it)}
+                    }
+                    retrievePosts()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    private fun retrievePosts() {
+        val postsRef = FirebaseDatabase.getInstance().reference.child("Posts")
+        postsRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                postList?.clear()
+                for(temp_snapshot in snapshot.children){
+                    val post = temp_snapshot.getValue(Post :: class.java)
+                    for(id in (followingList as ArrayList<*>)){
+                        if(id == post?.getPublisher())
+                        {
+                            if (post != null) {
+                                postList?.add(post)
+                                System.out.println("Shamik "+ post.getPostPdfName())
+                                System.out.println("Shamik" + post.getPostPdf() + "\n" + post.getPostID())
+
+                                Log.d("mytag",post.getPostPdfName())
+                            }
+                            postAdapter?.notifyDataSetChanged()
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     companion object {

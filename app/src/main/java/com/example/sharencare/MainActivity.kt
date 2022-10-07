@@ -9,6 +9,7 @@ import com.example.sharencare.fragments.*
 class MainActivity : AppCompatActivity() {
 
     private var selectedFragment : Fragment? = null
+    var x : Int = 10
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {

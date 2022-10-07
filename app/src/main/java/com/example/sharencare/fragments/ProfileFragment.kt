@@ -213,7 +213,6 @@ class ProfileFragment : Fragment() {
     //called in onStart method
     private fun userInfo()
     {
-
         val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(profileId)
 
         userRef.addValueEventListener(object : ValueEventListener{

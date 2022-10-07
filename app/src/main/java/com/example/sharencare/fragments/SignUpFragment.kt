@@ -111,6 +111,10 @@ class SignUpFragment : Fragment() {
         usersRef.child(currentUserID).setValue(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
+                FirebaseDatabase.getInstance().reference.child("Follow").child(currentUserID)
+                    .child("Following").child(currentUserID).setValue(true)
+
+
                 Toast.makeText(context,"Account has been created successfully.",Toast.LENGTH_LONG).show()
                 val newFragment : Fragment = SignInFragment()
                 val transaction : FragmentTransaction = requireFragmentManager().beginTransaction()
