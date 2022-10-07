@@ -1,8 +1,10 @@
 package com.example.sharencare.adapter
 
 import android.annotation.SuppressLint
+import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -63,7 +65,6 @@ class PostAdapter(private var mContext : Context,
         holder.description.text = post.getDescription()
         if(post.getPostPdfName().isEmpty())
         {
-            Toast.makeText(mContext,"Yesssss",Toast.LENGTH_LONG).show()
             holder.postPdf.layoutParams.height = 0
         }
         else{
@@ -76,7 +77,56 @@ class PostAdapter(private var mContext : Context,
 
         }
 
+        holder.postPdf.setOnClickListener {
+            if(!post.getPostPdfName().isEmpty()){
+                Toast.makeText(mContext,"Long click to download the pdf file",Toast.LENGTH_SHORT).show()
+            }
+        }
+        holder.postPdf.setOnLongClickListener ( object : View.OnLongClickListener{
+            override fun onLongClick(p0: View?): Boolean {
+                downloadPdfFile(mContext,post.getPostPdfName(),post.getPostPdf())
+                return true
+            }
+        } )
+
+        holder.postImage.setOnClickListener{
+            if(!post.getPostImage().isEmpty()){
+                Toast.makeText(mContext,"Long click to download the image file",Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        holder.postImage.setOnLongClickListener(object : View.OnLongClickListener{
+            override fun onLongClick(p0: View?): Boolean {
+                downloadImageFile(mContext,post.getPostImage(),post.getPostImage())
+                return true
+            }
+        })
+
         publisherInfo(holder.username,holder.profileImage,post.getPublisher())
+    }
+
+    private fun downloadImageFile(context: Context,fileName: String,url: String?){
+        val request : DownloadManager.Request = DownloadManager.Request(Uri.parse(url))
+        request.setTitle(fileName)
+        request.allowScanningByMediaScanner()
+        request.setAllowedOverMetered(true)
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileName)
+        val dm : DownloadManager?= context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
+        dm?.enqueue(request)
+    }
+
+    private fun downloadPdfFile(context: Context, fileName: String, url: String?)
+    {
+        val request : DownloadManager.Request = DownloadManager.Request(Uri.parse(url))
+        request.setTitle(fileName)
+        request.setMimeType("application/pdf")
+        request.allowScanningByMediaScanner()
+        request.setAllowedOverMetered(true)
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileName)
+        val dm : DownloadManager?= context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
+        dm?.enqueue(request)
     }
 
     private fun publisherInfo(username: TextView, profileImage: CircleImageView, publisher: String) {
