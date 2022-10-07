@@ -66,10 +66,10 @@ class SignUpFragment : Fragment() {
 
     private fun createUser() {
 
-        val fullname = fullname_editText_signUp_fragment?.text.toString()
-        val username = username_editText_signUp_fragment?.text.toString()
-        val email = email_editText_signUp_fragment?.text.toString()
-        val password = password_editText_signUp_fragment?.text.toString()
+        val fullname = fullname_editText_signUp_fragment.text.toString()
+        val username = username_editText_signUp_fragment.text.toString()
+        val email = email_editText_signUp_fragment.text.toString()
+        val password = password_editText_signUp_fragment.text.toString()
 
         when{
             TextUtils.isEmpty(fullname)->Toast.makeText(context,"Full Name is required",Toast.LENGTH_LONG).show()
