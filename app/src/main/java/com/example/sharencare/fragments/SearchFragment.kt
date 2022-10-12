@@ -18,6 +18,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,15 +97,11 @@ class SearchFragment : Fragment() {
         mUser?.clear()
         for(user in sUser)
         {
-            if(KMP(user.getFullname().lowercase(),input.lowercase()))
+            if(KMP(user.getFullname().lowercase(),input.lowercase(),user))
             {
-                mUser?.add(user)
+
             }
-            else if(KMP(user.getUsername().lowercase(),input.lowercase()))
-            {
-                mUser?.add(user)
-            }
-            else
+            else if(KMP(user.getUsername().lowercase(),input.lowercase(),user))
             {
 
             }
@@ -112,7 +110,8 @@ class SearchFragment : Fragment() {
         userAdapter?.notifyDataSetChanged()
     }
 
-    private fun KMP(txt : String ,pattern : String) : Boolean
+
+    private fun KMP(txt : String ,pattern : String,user : User) : Boolean
     {
         val pat_len  = pattern.length
         val txt_len  = txt.length
@@ -129,7 +128,31 @@ class SearchFragment : Fragment() {
                 i++
             }
             if (j == pat_len) {
-                return true
+                if(pat_len>=6)
+                {
+                    if((i-j)==0)
+                    {
+                        mUser?.add(0,user)
+                    }
+                    else{
+                        mUser?.add(user)
+                    }
+                    return true
+                }
+                else{
+                    if((i-j)==0)
+                    {
+                        mUser?.add(0,user)
+                        return true;
+                    }
+                    else if(txt[i - j - 1] == ' '){
+                        mUser?.add(user)
+                        return true
+                    }
+                    else{
+                        j = lps[j - 1];
+                    }
+                }
             }
             else if (i < txt_len && pattern[j] != txt[i]) {
 
@@ -142,10 +165,8 @@ class SearchFragment : Fragment() {
                     i = i + 1
                 }
             }
-
         }
         return false
-        //return true
     }
 
     private fun computeLPSArray(pattern : String ,length : Int ,lps : ArrayList<Int>) : ArrayList<Int>
