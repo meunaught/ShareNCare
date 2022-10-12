@@ -109,19 +109,6 @@ class HomeFragment : Fragment() {
         })
     }
 
-    fun downloadFile(context: Context, fileName: String, url: String?)
-    {
-        val request : DownloadManager.Request = DownloadManager.Request(Uri.parse(url))
-        request.setTitle(fileName)
-        request.setMimeType("application/pdf")
-        request.allowScanningByMediaScanner()
-        request.setAllowedOverMetered(true)
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileName)
-        val dm : DownloadManager?= context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager?
-        dm?.enqueue(request)
-    }
-
     private fun retrievePosts() {
         val postsRef = FirebaseDatabase.getInstance().reference.child("Posts")
         postsRef.addValueEventListener(object : ValueEventListener{
@@ -129,16 +116,12 @@ class HomeFragment : Fragment() {
                 postList?.clear()
                 for(temp_snapshot in snapshot.children){
                     val post = temp_snapshot.getValue(Post :: class.java)
-                    postList?.add(post!!)
-                    /*for(id in (followingList as ArrayList<*>)){
+                    for(id in (followingList as ArrayList<*>)){
                         if(id == post?.getPublisher())
                         {
                             postList?.add(post!!)
-                            System.out.println("Shamik "+ post?.getPostPdfName())
-                            System.out.println("Shamik" + post?.getPostPdf() + "\n" + post?.getPostID())
                         }
-                        postAdapter?.notifyDataSetChanged()
-                    }*/
+                    }
                     postAdapter?.notifyDataSetChanged()
                 }
             }

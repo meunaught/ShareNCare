@@ -13,9 +13,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sharencare.EditProfileActivity
+import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.example.sharencare.adapter.PostAdapter
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -55,6 +59,9 @@ class ProfileFragment : Fragment() {
     private lateinit var bio_textView_profile_fragment : TextView
     private lateinit var profile_picture_profile_fragment : ImageView
 
+    private var postAdapter : PostAdapter?= null
+    private var postList : MutableList<Post> ?= null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -78,10 +85,25 @@ class ProfileFragment : Fragment() {
         bio_textView_profile_fragment = view.findViewById(R.id.bio_textView_profile_fragment)
         profile_picture_profile_fragment = view.findViewById(R.id.profile_picture_profile_fragment)
 
+        var recyclerView : RecyclerView?= null
+        recyclerView = view.findViewById(R.id.recycler_view_profile_fragment)
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        recyclerView.layoutManager =linearLayoutManager
+        postList = ArrayList()
+        postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>) }
+        recyclerView.adapter = postAdapter
+
+
         val preferences = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
         if(preferences != null)
         {
             this.profileId = preferences.getString("profileId","none").toString()
+        }
+        else
+        {
+            this.profileId = firebaseUser.uid
         }
 
         if(profileId == firebaseUser.uid)
@@ -144,7 +166,30 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        retrievePosts()
+
         return view
+    }
+
+    private fun retrievePosts() {
+        val postsRef = FirebaseDatabase.getInstance().reference.child("Posts")
+        postsRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                postList?.clear()
+                for(temp_snapshot in snapshot.children){
+                    val post = temp_snapshot.getValue(Post :: class.java)
+                    val id = profileId
+                        if(id == post?.getPublisher()) {
+                            postList?.add(post!!)
+                        }
+                    postAdapter?.notifyDataSetChanged()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     private fun checkIsFollowing(){
@@ -273,6 +318,7 @@ class ProfileFragment : Fragment() {
         super.onDestroy()
         val preference = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)?.edit()
         preference?.putString("profileId","Logout Has Been Done")
+        preference?.putString("publisherId","Logout Has Been Done")
         preference?.apply()
     }
 

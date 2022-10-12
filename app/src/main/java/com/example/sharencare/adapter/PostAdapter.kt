@@ -36,8 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import java.lang.Exception
 
 class PostAdapter(private var mContext : Context,
-                  private var mPost : List<Post>,
-                  private var isFragment : Boolean = false) : RecyclerView.Adapter<PostAdapter.ViewHolder>()
+                  private var mPost : List<Post>) : RecyclerView.Adapter<PostAdapter.ViewHolder>()
 {
     private var firebaseuser: FirebaseUser? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostAdapter.ViewHolder {
@@ -101,6 +100,24 @@ class PostAdapter(private var mContext : Context,
                 return true
             }
         })
+
+        holder.username.setOnClickListener {
+            val preference = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+            preference.putString("profileId",post.getPublisher())
+            preference.apply()
+
+            (mContext as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                R.id.frame_layout_activity_main,ProfileFragment()).commit()
+        }
+
+        holder.profileImage.setOnClickListener {
+            val preference = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+            preference.putString("profileId",post.getPublisher())
+            preference.apply()
+
+            (mContext as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                R.id.frame_layout_activity_main,ProfileFragment()).commit()
+        }
 
         publisherInfo(holder.username,holder.profileImage,post.getPublisher())
     }
