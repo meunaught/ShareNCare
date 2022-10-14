@@ -17,7 +17,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
@@ -28,14 +30,12 @@ import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.example.sharencare.fragments.ProfileFragment
+import com.example.sharencare.fragments.SignInFragment
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
@@ -106,7 +106,19 @@ class PostAdapter(private var mContext : Context,
         }
 
         holder.likeBtn.setOnClickListener {
-
+            if(holder.likeBtnState)
+            {
+                Picasso.get().load(R.drawable.heart_not_clicked).fit().centerInside().into(holder.likeBtn)
+                removeLikeFromFirebase(post.getPostID())
+                if(holder.likeNumber.text.toString() == "1")
+                {
+                    holder.likeNumber.text = ""
+                }
+            }
+            else {
+                Picasso.get().load(R.drawable.heart_clicked).fit().centerInside().into(holder.likeBtn)
+                saveLikeIntoFirebase(post.getPostID())
+            }
         }
         holder.commentBtn.setOnClickListener {
 
@@ -156,7 +168,81 @@ class PostAdapter(private var mContext : Context,
         }
 
         publisherInfo(holder.username,holder.profileImage,post.getPublisher())
+        likeInfoLoading(post.getPostID(),holder)
+        getLike(post.getPostID(),holder)
     }
+
+    private fun getLike(postID: String,holder: ViewHolder) {
+        val likeRef = FirebaseDatabase.getInstance().reference.child("Like").child(postID)
+
+        likeRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists())
+                {
+                    holder.likeNumber.text = snapshot.childrenCount.toString()
+                    //System.out.println("Observe" + snapshot.childrenCount.toString())
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    private fun likeInfoLoading(postID: String,holder: ViewHolder) {
+        val userRef =  firebaseuser?.uid.let { it1 ->
+            FirebaseDatabase.getInstance().reference.child("Like")
+                .child(postID).child(it1.toString())
+        }
+
+        userRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists())
+                {
+                    holder.likeBtnState = true
+                    Picasso.get().load(R.drawable.heart_clicked).fit().centerInside().into(holder.likeBtn)
+                }
+                else
+                {
+                    holder.likeBtnState = false
+                    Picasso.get().load(R.drawable.heart_not_clicked).fit().centerInside().into(holder.likeBtn)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    private fun saveLikeIntoFirebase(postID : String) {
+        firebaseuser?.uid.let { it1 ->
+            FirebaseDatabase.getInstance().reference.child("Like")
+                .child(postID).child(it1.toString()).setValue(true)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful)
+                    {
+                        System.out.println("Added to firebase")
+                    }
+                }
+        }
+    }
+
+
+    private fun removeLikeFromFirebase(postID : String) {
+        firebaseuser?.uid.let { it1 ->
+            FirebaseDatabase.getInstance().reference.child("Like")
+                .child(postID)
+                .child(it1.toString()).removeValue()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful)
+                    {
+                        System.out.println("Removed to firebase")
+                    }
+                }
+        }
+    }
+
 
     private fun loadImage(postImageUrl: String, postImage: ImageView) {
         runBlocking {
@@ -262,6 +348,7 @@ class PostAdapter(private var mContext : Context,
 
     class ViewHolder(@NonNull itemView : View) : RecyclerView.ViewHolder(itemView)
     {
+        var likeBtnState : Boolean = false
         var username : TextView = itemView.findViewById(R.id.username_postLayout)
         var profileImage : CircleImageView = itemView.findViewById(R.id.user_profile_image_postLayout)
         var description : TextView = itemView.findViewById(R.id.postDescriptionTextView_postLayout)
