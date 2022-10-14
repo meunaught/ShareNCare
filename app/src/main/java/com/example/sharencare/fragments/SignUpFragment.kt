@@ -1,5 +1,6 @@
 package com.example.sharencare.fragments
 
+import android.app.ProgressDialog;
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.FragmentTransaction
@@ -36,6 +38,8 @@ class SignUpFragment : Fragment() {
     private lateinit var password_editText_signUp_fragment : EditText
     private lateinit var email_editText_signUp_fragment : EditText
 
+    private var progressDialog : ProgressDialog?= null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,24 +64,36 @@ class SignUpFragment : Fragment() {
         signUp_btn_sign_up_fragment.setOnClickListener {
             createUser()
         }
-
         return view
     }
 
     private fun createUser() {
-
         val fullname = fullname_editText_signUp_fragment.text.toString()
         val username = username_editText_signUp_fragment.text.toString()
         val email = email_editText_signUp_fragment.text.toString()
         val password = password_editText_signUp_fragment.text.toString()
 
         when{
-            TextUtils.isEmpty(fullname)->Toast.makeText(context,"Full Name is required",Toast.LENGTH_LONG).show()
-            TextUtils.isEmpty(username)->Toast.makeText(context,"Username is required",Toast.LENGTH_LONG).show()
-            TextUtils.isEmpty(email)->Toast.makeText(context,"Email is required",Toast.LENGTH_LONG).show()
-            TextUtils.isEmpty(password)->Toast.makeText(context,"Password Name is required",Toast.LENGTH_LONG).show()
+            TextUtils.isEmpty(fullname)->{
+                Toast.makeText(context,"Full Name is required",Toast.LENGTH_LONG).show()
+            }
+            TextUtils.isEmpty(username)->{
+                Toast.makeText(context,"Username is required",Toast.LENGTH_LONG).show()
+            }
+            TextUtils.isEmpty(email)->{
+                Toast.makeText(context,"Email is required",Toast.LENGTH_LONG).show()
+            }
+            TextUtils.isEmpty(password)->{
+                Toast.makeText(context,"Password Name is required",Toast.LENGTH_LONG).show()
+            }
 
             else->{
+                progressDialog = ProgressDialog(context)
+                progressDialog?.setTitle("Sign Up")
+                progressDialog?.setMessage("Please wait,this may take a while...")
+                progressDialog?.setCanceledOnTouchOutside(false)
+                progressDialog?.show()
+
                 val userAuth : FirebaseAuth = FirebaseAuth.getInstance()
                 userAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener{ task->
                     if(task.isSuccessful)
@@ -89,8 +105,10 @@ class SignUpFragment : Fragment() {
                         val message = task.exception!!.toString()
                         Toast.makeText(context,"Error : $message",Toast.LENGTH_LONG).show()
                         userAuth.signOut()
+                        progressDialog?.dismiss()
                     }
                 }
+
             }
         }
     }
@@ -98,7 +116,6 @@ class SignUpFragment : Fragment() {
     private fun saveUserIntoFirebase(fullname: String, username: String, email: String, password: String) {
         val currentUserID = FirebaseAuth.getInstance().currentUser!!.uid
         val usersRef : DatabaseReference = FirebaseDatabase.getInstance().reference.child("Users")
-
         val userMap = HashMap<String,Any>()
         userMap["uid"] = currentUserID
         userMap["fullname"] = fullname
@@ -114,19 +131,20 @@ class SignUpFragment : Fragment() {
                 FirebaseDatabase.getInstance().reference.child("Follow").child(currentUserID)
                     .child("Following").child(currentUserID).setValue(true)
 
-
                 Toast.makeText(context,"Account has been created successfully.",Toast.LENGTH_LONG).show()
                 val newFragment : Fragment = SignInFragment()
                 val transaction : FragmentTransaction = requireFragmentManager().beginTransaction()
                 transaction.replace(R.id.frame_layout_activity_login,newFragment)
                 transaction.addToBackStack(null)
                 transaction.commit()
+                progressDialog?.dismiss()
             }
             else
             {
                 val message = task.exception!!.toString()
                 Toast.makeText(context,"Error : $message",Toast.LENGTH_LONG).show()
                 FirebaseAuth.getInstance().signOut()
+                progressDialog?.dismiss()
             }
         }
     }

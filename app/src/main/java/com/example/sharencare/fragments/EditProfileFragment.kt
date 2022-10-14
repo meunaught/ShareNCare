@@ -1,9 +1,11 @@
 package com.example.sharencare.fragments
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
@@ -12,9 +14,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.google.android.gms.tasks.Continuation
@@ -27,7 +32,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
-import com.squareup.picasso.Picasso
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -56,6 +60,7 @@ class editProfileFragment : Fragment() {
     private lateinit var new_fullname_editText_edit_profile_fragment : EditText
     private lateinit var new_username_editText_edit_profile_fragment : EditText
     private lateinit var new_bio_editText_edit_profile_fragment : EditText
+    private var progressDialog : ProgressDialog ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,12 +102,23 @@ class editProfileFragment : Fragment() {
                 TextUtils.isEmpty(username)-> Toast.makeText(context,"Username is required", Toast.LENGTH_LONG).show()
                 TextUtils.isEmpty(bio)-> Toast.makeText(context,"Email is required", Toast.LENGTH_LONG).show()
                 (!checker)->{
+                    progressDialog = ProgressDialog(context)
+                    progressDialog?.setTitle("Updating Account")
+                    progressDialog?.setMessage("Please wait,this may take a while...")
+                    progressDialog?.setCanceledOnTouchOutside(false)
+                    progressDialog?.show()
                     updateUserIntoFirebase(fullname,username,bio)
                 }
                 (imageUri == null) -> Toast.makeText(context,"Please select an image", Toast.LENGTH_LONG).show()
                 else->{
-                    Log.d("myTag", "inside else of update btn edit profile");
+
+                    progressDialog = ProgressDialog(context)
+                    progressDialog?.setTitle("Updating Account")
+                    progressDialog?.setMessage("Please wait,this may take a while...")
+                    progressDialog?.setCanceledOnTouchOutside(false)
+                    progressDialog?.show()
                     uploadImageIntoFirebase(fullname,username,bio)
+
                 }
             }
         }
@@ -126,7 +142,6 @@ class editProfileFragment : Fragment() {
             {
                 val downloadUrl = task.result
                 imageUrl = downloadUrl.toString()
-                Toast.makeText(context,"task completed", Toast.LENGTH_LONG).show()
                 updateUserIntoFirebase(fullname,username,bio)
             }
             else
@@ -135,8 +150,6 @@ class editProfileFragment : Fragment() {
             }
         } )
     }
-
-
 
     private fun updateUserIntoFirebase(fullname: String, username: String,bio:String) {
         val currentUserID = firebaseUser.uid
@@ -164,6 +177,7 @@ class editProfileFragment : Fragment() {
                 Toast.makeText(context,"Error : $message",Toast.LENGTH_LONG).show()
             }
         }
+        progressDialog?.dismiss()
     }
 
     private fun userInfo()
@@ -174,7 +188,10 @@ class editProfileFragment : Fragment() {
                 if(snapshot.exists())
                 {
                     val user = snapshot.getValue<User>(User :: class.java)
-                    Picasso.get().load(user?.getImage()).into(image_btn_edit_profile_fragment)
+                    Glide.with(context!!).load(user?.getImage()).fitCenter().diskCacheStrategy(
+                        DiskCacheStrategy.ALL)
+                        .error(R.drawable.profile)
+                        .dontTransform().into(image_btn_edit_profile_fragment)
                     new_username_editText_edit_profile_fragment.setText(user?.getUsername())
                     new_fullname_editText_edit_profile_fragment.setText(user?.getFullname())
                     new_bio_editText_edit_profile_fragment.setText(user?.getBio())

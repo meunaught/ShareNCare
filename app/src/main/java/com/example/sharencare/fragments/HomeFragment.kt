@@ -1,5 +1,6 @@
 package com.example.sharencare.fragments
 
+import android.app.ProgressDialog;
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
@@ -14,9 +15,11 @@ import android.widget.ImageButton
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sharencare.ChatListActivity
+import com.example.sharencare.Model.MyDiffCallBack
 import com.example.sharencare.Model.Post
 import com.example.sharencare.R
 import com.example.sharencare.adapter.PostAdapter
@@ -49,6 +52,8 @@ class HomeFragment : Fragment() {
     private var followingList : MutableList<Post>?= null
     private var firebaseUser : FirebaseUser ?= null
 
+    private var progressDialog : ProgressDialog ?= null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -74,7 +79,9 @@ class HomeFragment : Fragment() {
 
         postList = ArrayList()
         postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>) }
+        postAdapter?.setHasStableIds(true)
         recyclerView.adapter = postAdapter
+        recyclerView.setItemViewCacheSize(25)
 
         checkFollowings()
 
@@ -98,6 +105,7 @@ class HomeFragment : Fragment() {
                     for(temp_snapshot in snapshot.children){
                         temp_snapshot.key?.let{(followingList as ArrayList<String>).add(it)}
                     }
+                    System.out.println("Retrieve Posts called")
                     retrievePosts()
                 }
             }
@@ -113,16 +121,21 @@ class HomeFragment : Fragment() {
         val postsRef = FirebaseDatabase.getInstance().reference.child("Posts")
         postsRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                postList?.clear()
+                var newList : MutableList<Post>? = null
+                newList = ArrayList()
                 for(temp_snapshot in snapshot.children){
                     val post = temp_snapshot.getValue(Post :: class.java)
                     for(id in (followingList as ArrayList<*>)){
                         if(id == post?.getPublisher())
                         {
-                            postList?.add(post!!)
+                            newList.add(post!!)
                         }
                     }
-                    postAdapter?.notifyDataSetChanged()
+                    val oldList = postAdapter?.getItems()
+                    val result = oldList?.let { MyDiffCallBack(it, newList) }
+                        ?.let { DiffUtil.calculateDiff(it) }
+                    postAdapter?.setItems(newList)
+                    postAdapter?.let { result?.dispatchUpdatesTo(it) }
                 }
             }
 
@@ -130,6 +143,7 @@ class HomeFragment : Fragment() {
                 TODO("Not yet implemented")
             }
         })
+
     }
 
     companion object {

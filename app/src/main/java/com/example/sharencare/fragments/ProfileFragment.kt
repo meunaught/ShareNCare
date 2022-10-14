@@ -13,9 +13,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.sharencare.EditProfileActivity
+import com.example.sharencare.Model.MyDiffCallBack
 import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
@@ -93,7 +97,9 @@ class ProfileFragment : Fragment() {
         recyclerView.layoutManager =linearLayoutManager
         postList = ArrayList()
         postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>) }
+        postAdapter?.setHasStableIds(true)
         recyclerView.adapter = postAdapter
+        recyclerView.setItemViewCacheSize(25)
 
 
         val preferences = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
@@ -175,15 +181,20 @@ class ProfileFragment : Fragment() {
         val postsRef = FirebaseDatabase.getInstance().reference.child("Posts")
         postsRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                postList?.clear()
+                var newList : MutableList<Post>? = null
+                newList = ArrayList()
                 for(temp_snapshot in snapshot.children){
                     val post = temp_snapshot.getValue(Post :: class.java)
                     val id = profileId
                         if(id == post?.getPublisher()) {
-                            postList?.add(post!!)
+                            newList.add(post)
                         }
-                    postAdapter?.notifyDataSetChanged()
                 }
+                val oldList = postAdapter?.getItems()
+                val result = oldList?.let { MyDiffCallBack(it, newList) }
+                    ?.let { DiffUtil.calculateDiff(it) }
+                postAdapter?.setItems(newList)
+                postAdapter?.let { result?.dispatchUpdatesTo(it) }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -278,7 +289,10 @@ class ProfileFragment : Fragment() {
                         val storageRef : StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(user.getImage())
                         storageRef.downloadUrl.addOnSuccessListener ( object : OnSuccessListener<Uri> {
                             override fun onSuccess(p0: Uri?) {
-                                Picasso.get().load(user.getImage()).into(profile_picture_profile_fragment)
+                                Glide.with(context!!).load(user.getImage()).fitCenter().diskCacheStrategy(
+                                    DiskCacheStrategy.ALL)
+                                    .error(R.drawable.profile)
+                                    .dontTransform().into(profile_picture_profile_fragment)
                             }
                         }).addOnFailureListener(object : OnFailureListener{
                             override fun onFailure(p0: Exception) {

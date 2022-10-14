@@ -64,7 +64,9 @@ class SearchFragment : Fragment() {
 
         mUser = ArrayList()
         userAdapter = context?.let { UserAdapter(it,mUser as ArrayList<User>,true) }
+        userAdapter?.setHasStableIds(true)
         recyclerview?.adapter = userAdapter
+        recyclerview?.setItemViewCacheSize(15)
         retriveUsers()
 
         search_editText_search_fragment.addTextChangedListener(object : TextWatcher

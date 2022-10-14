@@ -13,6 +13,8 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.example.sharencare.fragments.ProfileFragment
@@ -39,12 +41,19 @@ class UserAdapter(private var mContext : Context,
         return mUser.size
     }
 
+    override fun getItemId(position: Int): Long {
+        return mUser[position].getUid().hashCode().toLong()
+    }
+
     @SuppressLint("CommitPrefEdits")
     override fun onBindViewHolder(holder: UserAdapter.ViewHolder, position: Int) {
         val user = mUser[position]
         holder.usernameTextView.text = user.getUsername()
         holder.fullnameTextView.text = user.getFullname()
-        Picasso.get().load(user.getImage()).into(holder.profileImage)
+        Glide.with(mContext).load(user.getImage()).fitCenter().diskCacheStrategy(
+            DiskCacheStrategy.ALL)
+            .error(R.drawable.profile)
+            .dontTransform().into(holder.profileImage)
         checkFollowingStatus(user.getUid(),holder.followButton)
 
         holder.itemView.setOnClickListener {

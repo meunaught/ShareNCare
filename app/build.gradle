@@ -57,4 +57,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:20.0.6'
     implementation 'com.google.firebase:firebase-storage:20.0.2'
     implementation platform('com.google.firebase:firebase-bom:30.3.2')
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
+    def lifecycle_ver = "2.2.0-alpha01"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_ver"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ver"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_ver"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
+
 }

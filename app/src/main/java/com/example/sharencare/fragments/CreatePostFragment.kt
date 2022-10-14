@@ -1,5 +1,6 @@
 package com.example.sharencare.fragments
 
+import android.app.ProgressDialog
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
@@ -48,6 +49,7 @@ class CreatePostFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private var progressDialog : ProgressDialog ?= null
     private val pickImage = 100
     private val pickPdfDocument = 1
     private var imageUri: Uri? = null
@@ -106,9 +108,15 @@ class CreatePostFragment : Fragment() {
 
         post_btn_create_post_fragment.setOnClickListener {
             val description = editText_create_post_fragment.text
+            progressDialog = ProgressDialog(context)
+            progressDialog?.setTitle("Creating Post")
+            progressDialog?.setMessage("Please wait,this may take a while...")
+            progressDialog?.setCanceledOnTouchOutside(false)
+            progressDialog?.show()
             when{
                 (description.isEmpty() && pdfUri == null && imageUri == null)->{
                     Toast.makeText(context,"Please add something for the post",Toast.LENGTH_LONG).show()
+                    progressDialog?.dismiss()
                 }
                 (imageUri == null && pdfUri == null)->{
                     timeStamp = System.currentTimeMillis().toString()
@@ -139,6 +147,7 @@ class CreatePostFragment : Fragment() {
         uploadTask.continueWithTask<Uri?>(Continuation <UploadTask.TaskSnapshot, Task<Uri>>{ task ->
             if(!task.isSuccessful)
             {
+                progressDialog?.dismiss()
                 task.exception?.let {
                     throw it
                 }
@@ -149,7 +158,7 @@ class CreatePostFragment : Fragment() {
             {
                 val downloadUrl = task.result
                 imageUrl = downloadUrl.toString()
-                Toast.makeText(context,"Image has been uploaded successfully", Toast.LENGTH_LONG).show()
+                //Toast.makeText(context,"Image has been uploaded successfully", Toast.LENGTH_LONG).show()
                 if(reference == true)
                 {
                     uploadPdfIntoFirebase();
@@ -160,6 +169,7 @@ class CreatePostFragment : Fragment() {
             }
             else
             {
+                progressDialog?.dismiss()
                 Toast.makeText(context,"task not completed", Toast.LENGTH_LONG).show()
             }
         } )
@@ -172,6 +182,7 @@ class CreatePostFragment : Fragment() {
         uploadTask.continueWithTask<Uri?>(Continuation <UploadTask.TaskSnapshot, Task<Uri>>{ task ->
             if(!task.isSuccessful)
             {
+                progressDialog?.dismiss()
                 task.exception?.let {
                     throw it
                 }
@@ -182,11 +193,12 @@ class CreatePostFragment : Fragment() {
             {
                 val downloadUrl = task.result
                 pdfUrl = downloadUrl.toString()
-                Toast.makeText(context,"Pdf has been uploaded successfully", Toast.LENGTH_LONG).show()
+                //Toast.makeText(context,"Pdf has been uploaded successfully", Toast.LENGTH_LONG).show()
                 createPostIntoFirebase()
             }
             else
             {
+                progressDialog?.dismiss()
                 Toast.makeText(context,"task not completed", Toast.LENGTH_LONG).show()
             }
         } )
@@ -208,10 +220,12 @@ class CreatePostFragment : Fragment() {
         usersRef.child(timeStamp).updateChildren(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
+                progressDialog?.dismiss()
                 Toast.makeText(context,"Post has been created successfully.",Toast.LENGTH_LONG).show()
             }
             else
             {
+                progressDialog?.dismiss()
                 val message = task.exception!!.toString()
                 Toast.makeText(context,"Error : $message",Toast.LENGTH_LONG).show()
             }

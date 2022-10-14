@@ -1,5 +1,6 @@
 package com.example.sharencare.fragments
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -32,6 +33,7 @@ class SignInFragment : Fragment() {
     private lateinit var signIn_btn_sign_in_fragment :AppCompatButton
     private lateinit var email_editText_signIn_fragment : EditText
     private lateinit var password_editText_signIn_fragment : EditText
+    private var progressDialog : ProgressDialog ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,15 +71,22 @@ class SignInFragment : Fragment() {
                     Toast.LENGTH_LONG).show()
 
                 else->{
+                    progressDialog = ProgressDialog(context)
+                    progressDialog?.setTitle("Signing In ")
+                    progressDialog?.setMessage("Please wait,this may take a while...")
+                    progressDialog?.setCanceledOnTouchOutside(false)
+                    progressDialog?.show()
                     val userAuth : FirebaseAuth = FirebaseAuth.getInstance()
                     userAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener{ task->
                         if(task.isSuccessful)
                         {
+                            progressDialog?.dismiss()
                             startActivity(Intent(context,MainActivity::class.java))
                             this.activity?.finish()
                         }
                         else
                         {
+                            progressDialog?.dismiss()
                             val message = task.exception!!.toString()
                             Toast.makeText(context,"Error : $message", Toast.LENGTH_LONG).show()
                             userAuth.signOut()

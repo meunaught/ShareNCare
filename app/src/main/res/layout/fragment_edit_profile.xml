@@ -7,6 +7,18 @@
     android:orientation="vertical"
     android:weightSum="22"
     >
+    <ProgressBar
+        android:id="@+id/progressBar_edit_profile_fragment"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:max="100"
+        android:minHeight="10dp"
+        android:minWidth="200dp"
+        android:progress="1"
+        android:visibility="invisible"
+        />
 
     <ImageButton
         android:id="@+id/image_btn_edit_profile_fragment"

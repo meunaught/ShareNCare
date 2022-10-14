@@ -7,6 +7,8 @@ class Post {
     private var postPdf : String = ""
     private var publisher : String = ""
     private var postPdfName : String = ""
+    private var publisherUsername : String = ""
+    private var publisherImage : String  = ""
 
     constructor()
 
@@ -17,6 +19,22 @@ class Post {
         this.postPdf = postPdf
         this.postPdfName = postPdfName
         this.publisher = publisher
+    }
+
+    fun getPublisherUsername() : String{
+        return this.publisherUsername
+    }
+
+    fun setPublisherUsername(publisherUsername : String){
+        this.publisherUsername = publisherUsername
+    }
+
+    fun getPublisherImage() : String{
+        return this.publisherImage
+    }
+
+    fun setPublisherImage(publisherImage : String){
+        this.publisherImage = publisherImage
     }
 
     fun getPostID() : String{
