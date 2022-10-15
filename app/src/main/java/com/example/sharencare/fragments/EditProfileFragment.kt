@@ -189,7 +189,15 @@ class editProfileFragment : Fragment() {
                 if(snapshot.exists())
                 {
                     val user = snapshot.getValue<User>(User :: class.java)
-                    Picasso.get().load(user?.getImage()).into(image_btn_edit_profile_fragment)
+                    if (user != null) {
+                        context?.let {
+                            Glide.with(it).load(user.getImage()).fitCenter().diskCacheStrategy(
+                                DiskCacheStrategy.ALL)
+                                .error(R.drawable.profile)
+                                .dontTransform().into(image_btn_edit_profile_fragment)
+                        }
+                    }
+                    //Picasso.get().load(user?.getImage()).into(image_btn_edit_profile_fragment)
                     new_username_editText_edit_profile_fragment.setText(user?.getUsername())
                     new_fullname_editText_edit_profile_fragment.setText(user?.getFullname())
                     new_bio_editText_edit_profile_fragment.setText(user?.getBio())

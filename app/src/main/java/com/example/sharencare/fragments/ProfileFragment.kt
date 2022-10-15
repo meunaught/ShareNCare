@@ -289,7 +289,13 @@ class ProfileFragment : Fragment() {
                         val storageRef : StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(user.getImage())
                         storageRef.downloadUrl.addOnSuccessListener ( object : OnSuccessListener<Uri> {
                             override fun onSuccess(p0: Uri?) {
-                                Picasso.get().load(user.getImage()).into(profile_picture_profile_fragment)
+                                context?.let {
+                                    Glide.with(it).load(user.getImage()).fitCenter().diskCacheStrategy(
+                                        DiskCacheStrategy.ALL)
+                                        .error(R.drawable.profile)
+                                        .dontTransform().into(profile_picture_profile_fragment)
+                                }
+                                //Picasso.get().load(user.getImage()).into(profile_picture_profile_fragment)
                             }
                         }).addOnFailureListener(object : OnFailureListener{
                             override fun onFailure(p0: Exception) {

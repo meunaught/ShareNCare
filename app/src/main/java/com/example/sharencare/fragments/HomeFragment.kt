@@ -84,7 +84,6 @@ class HomeFragment : Fragment() {
         recyclerView.setItemViewCacheSize(25)
 
         checkFollowings()
-
         message_btn_home_fragment = view.findViewById(R.id.message_btn_home_fragment)
         message_btn_home_fragment.setOnClickListener{
             startActivity(Intent(context,ChatListActivity::class.java))
@@ -121,6 +120,7 @@ class HomeFragment : Fragment() {
         val postsRef = FirebaseDatabase.getInstance().reference.child("Posts")
         postsRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+                postList?.clear()
                 var newList : MutableList<Post>? = null
                 newList = ArrayList()
                 for(temp_snapshot in snapshot.children){
@@ -128,14 +128,10 @@ class HomeFragment : Fragment() {
                     for(id in (followingList as ArrayList<*>)){
                         if(id == post?.getPublisher())
                         {
-                            newList.add(post!!)
+                            postList?.add(post!!)
                         }
                     }
-                    val oldList = postAdapter?.getItems()
-                    val result = oldList?.let { MyDiffCallBack(it, newList) }
-                        ?.let { DiffUtil.calculateDiff(it) }
-                    postAdapter?.setItems(newList)
-                    postAdapter?.let { result?.dispatchUpdatesTo(it) }
+                    postAdapter?.notifyDataSetChanged()
                 }
             }
 
