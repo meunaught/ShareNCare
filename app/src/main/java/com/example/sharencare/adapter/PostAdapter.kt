@@ -334,9 +334,9 @@ class PostAdapter(private var mContext : Context,
                 if(snapshot.exists())
                 {
                     val user = snapshot.getValue<User>(User :: class.java)
-                    mContext.let { Glide.with(it).load(user?.getImage()).fitCenter().diskCacheStrategy(
+                    Glide.with(mContext.applicationContext).load(user?.getImage()).fitCenter().diskCacheStrategy(
                         DiskCacheStrategy.ALL)
-                        .dontTransform().into(profileImage) }
+                        .dontTransform().into(profileImage)
                     username.text = user?.getUsername()
                 }
             }
