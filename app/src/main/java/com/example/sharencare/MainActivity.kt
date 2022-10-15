@@ -1,9 +1,15 @@
 package com.example.sharencare
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.cometchat.pro.core.AppSettings
+import com.cometchat.pro.core.CometChat
+import com.cometchat.pro.exceptions.CometChatException
+import com.example.sharencare.constants.AppConfig
 import com.example.sharencare.fragments.*
 
 class MainActivity : AppCompatActivity() {
@@ -46,7 +52,10 @@ class MainActivity : AppCompatActivity() {
         val navView : BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
+
+
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout_activity_main,HomeFragment()).commit()
 
     }
+
 }

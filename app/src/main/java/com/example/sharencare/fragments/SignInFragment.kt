@@ -1,9 +1,11 @@
 package com.example.sharencare.fragments
 
 import android.app.ProgressDialog
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +13,13 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import com.cometchat.pro.core.AppSettings
+import com.cometchat.pro.core.CometChat
+import com.cometchat.pro.exceptions.CometChatException
+import com.cometchat.pro.models.User
 import com.example.sharencare.MainActivity
 import com.example.sharencare.R
+import com.example.sharencare.constants.AppConfig
 import com.google.firebase.auth.FirebaseAuth
 
 // TODO: Rename parameter arguments, choose names that match
@@ -80,6 +87,8 @@ class SignInFragment : Fragment() {
                     userAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener{ task->
                         if(task.isSuccessful)
                         {
+                            val uid = "SUPERHERO1"
+                            loginComet(uid)
                             progressDialog?.dismiss()
                             startActivity(Intent(context,MainActivity::class.java))
                             this.activity?.finish()
@@ -97,6 +106,20 @@ class SignInFragment : Fragment() {
         }
 
         return view
+    }
+
+
+    private fun loginComet(uid: String) {
+        val AUTH_KEY = AppConfig.AppDetails.AUTH_KEY // Replace with your App Auth Key
+        CometChat.login(uid, AUTH_KEY, object : CometChat.CallbackListener<User?>() {
+            override fun onSuccess(user: User?) {
+                Log.d(ContentValues.TAG, "Login Successful : "+user.toString())
+            }
+
+            override fun onError(e: CometChatException) {
+                Log.d(ContentValues.TAG, "Login failed with exception: " + e.message);
+            }
+        })
     }
 
     companion object {

@@ -1,9 +1,15 @@
 package com.example.sharencare
 
+import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.AppCompatButton
+import com.cometchat.pro.core.AppSettings
+import com.cometchat.pro.core.CometChat
+import com.cometchat.pro.exceptions.CometChatException
+import com.example.sharencare.constants.AppConfig
 import com.example.sharencare.fragments.SignInFragment
 import com.example.sharencare.fragments.SignUpFragment
 
@@ -15,6 +21,8 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initComet()
+
         setContentView(R.layout.activity_login)
 
         signIn_btn_activity_login = findViewById(R.id.signIn_btn_activity_login)
@@ -42,5 +50,24 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun initComet() {
+        val appID = AppConfig.AppDetails.APP_ID
+        val region = AppConfig.AppDetails.REGION
+        val appSettings =
+            AppSettings.AppSettingsBuilder().subscribePresenceForAllUsers().setRegion(region)
+                .build()
+
+        CometChat.init(this, appID, appSettings, object : CometChat.CallbackListener<String>() {
+            override fun onSuccess(successMessage: String) {
+                Log.d(ContentValues.TAG, "Comet Initialization completed successfully")
+            }
+
+            override fun onError(e: CometChatException) {
+                Log.d(ContentValues.TAG, "Comet Initialization failed with exception: " + e.message)
+            }
+        })
+    }
+
 
 }

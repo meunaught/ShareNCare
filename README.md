@@ -1,2 +1,0 @@
-# ShareNCare
-Share and care!
