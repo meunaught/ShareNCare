@@ -32,6 +32,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
+import com.squareup.picasso.Picasso
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -188,10 +189,7 @@ class editProfileFragment : Fragment() {
                 if(snapshot.exists())
                 {
                     val user = snapshot.getValue<User>(User :: class.java)
-                    Glide.with(context!!).load(user?.getImage()).fitCenter().diskCacheStrategy(
-                        DiskCacheStrategy.ALL)
-                        .error(R.drawable.profile)
-                        .dontTransform().into(image_btn_edit_profile_fragment)
+                    Picasso.get().load(user?.getImage()).into(image_btn_edit_profile_fragment)
                     new_username_editText_edit_profile_fragment.setText(user?.getUsername())
                     new_fullname_editText_edit_profile_fragment.setText(user?.getFullname())
                     new_bio_editText_edit_profile_fragment.setText(user?.getBio())
