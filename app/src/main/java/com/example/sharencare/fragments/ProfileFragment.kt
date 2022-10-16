@@ -3,16 +3,20 @@ package com.example.sharencare.fragments
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -62,9 +66,11 @@ class ProfileFragment : Fragment() {
     private lateinit var fullName_textView_profile_fragment : TextView
     private lateinit var bio_textView_profile_fragment : TextView
     private lateinit var profile_picture_profile_fragment : ImageView
+    private lateinit var scrollView : NestedScrollView
 
     private var postAdapter : PostAdapter?= null
     private var postList : MutableList<Post> ?= null
+    private var recyclerView : RecyclerView?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,18 +94,19 @@ class ProfileFragment : Fragment() {
         fullName_textView_profile_fragment = view.findViewById(R.id.fullName_textView_profile_fragment)
         bio_textView_profile_fragment = view.findViewById(R.id.bio_textView_profile_fragment)
         profile_picture_profile_fragment = view.findViewById(R.id.profile_picture_profile_fragment)
+        scrollView = view.findViewById(R.id.scrollView_profile_fragment)
 
-        var recyclerView : RecyclerView?= null
         recyclerView = view.findViewById(R.id.recycler_view_profile_fragment)
         val linearLayoutManager = LinearLayoutManager(context)
+
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
-        recyclerView.layoutManager =linearLayoutManager
+        recyclerView?.layoutManager =linearLayoutManager
         postList = ArrayList()
         postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>) }
         postAdapter?.setHasStableIds(true)
-        recyclerView.adapter = postAdapter
-        recyclerView.setItemViewCacheSize(25)
+        recyclerView?.adapter = postAdapter
+        recyclerView?.setItemViewCacheSize(25)
 
 
         val preferences = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
@@ -115,11 +122,13 @@ class ProfileFragment : Fragment() {
         if(profileId == firebaseUser.uid)
         {
             editProfile_btn_profile_fragment.text = "Edit Profile"
+            recyclerView?.suppressLayout(false)
         }
         else if(profileId == "Logout Has Been Done")
         {
             editProfile_btn_profile_fragment.text = "Edit Profile"
             profileId = firebaseUser.uid
+            recyclerView?.suppressLayout(false)
         }
         else if(profileId != firebaseUser.uid)
         {
@@ -133,6 +142,10 @@ class ProfileFragment : Fragment() {
                     startActivity(Intent(context,EditProfileActivity::class.java))
                 }
                 edit_follow_btn.lowercase()=="follow"->{
+                    recyclerView?.suppressLayout(false)
+                    scrollView.isNestedScrollingEnabled = true
+                    recyclerView?.isNestedScrollingEnabled = true
+
                     firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(it1.toString())
@@ -151,6 +164,10 @@ class ProfileFragment : Fragment() {
                     }
                 }
                 edit_follow_btn.lowercase()=="following"->{
+                    recyclerView?.suppressLayout(true)
+                    scrollView.isNestedScrollingEnabled = false
+                    recyclerView?.isNestedScrollingEnabled = false
+
                     firebaseUser = FirebaseAuth.getInstance().currentUser!!
                     firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
@@ -186,9 +203,9 @@ class ProfileFragment : Fragment() {
                 for(temp_snapshot in snapshot.children){
                     val post = temp_snapshot.getValue(Post :: class.java)
                     val id = profileId
-                        if(id == post?.getPublisher()) {
-                            newList.add(post)
-                        }
+                    if(id == post?.getPublisher()) {
+                        newList.add(post)
+                    }
                 }
                 val oldList = postAdapter?.getItems()
                 val result = oldList?.let { MyDiffCallBack(it, newList) }
@@ -209,14 +226,23 @@ class ProfileFragment : Fragment() {
         }
 
         followRef.addValueEventListener(object : ValueEventListener{
+            @RequiresApi(Build.VERSION_CODES.Q)
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.child(profileId).exists())
                 {
                     editProfile_btn_profile_fragment.text = "Following"
+                    recyclerView?.visibility = View.VISIBLE
+                    recyclerView?.suppressLayout(false)
+                    scrollView.isNestedScrollingEnabled = true
+                    recyclerView?.isNestedScrollingEnabled = true
                 }
                 else
                 {
                     editProfile_btn_profile_fragment.text = "Follow"
+                    recyclerView?.visibility = View.INVISIBLE
+                    recyclerView?.suppressLayout(true)
+                    scrollView.isNestedScrollingEnabled = false
+                    recyclerView?.isNestedScrollingEnabled = false
                 }
             }
 
@@ -225,12 +251,11 @@ class ProfileFragment : Fragment() {
             }
 
         })
-
     }
 
     private fun getFollowers() {
         val followersRef = FirebaseDatabase.getInstance().reference.child("Follow").child(profileId)
-                .child("Followers")
+            .child("Followers")
 
 
         followersRef.addValueEventListener(object : ValueEventListener {
@@ -249,7 +274,7 @@ class ProfileFragment : Fragment() {
 
     private fun getFollowing() {
         val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(profileId)
-                .child("Following")
+            .child("Following")
 
 
         followingRef.addValueEventListener(object : ValueEventListener {
