@@ -87,7 +87,11 @@ class SignInFragment : Fragment() {
                     userAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener{ task->
                         if(task.isSuccessful)
                         {
-                            val uid = "SUPERHERO1"
+                            val uid = if(email == "4mahadi@gmail.com") {
+                                "4mahadi"
+                            } else {
+                                "ssharara"
+                            }
                             loginComet(uid)
                             progressDialog?.dismiss()
                             startActivity(Intent(context,MainActivity::class.java))

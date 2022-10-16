@@ -1,25 +1,16 @@
 package com.example.sharencare.fragments
 
 import android.app.ProgressDialog;
-import android.app.DownloadManager
-import android.content.Context
-import android.content.Context.DOWNLOAD_SERVICE
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sharencare.ChatListActivity
-import com.example.sharencare.Model.MyDiffCallBack
+import com.cometchat.pro.uikit.ui_components.cometchat_ui.CometChatUI
 import com.example.sharencare.Model.Post
 import com.example.sharencare.R
 import com.example.sharencare.adapter.PostAdapter
@@ -29,6 +20,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -86,7 +78,7 @@ class HomeFragment : Fragment() {
         checkFollowings()
         message_btn_home_fragment = view.findViewById(R.id.message_btn_home_fragment)
         message_btn_home_fragment.setOnClickListener{
-            startActivity(Intent(context,ChatListActivity::class.java))
+            startActivity(Intent(context, CometChatUI::class.java))
         }
 
         return view
