@@ -171,18 +171,14 @@ class ProfileFragment : Fragment() {
                 edit_follow_btn.lowercase() == "edit profile" ->{
                     startActivity(Intent(context,EditProfileActivity::class.java))
                 }
-                edit_follow_btn.lowercase()=="follow"->{
-                    recyclerView?.suppressLayout(false)
-                    scrollView.isNestedScrollingEnabled = true
-                    recyclerView?.isNestedScrollingEnabled = true
-
+                edit_follow_btn.lowercase() == "request sent" ->{
                     firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(it1.toString())
-                            .child("Following").child(profileId).setValue(true).addOnCompleteListener{task->
+                            .child("Sent Requests").child(profileId).removeValue().addOnCompleteListener{task->
                                 if(task.isSuccessful)
                                 {
-                                    editProfile_btn_profile_fragment.text = "Following"
+                                    editProfile_btn_profile_fragment.text = "Follow"
                                 }
                             }
                     }
@@ -190,7 +186,25 @@ class ProfileFragment : Fragment() {
                     firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(profileId)
-                            .child("Followers").child(it1.toString()).setValue(true)
+                            .child("Received Requests").child(it1.toString()).removeValue()
+                    }
+                }
+                edit_follow_btn.lowercase()=="follow"->{
+                    firebaseUser.uid.let { it1 ->
+                        FirebaseDatabase.getInstance().reference.child("Follow")
+                            .child(it1.toString())
+                            .child("Sent Requests").child(profileId).setValue(true).addOnCompleteListener{task->
+                                if(task.isSuccessful)
+                                {
+                                    editProfile_btn_profile_fragment.text = "Request Sent"
+                                }
+                            }
+                    }
+
+                    firebaseUser.uid.let { it1 ->
+                        FirebaseDatabase.getInstance().reference.child("Follow")
+                            .child(profileId)
+                            .child("Received Requests").child(it1.toString()).setValue(true)
                     }
                 }
                 edit_follow_btn.lowercase()=="following"->{
@@ -268,11 +282,34 @@ class ProfileFragment : Fragment() {
                 }
                 else
                 {
-                    editProfile_btn_profile_fragment.text = "Follow"
-                    recyclerView?.visibility = View.INVISIBLE
-                    recyclerView?.suppressLayout(true)
-                    scrollView.isNestedScrollingEnabled = false
-                    recyclerView?.isNestedScrollingEnabled = false
+                    val requestRef = firebaseUser.uid.let {
+                        FirebaseDatabase.getInstance().reference.child("Follow").child(it.toString()).child("Sent Requests")
+                    }
+                    requestRef.addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snapshot2: DataSnapshot) {
+                            if(snapshot2.child(profileId).exists())
+                            {
+                                editProfile_btn_profile_fragment.text = "Request Sent"
+                                recyclerView?.visibility = View.INVISIBLE
+                                recyclerView?.suppressLayout(true)
+                                scrollView.isNestedScrollingEnabled = false
+                                recyclerView?.isNestedScrollingEnabled = false
+                            }
+                            else
+                            {
+                                editProfile_btn_profile_fragment.text = "Follow"
+                                recyclerView?.visibility = View.INVISIBLE
+                                recyclerView?.suppressLayout(true)
+                                scrollView.isNestedScrollingEnabled = false
+                                recyclerView?.isNestedScrollingEnabled = false
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
                 }
             }
 

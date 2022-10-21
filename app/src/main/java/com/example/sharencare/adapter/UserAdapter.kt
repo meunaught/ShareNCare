@@ -67,19 +67,22 @@ class UserAdapter(private var mContext : Context,
 
 
         holder.followButton.setOnClickListener {
+            val currentTime = System.currentTimeMillis()
             if (holder.followButton.text.toString().lowercase() == "follow") {
                 firebaseuser?.uid.let { it1 ->
                     FirebaseDatabase.getInstance().reference.child("Follow").child(it1.toString())
-                        .child("Sent Requests").child(user.getUid()).setValue(true)
+                        .child("Sent Requests").child(user.getUid()).child(currentTime.toString()).setValue(true)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 firebaseuser?.uid.let { it1 ->
                                     FirebaseDatabase.getInstance().reference.child("Follow")
                                         .child(user.getUid()).child("Received Requests")
-                                        .child(it1.toString()).setValue(true)
+                                        .child(it1.toString()).child(currentTime.toString()).setValue(true)
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful)
-                                            { }
+                                            {
+
+                                            }
                                         }
                                 }
                             }

@@ -58,6 +58,12 @@ class Received_RequestsAdapter(private var mContext : Context,
         }
 
         holder.acceptButton.setOnClickListener {
+            if(position == 0 && mUser.size == 1)
+            {
+                System.out.println("Inside if")
+                mUser.clear();
+                this.notifyDataSetChanged()
+            }
             if (holder.acceptButton.text.toString().lowercase() == "accept") {
                 firebaseuser?.uid.let { it1 ->
                     FirebaseDatabase.getInstance().reference.child("Follow").child(it1.toString())
@@ -91,8 +97,7 @@ class Received_RequestsAdapter(private var mContext : Context,
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful)
                                             {
-                                                mUser.removeAt(position)
-                                                this.notifyItemRemoved(position)
+
                                             }
                                         }
                                 }
@@ -103,6 +108,12 @@ class Received_RequestsAdapter(private var mContext : Context,
         }
 
         holder.denyButton.setOnClickListener {
+            if(position == 0 && mUser.size == 1)
+            {
+                System.out.println("Inside if")
+                mUser.clear();
+                this.notifyDataSetChanged()
+            }
             if (holder.denyButton.text.toString().lowercase() == "deny") {
                 firebaseuser?.uid.let { it1 ->
                     FirebaseDatabase.getInstance().reference.child("Follow").child(it1.toString())
@@ -116,8 +127,7 @@ class Received_RequestsAdapter(private var mContext : Context,
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful)
                                             {
-                                                mUser.removeAt(position)
-                                                this.notifyItemRemoved(position)
+
                                             }
                                         }
                                 }

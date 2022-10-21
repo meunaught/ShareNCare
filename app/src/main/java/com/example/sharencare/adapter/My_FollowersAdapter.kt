@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase
 import de.hdodenhof.circleimageview.CircleImageView
 
 class My_FollowersAdapter(private var mContext : Context,
-                  private var mUser : List<User>,
+                  private var mUser : MutableList<User>,
                   private var isFragment : Boolean = false) : RecyclerView.Adapter<My_FollowersAdapter.ViewHolder>()
 {
     private var firebaseuser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -58,6 +58,12 @@ class My_FollowersAdapter(private var mContext : Context,
         }
 
         holder.followButton.setOnClickListener {
+            if(position == 0 && mUser.size == 1)
+            {
+                System.out.println("Inside if")
+                mUser.clear();
+                this.notifyDataSetChanged()
+            }
             if (holder.followButton.text.toString().lowercase() == "remove follower") {
                 firebaseuser?.uid.let { it1 ->
                     FirebaseDatabase.getInstance().reference.child("Follow").child(it1.toString())
@@ -72,29 +78,6 @@ class My_FollowersAdapter(private var mContext : Context,
                                             if (task.isSuccessful)
                                             {
                                                 holder.followButton.text = "Follower Removed"
-                                            }
-                                        }
-                                }
-                            }
-                        }
-                }
-            }
-            else if(holder.followButton.text.toString().lowercase() == "follower removed")
-            {
-                firebaseuser?.uid.let { it1 ->
-                    FirebaseDatabase.getInstance().reference.child("Follow").child(it1.toString())
-                        .child("Followers").child(user.getUid()).setValue(true)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-
-                                firebaseuser?.uid.let { it1 ->
-                                    FirebaseDatabase.getInstance().reference.child("Follow")
-                                        .child(user.getUid()).child("Following")
-                                        .child(it1.toString()).setValue(true)
-                                        .addOnCompleteListener { task ->
-                                            if (task.isSuccessful)
-                                            {
-                                                holder.followButton.text = "Remove Follower"
                                             }
                                         }
                                 }
