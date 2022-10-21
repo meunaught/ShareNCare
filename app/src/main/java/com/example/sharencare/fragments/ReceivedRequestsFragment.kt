@@ -63,7 +63,10 @@ class ReceivedRequestsFragment : Fragment() {
         search_editText_received_requests_fragment = view.findViewById(R.id.search_editText_received_requests_fragment)
         recyclerview = view.findViewById(R.id.recycler_view_received_requests_fragment)
         recyclerview?.setHasFixedSize(true)
-        recyclerview?.layoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        recyclerview?.layoutManager = linearLayoutManager
 
         mUser = ArrayList()
         userAdapter = context?.let { Received_RequestsAdapter(it,mUser as ArrayList<User>,true) }
@@ -209,7 +212,7 @@ class ReceivedRequestsFragment : Fragment() {
     private fun checkRequests() {
         receivedRequestsList = ArrayList()
         val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser.uid)
-            .child("Received Requests")
+            .child("Received Requests").orderByChild("timeStamp")
         followingRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists())
@@ -234,12 +237,13 @@ class ReceivedRequestsFragment : Fragment() {
         userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 sUser.clear()
-                for(temp_snapshot in snapshot.children){
-                    val user = temp_snapshot.getValue(User :: class.java)
-                    for(id in (receivedRequestsList as ArrayList<*>)){
-                        if(id == user?.getUid())
-                        {
+                for(id in (receivedRequestsList as ArrayList<*>))
+                {
+                    for(temp_snapshot in snapshot.children){
+                        val user = temp_snapshot.getValue(User :: class.java)
+                        if(id == user?.getUid()) {
                             sUser.add(user!!)
+                            break;
                         }
                     }
                 }

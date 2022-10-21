@@ -63,7 +63,10 @@ class SentRequests : Fragment() {
         search_editText_sent_requests_fragment = view.findViewById(R.id.search_editText_sent_requests_fragment)
         recyclerview = view.findViewById(R.id.recycler_view_sent_requests_fragment)
         recyclerview?.setHasFixedSize(true)
-        recyclerview?.layoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        recyclerview?.layoutManager = linearLayoutManager
 
         mUser = ArrayList()
         userAdapter = context?.let { Sent_RequestsAdapter(it,mUser as ArrayList<User>,true) }
@@ -209,14 +212,16 @@ class SentRequests : Fragment() {
     private fun checkFollowings() {
         sentRequestsList = ArrayList()
         val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser.uid)
-            .child("Sent Requests")
+            .child("Sent Requests").orderByChild("timeStamp")
         followingRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists())
                 {
                     (sentRequestsList as ArrayList<String>).clear()
                     for(temp_snapshot in snapshot.children){
-                        temp_snapshot.key?.let{(sentRequestsList as ArrayList<String>).add(it)}
+                        temp_snapshot.key?.let{(sentRequestsList as ArrayList<String>).add(it)
+                        System.out.println(it)
+                        }
                     }
                     retrieveUsers()
                 }
@@ -234,12 +239,13 @@ class SentRequests : Fragment() {
         userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 sUser.clear()
-                for(temp_snapshot in snapshot.children){
-                    val user = temp_snapshot.getValue(User :: class.java)
-                    for(id in (sentRequestsList as ArrayList<*>)){
-                        if(id == user?.getUid())
-                        {
+                for(id in (sentRequestsList as ArrayList<*>))
+                {
+                    for(temp_snapshot in snapshot.children){
+                        val user = temp_snapshot.getValue(User :: class.java)
+                        if(id == user?.getUid()) {
                             sUser.add(user!!)
+                            break;
                         }
                     }
                 }

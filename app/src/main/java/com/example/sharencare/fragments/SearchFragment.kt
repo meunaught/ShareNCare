@@ -215,8 +215,7 @@ class SearchFragment : Fragment() {
                         sUser.add(user)
                     }
                 }
-                //userAdapter?.notifyDataSetChanged()
-
+                userAdapter?.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {

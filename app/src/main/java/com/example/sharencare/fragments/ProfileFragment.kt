@@ -190,21 +190,21 @@ class ProfileFragment : Fragment() {
                     }
                 }
                 edit_follow_btn.lowercase()=="follow"->{
+                    val currentTime = System.currentTimeMillis().toString()
                     firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(it1.toString())
-                            .child("Sent Requests").child(profileId).setValue(true).addOnCompleteListener{task->
+                            .child("Sent Requests").child(profileId).child("timeStamp").setValue(currentTime).addOnCompleteListener{task->
                                 if(task.isSuccessful)
                                 {
                                     editProfile_btn_profile_fragment.text = "Request Sent"
                                 }
                             }
                     }
-
                     firebaseUser.uid.let { it1 ->
                         FirebaseDatabase.getInstance().reference.child("Follow")
                             .child(profileId)
-                            .child("Received Requests").child(it1.toString()).setValue(true)
+                            .child("Received Requests").child(it1.toString()).child("timeStamp").setValue(currentTime)
                     }
                 }
                 edit_follow_btn.lowercase()=="following"->{
