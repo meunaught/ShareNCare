@@ -198,6 +198,7 @@ class ProfileFragment : Fragment() {
                                 if(task.isSuccessful)
                                 {
                                     editProfile_btn_profile_fragment.text = "Request Sent"
+                                    saveNotification("3","",profileId)
                                 }
                             }
                     }
@@ -236,6 +237,29 @@ class ProfileFragment : Fragment() {
         retrievePosts()
 
         return view
+    }
+
+    private fun saveNotification(type : String,postID: String,receiver: String) {
+        val currentTime = System.currentTimeMillis().toString()
+
+        val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications")
+
+        val notiMap = HashMap<String,Any>()
+        notiMap["type"] = type
+        notiMap["sender"] = firebaseUser.uid.toString()
+        notiMap["postID"] = postID
+        notiMap["receiver"] = receiver
+
+        notiRef.child(currentTime).updateChildren(notiMap).addOnCompleteListener{ task->
+            if(task.isSuccessful)
+            {
+                System.out.println("Sent Request saved successfully")
+            }
+            else
+            {
+                System.out.println("Sent Request didn't saved ")
+            }
+        }
     }
 
     private fun retrievePosts() {

@@ -81,7 +81,7 @@ class UserAdapter(private var mContext : Context,
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful)
                                             {
-
+                                                saveNotification("3","",user.getUid())
                                             }
                                         }
                                 }
@@ -134,6 +134,30 @@ class UserAdapter(private var mContext : Context,
                             }
                         }
                 }
+            }
+        }
+    }
+
+    private fun saveNotification(type : String,postID: String,receiver: String) {
+        val currentTime = System.currentTimeMillis().toString()
+
+        val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications")
+
+        val notiMap = HashMap<String,Any>()
+        notiMap["type"] = type
+        notiMap["sender"] = firebaseuser?.uid.toString()
+        notiMap["postID"] = postID
+        notiMap["receiver"] = receiver
+        notiMap["seen"] = "false"
+
+        notiRef.child(currentTime).updateChildren(notiMap).addOnCompleteListener{ task->
+            if(task.isSuccessful)
+            {
+                System.out.println("Sent Request saved successfully")
+            }
+            else
+            {
+                System.out.println("Sent Request didn't saved ")
             }
         }
     }

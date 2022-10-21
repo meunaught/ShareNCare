@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
@@ -118,6 +119,7 @@ class PostAdapter(private var mContext : Context,
             else {
                 Picasso.get().load(R.drawable.heart_clicked).fit().centerInside().into(holder.likeBtn)
                 saveLikeIntoFirebase(post.getPostID())
+                saveNotification("1",post.getPostID(),post.getPublisher())
             }
         }
         holder.commentBtn.setOnClickListener {
@@ -172,6 +174,30 @@ class PostAdapter(private var mContext : Context,
         getLike(post.getPostID(),holder)
     }
 
+    private fun saveNotification(type : String,postID: String,publisher: String) {
+        val currentTime = System.currentTimeMillis().toString()
+
+        val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications")
+
+        val notiMap = HashMap<String,Any>()
+        notiMap["type"] = type
+        notiMap["sender"] = firebaseuser?.uid.toString()
+        notiMap["postID"] = postID
+        notiMap["receiver"] = publisher
+        notiMap["seen"] = "false"
+
+        notiRef.child(currentTime).updateChildren(notiMap).addOnCompleteListener{ task->
+            if(task.isSuccessful)
+            {
+                System.out.println("Like saved successfully")
+            }
+            else
+            {
+                System.out.println("Like didn't saved ")
+            }
+        }
+    }
+
     private fun getLike(postID: String,holder: ViewHolder) {
         val likeRef = FirebaseDatabase.getInstance().reference.child("Like").child(postID)
 
@@ -180,7 +206,6 @@ class PostAdapter(private var mContext : Context,
                 if(snapshot.exists())
                 {
                     holder.likeNumber.text = snapshot.childrenCount.toString()
-                    //System.out.println("Observe" + snapshot.childrenCount.toString())
                 }
             }
 

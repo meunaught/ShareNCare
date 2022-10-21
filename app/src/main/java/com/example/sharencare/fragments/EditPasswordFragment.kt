@@ -63,7 +63,6 @@ class EditPasswordFragment : Fragment() {
         newPassword = view.findViewById(R.id.new_password_editText_edit_password_fragment)
         confirmPassword = view.findViewById(R.id.confirm_password_editText_edit_password_fragment)
 
-
         userInfo()
         password_btn_edit_password_fragment.setOnClickListener {
             changePassword()
