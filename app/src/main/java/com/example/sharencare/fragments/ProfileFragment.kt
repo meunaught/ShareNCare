@@ -6,17 +6,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.HorizontalScrollView
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,8 +37,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.squareup.picasso.Picasso
-import java.lang.Exception
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -67,6 +64,7 @@ class ProfileFragment : Fragment() {
     private lateinit var bio_textView_profile_fragment : TextView
     private lateinit var profile_picture_profile_fragment : ImageView
     private lateinit var scrollView : NestedScrollView
+    private lateinit var toolbar: Toolbar
 
     private var postAdapter : PostAdapter?= null
     private var postList : MutableList<Post> ?= null
@@ -78,7 +76,9 @@ class ProfileFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        setHasOptionsMenu(true)
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,6 +95,36 @@ class ProfileFragment : Fragment() {
         bio_textView_profile_fragment = view.findViewById(R.id.bio_textView_profile_fragment)
         profile_picture_profile_fragment = view.findViewById(R.id.profile_picture_profile_fragment)
         scrollView = view.findViewById(R.id.scrollView_profile_fragment)
+        toolbar = view.findViewById(R.id.toolbar_profile_fragment)
+
+        toolbar.inflateMenu(R.menu.options_profile_fragment)
+        toolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.options_followers) {
+                (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                    R.id.frame_layout_activity_main,My_followersFragment()).commit()
+                return@setOnMenuItemClickListener true
+            }
+            else if(item.itemId == R.id.options_following)
+            {
+                (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                    R.id.frame_layout_activity_main,My_FollowingsFragment()).commit()
+                return@setOnMenuItemClickListener true
+            }
+
+            else if(item.itemId == R.id.options_request_sent)
+            {
+                (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                    R.id.frame_layout_activity_main,SentRequests()).commit()
+                return@setOnMenuItemClickListener true
+            }
+            else if(item.itemId == R.id.options_request_receive)
+            {
+                (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                    R.id.frame_layout_activity_main,ReceivedRequestsFragment()).commit()
+                return@setOnMenuItemClickListener true
+            }
+            false
+        }
 
         recyclerView = view.findViewById(R.id.recycler_view_profile_fragment)
         val linearLayoutManager = LinearLayoutManager(context)

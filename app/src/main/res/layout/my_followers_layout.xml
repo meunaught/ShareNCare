@@ -13,7 +13,7 @@
         android:weightSum="4"
         >
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profileImage_user_info_layout"
+            android:id="@+id/profileImage_my_followers_layout"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
@@ -25,27 +25,26 @@
             android:layout_weight="3"
             android:orientation="vertical"
             >
-
             <TextView
-                android:id="@+id/username_textview_user_info_layout"
+                android:id="@+id/username_textview_my_followers_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="username"
                 android:textSize="20sp"
                 />
             <TextView
-                android:id="@+id/fullname_textview_user_info_layout"
+                android:id="@+id/fullname_textview_my_followers_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="fullname"
                 android:textSize="20sp"
                 />
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/follow_btn_user_info_layout"
+                android:id="@+id/follow_btn_my_followers_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/purple_700"
-                android:text="follow"
+                android:text="Remove Follower"
                 android:textColor="@color/white"
                 />
         </LinearLayout>
