@@ -1,18 +1,24 @@
 package com.example.sharencare.fragments
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,6 +38,9 @@ class EditPasswordFragment : Fragment() {
     private lateinit var firebaseUser : FirebaseUser
     private var user : User?=null
     private lateinit var password_btn_edit_password_fragment : AppCompatButton
+    private lateinit var previousPassword : EditText
+    private lateinit var newPassword : EditText
+    private lateinit var confirmPassword : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,13 +59,58 @@ class EditPasswordFragment : Fragment() {
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
         password_btn_edit_password_fragment = view?.findViewById(R.id.password_btn_edit_password_fragment)!!
+        previousPassword = view.findViewById(R.id.previous_password_editText_edit_password_fragment)
+        newPassword = view.findViewById(R.id.new_password_editText_edit_password_fragment)
+        confirmPassword = view.findViewById(R.id.confirm_password_editText_edit_password_fragment)
+
+
         userInfo()
-
         password_btn_edit_password_fragment.setOnClickListener {
-
+            changePassword()
         }
 
         return view
+    }
+
+    private fun changePassword()
+    {
+        when{
+            (previousPassword.text.isEmpty())->{
+                Toast.makeText(context,"Previous password is required",Toast.LENGTH_SHORT).show()
+            }
+            (newPassword.text.isEmpty())->{
+                Toast.makeText(context,"Password is required",Toast.LENGTH_SHORT).show()
+            }
+            (confirmPassword.text.isEmpty())->{
+                Toast.makeText(context,"Confirm password is required",Toast.LENGTH_SHORT).show()
+            }
+            (!newPassword.text.toString().equals(confirmPassword.text.toString()))->{
+                Toast.makeText(context,"Password confirmation doesn't match",Toast.LENGTH_SHORT).show()
+            }
+            else->{
+                val user = FirebaseAuth.getInstance().currentUser!!
+                val credential : AuthCredential = user.email?.let {
+                    EmailAuthProvider
+                        .getCredential(it, previousPassword.text.toString())
+                }!!
+                user.reauthenticate(credential)
+                    .addOnCompleteListener { task->
+                        if(task.isSuccessful)
+                        {
+                            user.updatePassword(newPassword.text.toString())
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        updatePasswordIntoFirebase(newPassword.text.toString())
+                                    }
+                                }
+                        }
+                        else
+                        {
+                            Toast.makeText(context,"Your previous password doesn't match",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+            }
+        }
     }
 
     private fun updatePasswordIntoFirebase(password: String) {
@@ -71,7 +125,6 @@ class EditPasswordFragment : Fragment() {
         usersRef.child(currentUserID).updateChildren(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
-                Log.d("myTag", "inside task succesful")
                 Toast.makeText(context,"Password has been updated successfully.",Toast.LENGTH_LONG).show()
             }
             else
