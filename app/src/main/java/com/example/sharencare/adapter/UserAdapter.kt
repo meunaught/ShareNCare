@@ -54,6 +54,7 @@ class UserAdapter(private var mContext : Context,
             DiskCacheStrategy.ALL)
             .error(R.drawable.profile)
             .dontTransform().into(holder.profileImage)
+
         checkFollowingStatus(user.getUid(),holder.followButton)
 
         holder.itemView.setOnClickListener {

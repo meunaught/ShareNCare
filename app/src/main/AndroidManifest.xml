@@ -19,6 +19,9 @@
         android:theme="@style/Theme.ShareNCare"
         tools:targetApi="31">
         <activity
+            android:name=".CommentActivity"
+            android:exported="false" />
+        <activity
             android:name=".ForgetPasswordActivity"
             android:exported="false" />
         <activity

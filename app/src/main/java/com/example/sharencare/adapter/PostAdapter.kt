@@ -4,6 +4,7 @@ import kotlinx.coroutines.*
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
@@ -17,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
@@ -26,6 +28,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.sharencare.CommentActivity
+import com.example.sharencare.EditProfileActivity
 import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
@@ -123,7 +127,11 @@ class PostAdapter(private var mContext : Context,
             }
         }
         holder.commentBtn.setOnClickListener {
+            val preference = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+            preference.putString("postID",post.getPostID())
+            preference.apply()
 
+            mContext.startActivity(Intent(mContext,CommentActivity::class.java))
         }
 
         holder.postPdf.setOnClickListener {
@@ -383,6 +391,5 @@ class PostAdapter(private var mContext : Context,
         var likeBtn : ImageButton = itemView.findViewById(R.id.post_image_like_btn)
         var commentNumber : TextView = itemView.findViewById(R.id.commentNumberTextView_postLayout)
         var commentBtn : ImageButton = itemView.findViewById(R.id.post_image_comment_btn)
-        var comments : TextView = itemView.findViewById(R.id.comments_postLayout)
     }
 }
