@@ -22,7 +22,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.sharencare.EditProfileActivity
+import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.MyDiffCallBack
+import com.example.sharencare.Model.Notification
 import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
@@ -236,8 +238,50 @@ class ProfileFragment : Fragment() {
 
         retrievePosts()
 
+        badgeSetForNotifications()
+
         return view
     }
+
+    private fun badgeSetForNotifications() {
+        var counter = 0
+        val navView = (activity as MainActivity).navView
+        var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
+
+        val notificationRef = FirebaseDatabase.getInstance().reference.child("Notifications")
+        notificationRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_snapshot in snapshot.children)
+                {
+                    val notification = temp_snapshot.getValue(Notification::class.java)
+                    if((notification?.getReceiver() == firebaseUser.uid)
+                        && notification.getSeen().equals("false")){
+                        counter++
+                        println(counter)
+                    }
+                    else{
+                        println("Same")
+                    }
+                }
+                if(counter >0)
+                {
+                    println("Counter is more than 1")
+                    badge_notifications?.isVisible = true
+                    badge_notifications?.number = counter
+                }
+                else
+                {
+                    badge_notifications?.isVisible = false
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
+    }
+
 
     private fun saveNotification(type : String,postID: String,receiver: String) {
         val currentTime = System.currentTimeMillis().toString()

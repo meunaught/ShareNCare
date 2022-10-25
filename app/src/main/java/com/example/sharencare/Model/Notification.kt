@@ -6,6 +6,15 @@ class Notification {
     private var postID : String = ""
     private var receiver : String = ""
     private var seen : String  = ""
+    private var notificationID : String = ""
+
+    fun getNotificationID(): String{
+        return this.notificationID
+    }
+
+    fun setNotificationID(notificationID: String){
+        this.notificationID = notificationID
+    }
 
     fun getType(): String{
         return this.type

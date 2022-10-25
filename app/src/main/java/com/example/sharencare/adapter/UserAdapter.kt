@@ -150,6 +150,7 @@ class UserAdapter(private var mContext : Context,
         notiMap["postID"] = postID
         notiMap["receiver"] = receiver
         notiMap["seen"] = "false"
+        notiMap["notificationID"] = currentTime
 
         notiRef.child(currentTime).updateChildren(notiMap).addOnCompleteListener{ task->
             if(task.isSuccessful)

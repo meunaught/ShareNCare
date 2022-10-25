@@ -105,6 +105,7 @@ class CommentActivity : AppCompatActivity() {
             if(!comment?.text.toString().isEmpty())
             {
                 saveCommentIntoFirebase()
+                postCreator?.getPublisher()?.let { it1 -> saveNotification("2",postID, it1) }
             }
         }
     }
@@ -168,6 +169,7 @@ class CommentActivity : AppCompatActivity() {
         notiMap["postID"] = postID
         notiMap["receiver"] = publisher
         notiMap["seen"] = "false"
+        notiMap["notificationID"] = currentTime
 
         notiRef.child(currentTime).updateChildren(notiMap).addOnCompleteListener{ task->
             if(task.isSuccessful)

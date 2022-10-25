@@ -1,19 +1,16 @@
 package com.example.sharencare.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.Notification
-import com.example.sharencare.Model.Post
-import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.example.sharencare.adapter.NotificationsAdapter
-import com.example.sharencare.adapter.Received_RequestsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -70,15 +67,23 @@ class NotificationsFragment : Fragment() {
         recyclerview?.adapter = notificationAdapter
         recyclerview?.setItemViewCacheSize(15)
 
-        getNotifications()
+        val navView = (activity as MainActivity).navView
+        var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
+        badge_notifications?.isVisible = false
 
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        getNotifications()
+    }
+
+
     private fun getNotifications() {
         val notificationsRef = FirebaseDatabase.getInstance().reference.child("Notifications")
 
-        notificationsRef.addValueEventListener(object : ValueEventListener{
+        notificationsRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 mNotifications?.clear()
                 for(temp_snapshot in snapshot.children){
@@ -89,6 +94,7 @@ class NotificationsFragment : Fragment() {
                         }
 
                     notificationAdapter?.notifyDataSetChanged()
+                    setSeenNotifications()
                 }
             }
 
@@ -97,6 +103,25 @@ class NotificationsFragment : Fragment() {
             }
 
         })
+    }
+
+
+    private fun setSeenNotifications() {
+        if (mNotifications != null) {
+            for(notification in mNotifications!!)
+            {
+                updateIntoFirebase(notification)
+            }
+        }
+    }
+
+    private fun updateIntoFirebase(notification: Notification) {
+        FirebaseDatabase.getInstance().reference.child("Notifications").child(notification.getNotificationID()).child("seen").setValue("true").addOnCompleteListener{task->
+            if(task.isSuccessful)
+            {
+                System.out.println("Notifications seen")
+            }
+        }
     }
 
     companion object {

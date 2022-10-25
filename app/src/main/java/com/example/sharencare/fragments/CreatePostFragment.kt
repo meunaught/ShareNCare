@@ -21,6 +21,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.example.sharencare.MainActivity
+import com.example.sharencare.Model.Notification
 import com.example.sharencare.R
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -31,8 +33,7 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -137,8 +138,50 @@ class CreatePostFragment : Fragment() {
             }
         }
 
+        badgeSetForNotifications()
+
         return view
     }
+
+    private fun badgeSetForNotifications() {
+        var counter = 0
+        val navView = (activity as MainActivity).navView
+        var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
+
+        val notificationRef = FirebaseDatabase.getInstance().reference.child("Notifications")
+        notificationRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_snapshot in snapshot.children)
+                {
+                    val notification = temp_snapshot.getValue(Notification::class.java)
+                    if((notification?.getReceiver() == firebaseUser.uid)
+                        && notification.getSeen().equals("false")){
+                        counter++
+                        println(counter)
+                    }
+                    else{
+                        println("Same")
+                    }
+                }
+                if(counter >0)
+                {
+                    println("Counter is more than 1")
+                    badge_notifications?.isVisible = true
+                    badge_notifications?.number = counter
+                }
+                else
+                {
+                    badge_notifications?.isVisible = false
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
+    }
+
 
     private fun uploadImageIntoFirebase( reference : Boolean) {
         val fileReference = storageReferenceImage.child(timeStamp + ".jpg")

@@ -185,7 +185,7 @@ class PostAdapter(private var mContext : Context,
     private fun saveNotification(type : String,postID: String,publisher: String) {
         val currentTime = System.currentTimeMillis().toString()
 
-        val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications")
+        val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications").child(currentTime)
 
         val notiMap = HashMap<String,Any>()
         notiMap["type"] = type
@@ -193,8 +193,9 @@ class PostAdapter(private var mContext : Context,
         notiMap["postID"] = postID
         notiMap["receiver"] = publisher
         notiMap["seen"] = "false"
+        notiMap["notificationID"] = currentTime
 
-        notiRef.child(currentTime).updateChildren(notiMap).addOnCompleteListener{ task->
+        notiRef.updateChildren(notiMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
                 System.out.println("Like saved successfully")

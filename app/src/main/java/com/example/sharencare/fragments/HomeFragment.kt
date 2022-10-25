@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cometchat.pro.uikit.ui_components.cometchat_ui.CometChatUI
+import com.example.sharencare.MainActivity
+import com.example.sharencare.Model.Notification
 import com.example.sharencare.Model.Post
 import com.example.sharencare.R
 import com.example.sharencare.adapter.PostAdapter
@@ -20,7 +22,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -81,7 +82,48 @@ class HomeFragment : Fragment() {
             startActivity(Intent(context, CometChatUI::class.java))
         }
 
+        badgeSetForNotifications()
+
         return view
+    }
+
+    private fun badgeSetForNotifications() {
+        var counter = 0
+        val navView = (activity as MainActivity).navView
+        var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
+
+        val notificationRef = FirebaseDatabase.getInstance().reference.child("Notifications")
+        notificationRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_snapshot in snapshot.children)
+                {
+                    val notification = temp_snapshot.getValue(Notification::class.java)
+                    if((notification?.getReceiver() == firebaseUser?.uid)
+                        && notification?.getSeen().equals("false")){
+                       counter++
+                        println(counter)
+                    }
+                    else{
+                        println("Same")
+                    }
+                }
+                if(counter >0)
+                {
+                    println("Counter is more than 1")
+                    badge_notifications?.isVisible = true
+                    badge_notifications?.number = counter
+                }
+                else
+                {
+                    badge_notifications?.isVisible = false
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
     }
 
     private fun checkFollowings() {
