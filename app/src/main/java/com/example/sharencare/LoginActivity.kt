@@ -1,6 +1,7 @@
 package com.example.sharencare
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,7 @@ import androidx.appcompat.widget.AppCompatButton
 import com.cometchat.pro.core.AppSettings
 import com.cometchat.pro.core.CometChat
 import com.cometchat.pro.exceptions.CometChatException
+import com.cometchat.pro.uikit.ui_components.calls.call_manager.listener.CometChatCallListener
 import com.example.sharencare.constants.AppConfig
 import com.example.sharencare.fragments.SignInFragment
 import com.example.sharencare.fragments.SignUpFragment
@@ -67,6 +69,7 @@ class LoginActivity : AppCompatActivity() {
                 Log.d(ContentValues.TAG, "Comet Initialization failed with exception: " + e.message)
             }
         })
+        CometChatCallListener.addCallListener(TAG, this)
     }
 
 

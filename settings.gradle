@@ -9,6 +9,6 @@ dependencyResolutionManagement {
         }
     }
 }
-rootProject.name = "InstagramClone"
+rootProject.name = "ShareNCare"
 include ':app'
 include ':uikit-kotlin'

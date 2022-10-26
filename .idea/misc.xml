@@ -3,20 +3,63 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/drawable/border.xml" value="0.2055" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/drawable/ic_call_outgoing_24dp.xml" value="0.2055" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layout/activity_start_conversation_from_chat.xml" value="0.192481884057971" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layout/activity_user_profile_actiivty.xml" value="0.192481884057971" />
-        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/activity_cometchat_callmanager.xml" value="0.1515625" />
-        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/activity_cometchat_start_call.xml" value="0.1515625" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/activity_cometchat_callmanager.xml" value="0.33" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/activity_cometchat_start_call.xml" value="0.33" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/cometchat_call_history_item.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/fragment_cometchat_all_call.xml" value="0.192481884057971" />
-        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/fragment_cometchat_calls.xml" value="0.192481884057971" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/fragment_cometchat_calls.xml" value="0.33" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/fragment_cometchat_missed_call.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/chats/layout/conversation_shimmer.xml" value="0.192481884057971" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/chats/layout/fragment_conversation_screen.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/cometchat_ui/layout/activity_cometchat_unified.xml" value="0.192481884057971" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/groups/layout/activity_cometchat_ban_members.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/groups/layout/activity_cometchat_group_detail.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/groups/layout/fragment_cometchat_create_group.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/groups/layout/fragment_cometchat_group_list.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messagebubbles/layout/message_left_audio_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messagebubbles/layout/message_left_custom_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messagebubbles/layout/thread_location_message_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messagebubbles/layout/thread_message_audio_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messagebubbles/layout/thread_message_file_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messagebubbles/layout/thread_message_image_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messagebubbles/layout/thread_message_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messagebubbles/layout/thread_message_link_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messagebubbles/layout/thread_message_video_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/activity_cometchat_forward_message.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/activity_cometchat_message_info.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/activity_cometchat_message_list.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/activity_cometchat_reaction_info.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/activity_cometchat_webview.xml" value="0.192481884057971" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/cometchat_messagelist_toolbar.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/fragment_cometchat_message_actions.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/fragment_cometchat_messagelist.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/fragment_cometchat_thread_message.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/messages/layout/messages_shimmer.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/activity_screen.xml" value="0.192481884057971" />
-        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/view_message_box.xml" value="0.192481884057971" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/cc_dialog.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/fragment_stickers_view.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/group_list_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/image_dialog_view.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/poll_option.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/view_message_box.xml" value="0.33" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/shared/layout/cometchat_badge_count.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/shared/layout/cometchat_compose_box.xml" value="0.192481884057971" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/user_profile/layout/activity_cometchat_more_privacy.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/user_profile/layout/fragment_cometchat_user_profile.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/users/layout/activity_cometchat_user_detail.xml" value="0.192481884057971" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/users/layout/cometchat_user_list_item.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/users/layout/cometchat_userlist_header.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/users/layout/fragment_cometchat_block_user.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/users/layout/fragment_cometchat_userlist.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/users/layout/user_shimmer.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/users/layout/user_shimmer_item.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/menu/cometchat_navigation_bottom.xml" value="0.33177083333333335" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/menu/cometchat_reaction_nav.xml" value="0.33177083333333335" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/menu/group_action_menu.xml" value="0.33177083333333335" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/hehe/ShareNCare/app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.2055" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/hehe/ShareNCare/app/src/main/res/drawable/inputs_background.xml" value="0.2055" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/hehe/ShareNCare/app/src/main/res/layout/activity_edit_profile.xml" value="0.17980072463768115" />
