@@ -12,7 +12,6 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,11 +29,9 @@ import com.cometchat.pro.uikit.R
 import com.cometchat.pro.uikit.databinding.ActivityCometchatUnifiedBinding
 import com.cometchat.pro.uikit.ui_components.calls.call_list.CometChatCallList
 import com.cometchat.pro.uikit.ui_components.chats.CometChatConversationList
-import com.cometchat.pro.uikit.ui_components.groups.create_group.CometChatCreateGroupActivity
 import com.cometchat.pro.uikit.ui_components.groups.group_list.CometChatGroupList
 import com.cometchat.pro.uikit.ui_components.messages.message_list.CometChatMessageListActivity
 import com.cometchat.pro.uikit.ui_components.userProfile.CometChatUserProfile
-import com.cometchat.pro.uikit.ui_components.userProfile.UserProfileActivity
 import com.cometchat.pro.uikit.ui_components.users.user_list.CometChatUserList
 import com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants
 import com.cometchat.pro.uikit.ui_resources.utils.ErrorMessagesUtils
@@ -76,12 +73,6 @@ class CometChatUI : AppCompatActivity(), BottomNavigationView.OnNavigationItemSe
     private var progressDialog: ProgressDialog? = null
     private var groupPassword: String? = null
     private var group: Group? = null
-
-    private var loggedInUsername: TextView? = null
-    private var backIcon: ImageView? = null
-    private var createGroup: ImageView? = null
-    private var more: ImageView? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityCometChatUnifiedBinding = DataBindingUtil.setContentView(this, R.layout.activity_cometchat_unified)
@@ -123,7 +114,7 @@ class CometChatUI : AppCompatActivity(), BottomNavigationView.OnNavigationItemSe
                         val tvTitle = dialogview.findViewById<TextView>(R.id.textViewDialogueTitle)
                         tvTitle.text = String.format(resources.getString(R.string.enter_password_to_join), group!!.name)
                         CustomAlertDialogHelper(this@CometChatUI, resources.getString(R.string.password), dialogview, resources.getString(R.string.join),
-                                "", resources.getString(R.string.cancel), this@CometChatUI, 1, false)
+                            "", resources.getString(R.string.cancel), this@CometChatUI, 1, false)
                     } else if (group!!.groupType == CometChatConstants.GROUP_TYPE_PUBLIC) {
                         joinGroup(group)
                     }
@@ -138,18 +129,6 @@ class CometChatUI : AppCompatActivity(), BottomNavigationView.OnNavigationItemSe
                 startUserIntent(t as User)
             }
         })
-
-        backIcon?.setOnClickListener(View.OnClickListener { finish() })
-
-        createGroup?.setOnClickListener(View.OnClickListener {
-            val intent = Intent(this@CometChatUI, CometChatCreateGroupActivity::class.java)
-            startActivity(intent)
-        })
-
-        more?.setOnClickListener(View.OnClickListener {
-            val intent = Intent(this@CometChatUI, UserProfileActivity::class.java)
-            startActivity(intent)
-        })
     }
 
     /**
@@ -159,11 +138,11 @@ class CometChatUI : AppCompatActivity(), BottomNavigationView.OnNavigationItemSe
      */
     private fun initViewComponent() {
         if (!Utils.hasPermissions(this, Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        UIKitConstants.RequestCode.RECORD)
+                    Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    UIKitConstants.RequestCode.RECORD)
             }
         }
 //        badgeDrawable = activityCometChatUnifiedBinding!!.bottomNavigation.getOrCreateBadge(R.id.menu_conversation)
@@ -203,13 +182,13 @@ class CometChatUI : AppCompatActivity(), BottomNavigationView.OnNavigationItemSe
             }
 
         })
-        /* FeatureRestriction.isUserSettingsEnabled(object : FeatureRestriction.OnSuccessListener{
+        FeatureRestriction.isUserSettingsEnabled(object : FeatureRestriction.OnSuccessListener{
             override fun onSuccess(p0: Boolean) {
                 userSettingsEnabled = p0
                 activityCometChatUnifiedBinding?.bottomNavigation?.menu?.findItem(R.id.menu_more)?.isVisible =  p0
             }
 
-        }) */
+        })
 
 
 //        badgeDrawable!!.isVisible = false
@@ -221,14 +200,6 @@ class CometChatUI : AppCompatActivity(), BottomNavigationView.OnNavigationItemSe
             userSettingsEnabled -> loadFragment(CometChatUserProfile())
             userListEnabled -> loadFragment(CometChatUserList())
         }
-
-        val user: User = CometChat.getLoggedInUser()
-        loggedInUsername = findViewById(R.id.loggedIn_userName);
-        loggedInUsername?.text = user.name
-
-        backIcon = findViewById(R.id.backIcon)
-        createGroup = findViewById(R.id.create_group)
-        more = findViewById(R.id.more);
     }
 
     /**
@@ -304,17 +275,17 @@ class CometChatUI : AppCompatActivity(), BottomNavigationView.OnNavigationItemSe
      */
     private fun setUnreadCount(message: BaseMessage) {
 //        if (message.editedAt == 0L && message.deletedAt == 0L) {
-            if (message.receiverType == CometChatConstants.RECEIVER_TYPE_GROUP) {
-                if (!unreadCount.contains(message.receiverUid)) {
-                    unreadCount.add(message.receiverUid)
+        if (message.receiverType == CometChatConstants.RECEIVER_TYPE_GROUP) {
+            if (!unreadCount.contains(message.receiverUid)) {
+                unreadCount.add(message.receiverUid)
 //                    setBadge()
-                }
-            } else {
-                if (!unreadCount.contains(message.sender.uid)) {
-                    unreadCount.add(message.sender.uid)
-//                    setBadge()
-                }
             }
+        } else {
+            if (!unreadCount.contains(message.sender.uid)) {
+                unreadCount.add(message.sender.uid)
+//                    setBadge()
+            }
+        }
 //        }
     }
 
@@ -412,9 +383,9 @@ class CometChatUI : AppCompatActivity(), BottomNavigationView.OnNavigationItemSe
             R.id.menu_conversation -> {
                 fragment = CometChatConversationList()
             }
-            /* R.id.menu_more -> {
+            R.id.menu_more -> {
                 fragment = CometChatUserProfile()
-            } */
+            }
             R.id.menu_call -> {
                 fragment = CometChatCallList()
             }

@@ -2,6 +2,7 @@ package com.cometchat.pro.uikit.ui_components.calls.call_manager
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
@@ -66,6 +67,7 @@ class CometChatCallActivity : AppCompatActivity(), View.OnClickListener {
     private var isOngoing = false
     private var notification: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(ContentValues.TAG, "inside call initview")
         super.onCreate(savedInstanceState)
         callActivity = this
         handleIntent()

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
