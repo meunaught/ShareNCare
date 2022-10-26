@@ -1,8 +1,10 @@
 package com.example.sharencare.fragments
 
-import android.app.ProgressDialog;
+import android.app.ProgressDialog
+import android.content.ContentValues
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +14,12 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.FragmentTransaction
+import com.cometchat.pro.core.CometChat
+import com.cometchat.pro.exceptions.CometChatException
+import com.cometchat.pro.models.User
+import com.example.sharencare.EditProfileActivity
 import com.example.sharencare.R
+import com.example.sharencare.constants.AppConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -99,6 +106,7 @@ class SignUpFragment : Fragment() {
                     if(task.isSuccessful)
                     {
                         saveUserIntoFirebase(fullname,username,email,password)
+                        userAuth.uid?.let { createCometuser(it, fullname) }
                     }
                     else
                     {
@@ -128,6 +136,8 @@ class SignUpFragment : Fragment() {
         usersRef.child(currentUserID).setValue(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
+                FirebaseAuth.getInstance().signOut()
+                cometLogout()
                 FirebaseDatabase.getInstance().reference.child("Follow").child(currentUserID)
                     .child("Following").child(currentUserID).setValue(true)
 
@@ -141,6 +151,7 @@ class SignUpFragment : Fragment() {
                 transaction.addToBackStack(null)
                 transaction.commit()
                 progressDialog?.dismiss()
+
             }
             else
             {
@@ -151,6 +162,36 @@ class SignUpFragment : Fragment() {
             }
         }
     }
+
+    private fun createCometuser (uid : String, name : String) {
+        val AUTH_KEY = AppConfig.AppDetails.AUTH_KEY
+        val user = User()
+        user.uid = uid
+        user.name = name
+        CometChat.createUser(user, AUTH_KEY, object : CometChat.CallbackListener<User>() {
+            override fun onSuccess(user: User) {
+                Log.d("createUser", user.toString())
+            }
+
+            override fun onError(e: CometChatException) {
+                Log.e("createUser", e.message.toString())
+            }
+        })
+    }
+
+    private fun cometLogout() {
+        CometChat.logout(object : CometChat.CallbackListener<String>() {
+            override fun onSuccess(p0: String?) {
+                Log.d(ContentValues.TAG, "Comet Logout Firebase completed successfully")
+            }
+
+            override fun onError(p0: CometChatException?) {
+                Log.d(ContentValues.TAG, "Comet Logout Firebase failed with exception: " + p0?.message)
+            }
+
+        })
+    }
+
 
     companion object {
         /**

@@ -87,12 +87,7 @@ class SignInFragment : Fragment() {
                     userAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener{ task->
                         if(task.isSuccessful)
                         {
-                            val uid = if(email == "4mahadi@gmail.com") {
-                                "4mahadi"
-                            } else {
-                                "ssharara"
-                            }
-                            loginComet(uid)
+                            userAuth.uid?.let { it1 -> loginComet(it1) }
                             progressDialog?.dismiss()
                             startActivity(Intent(context,MainActivity::class.java))
                             this.activity?.finish()
@@ -114,16 +109,22 @@ class SignInFragment : Fragment() {
 
 
     private fun loginComet(uid: String) {
-        val AUTH_KEY = AppConfig.AppDetails.AUTH_KEY // Replace with your App Auth Key
-        CometChat.login(uid, AUTH_KEY, object : CometChat.CallbackListener<User?>() {
-            override fun onSuccess(user: User?) {
-                Log.d(ContentValues.TAG, "Login Successful : "+user.toString())
-            }
+        val AUTH_KEY = AppConfig.AppDetails.AUTH_KEY
+        if (CometChat.getLoggedInUser() == null) {
+            CometChat.login(uid, AUTH_KEY, object : CometChat.CallbackListener<User?>() {
+                override fun onSuccess(user: User?) {
+                    Log.d(ContentValues.TAG, "Login Successful : "+user.toString())
+                }
 
-            override fun onError(e: CometChatException) {
-                Log.d(ContentValues.TAG, "Login failed with exception: " + e.message);
-            }
-        })
+                override fun onError(e: CometChatException) {
+                    Log.d(ContentValues.TAG, "Login failed with exception: " + e.message);
+                }
+            })
+        }
+        else {
+            //user logged in already
+        }
+
     }
 
     companion object {
