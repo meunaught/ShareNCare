@@ -11,6 +11,7 @@ import com.cometchat.pro.core.CometChat
 import com.cometchat.pro.exceptions.CometChatException
 import com.example.sharencare.constants.AppConfig
 import com.example.sharencare.fragments.*
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,6 +50,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        FirebaseMessaging.getInstance().subscribeToTopic("all")
 
         navView  = findViewById(R.id.nav_view)
         navView?.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)

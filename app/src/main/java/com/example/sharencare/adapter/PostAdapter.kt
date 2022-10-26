@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -28,8 +29,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.sharencare.CommentActivity
-import com.example.sharencare.EditProfileActivity
+import com.example.sharencare.*
 import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
@@ -199,6 +199,7 @@ class PostAdapter(private var mContext : Context,
             if(task.isSuccessful)
             {
                 System.out.println("Like saved successfully")
+                retrieveUser()
             }
             else
             {
@@ -206,6 +207,32 @@ class PostAdapter(private var mContext : Context,
             }
         }
     }
+
+    private fun retrieveUser() {
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users")
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_snapshot in snapshot.children)
+                {
+                    val user = temp_snapshot.getValue(User::class.java)
+                    if(user?.getUid() == firebaseuser?.uid.toString())
+                    {
+                        val sender = Html.fromHtml("<b>"+ user.getUsername() +"</b >" + "   "+ "has liked your post")
+                        val notificationsSender  =  FcmNotificationsSender("/topics/all","ShareNCare"
+                            ,sender.toString(),mContext,MainActivity())
+                        notificationsSender.SendNotifications()
+                        break;
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
 
     private fun getLike(postID: String,holder: ViewHolder) {
         val likeRef = FirebaseDatabase.getInstance().reference.child("Like").child(postID)
