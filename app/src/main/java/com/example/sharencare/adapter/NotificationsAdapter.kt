@@ -124,7 +124,7 @@ class NotificationsAdapter(private var mContext : Context,
     private fun setSender(holder: ViewHolder,sender : Notification)
     {
         val userRef = FirebaseDatabase.getInstance().getReference().child("Users")
-        userRef.addValueEventListener(object : ValueEventListener
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener
         {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for(snapshot in dataSnapshot.children)
