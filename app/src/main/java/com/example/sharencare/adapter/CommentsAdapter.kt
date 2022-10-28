@@ -48,7 +48,7 @@ class CommentsAdapter(private var mContext : Context,
 
     private fun setPublisher(publisher: String,holder: ViewHolder) {
         val userRef = FirebaseDatabase.getInstance().reference.child("Users")
-        userRef.addValueEventListener(object : ValueEventListener{
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(temp_snapshot in snapshot.children)
                 {

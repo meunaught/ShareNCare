@@ -2,6 +2,7 @@ package com.example.sharencare.fragments
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -20,14 +21,24 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.cometchat.pro.core.CometChat
+import com.cometchat.pro.exceptions.CometChatException
+import com.example.sharencare.LoginActivity
+import com.example.sharencare.Model.Comment
+import com.example.sharencare.Model.Notification
+import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
@@ -50,6 +61,7 @@ class editProfileFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+
     private val pickImage = 100
     private var imageUri: Uri? = null
     private lateinit var firebaseUser : FirebaseUser
@@ -62,6 +74,11 @@ class editProfileFragment : Fragment() {
     private lateinit var new_username_editText_edit_profile_fragment : EditText
     private lateinit var new_bio_editText_edit_profile_fragment : EditText
     private var progressDialog : ProgressDialog ?= null
+    private lateinit var deleteBtn : AppCompatButton
+    private var currentUser : User ?= null
+
+    private var userID_List : MutableList<String> ? = null
+    private var postID_List : MutableList<String> ? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +102,9 @@ class editProfileFragment : Fragment() {
         new_fullname_editText_edit_profile_fragment = view.findViewById(R.id.new_fullname_editText_edit_profile_fragment)
         new_username_editText_edit_profile_fragment = view.findViewById(R.id.new_username_editText_edit_profile_fragment)
         new_bio_editText_edit_profile_fragment = view.findViewById(R.id.new_bio_editText_edit_profile_fragment)
+        deleteBtn = view.findViewById(R.id.deleteAccount_btn_edit_profile_fragment)
+        userID_List = ArrayList()
+        postID_List = ArrayList()
 
         //Calling of userInfo method
         userInfo()
@@ -94,6 +114,20 @@ class editProfileFragment : Fragment() {
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
         }
+
+        deleteBtn.setOnLongClickListener(object : View.OnLongClickListener{
+            override fun onLongClick(p0: View?): Boolean {
+                progressDialog = ProgressDialog(context)
+                progressDialog?.setTitle("Deleting Account")
+                progressDialog?.setMessage("Please wait,this may take several minutes...")
+                progressDialog?.setCanceledOnTouchOutside(false)
+                progressDialog?.show()
+                retrieveUsers()
+                return true
+            }
+        })
+
+
         update_btn_edit_profile_fragment.setOnClickListener {
             val fullname = new_fullname_editText_edit_profile_fragment.text.toString()
             val username = new_username_editText_edit_profile_fragment.text.toString()
@@ -124,6 +158,222 @@ class editProfileFragment : Fragment() {
             }
         }
         return view
+    }
+
+    private fun retrievePosts() {
+        println("Retrieve posts")
+        val postRef = FirebaseDatabase.getInstance().reference.child("Posts")
+        postRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_Snapshot in snapshot.children)
+                {
+                    val post = temp_Snapshot.getValue(Post::class.java)
+                    post?.getPostID()?.let { postID_List?.add(it) }
+                }
+                deleteComments()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun retrieveUsers() {
+        println("Retrieve Users")
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users")
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_Snapshot in snapshot.children)
+                {
+                    val user = temp_Snapshot.getValue(User::class.java)
+                    user?.getUid()?.let { userID_List?.add(it) }
+                }
+                retrievePosts()
+            }
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun transferPage() {
+        println("Transfer Page")
+        cometLogout()
+        val i = Intent(activity, LoginActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(i)
+        activity?.finish()
+        progressDialog?.dismiss()
+    }
+
+    private fun cometLogout() {
+        CometChat.logout(object : CometChat.CallbackListener<String>() {
+            override fun onSuccess(p0: String?) {
+            }
+
+            override fun onError(p0: CometChatException?) {
+            }
+
+        })
+    }
+
+    private fun deleteAuthentication() {
+        println("Delete Auth")
+        val topic = FirebaseAuth.getInstance().currentUser?.uid.toString()
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
+
+        val user = FirebaseAuth.getInstance().currentUser!!
+        val credential : AuthCredential? = user.email?.let {
+            currentUser?.getPassword()?.let { it1 ->
+                EmailAuthProvider
+                    .getCredential(it, it1) }
+        }
+        credential?.let {
+            user.reauthenticate(it)
+                .addOnCompleteListener { task->
+                    if(task.isSuccessful) {
+                        user.delete()
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    println("User deleted successfully")
+                                    Toast.makeText(context,"Deleted account successfully",Toast.LENGTH_LONG).show()
+                                    transferPage()
+                                }
+                            }
+                    } else {
+                        Toast.makeText(context,"Your previous password doesn't match",Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+    }
+
+    private fun getCurrentUsers(){
+        println("Current Users")
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users")
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_Snapshot in snapshot.children)
+                {
+                    val temp_user = temp_Snapshot.getValue(User::class.java)
+                    if(temp_user?.getUid() == firebaseUser.uid)
+                    {
+                        currentUser = temp_user
+                        deleteUser()
+                        break
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+    }
+
+    private fun deleteUser() {
+        println("Delete user")
+        FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser.uid).removeValue()
+        deleteAuthentication()
+    }
+
+    private fun deleteNotifications() {
+        println("Delete Notifications")
+        val commentRef = FirebaseDatabase.getInstance().reference.child("Notifications")
+        commentRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_Snapshot in snapshot.children)
+                {
+                    val notification = temp_Snapshot.getValue(Notification::class.java)
+                    if((notification?.getSender() == firebaseUser.uid)||
+                        (notification?.getReceiver() == firebaseUser.uid))
+                    {
+                        FirebaseDatabase.getInstance().reference.child("Notifications").child(notification.getNotificationID()).removeValue()
+                    }
+                }
+                getCurrentUsers()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    private fun deleteFollow() {
+        println("Delete Follow")
+        FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser.uid).removeValue()
+
+        for(uid in userID_List!!)
+        {
+            FirebaseDatabase.getInstance().reference.child("Follow").child(uid).child("Following").
+            child(firebaseUser.uid).removeValue()
+
+            FirebaseDatabase.getInstance().reference.child("Follow").child(uid).child("Followers").
+            child(firebaseUser.uid).removeValue()
+        }
+        deleteNotifications()
+    }
+
+    private fun deleteLikes() {
+        println("Delete Likes")
+        for(postID in postID_List!!)
+        {
+            FirebaseDatabase.getInstance().reference.child("Like").child(postID).child(firebaseUser.uid).removeValue()
+        }
+        deleteFollow()
+    }
+
+    private fun deletePosts() {
+        println("Delete Posts")
+        val postRef = FirebaseDatabase.getInstance().reference.child("Posts")
+        postRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_Snapshot in snapshot.children)
+                {
+                    val post = temp_Snapshot.getValue(Post::class.java)
+                    if(post?.getPublisher() == firebaseUser.uid.toString())
+                    {
+                        FirebaseDatabase.getInstance().reference.child("Like").child(post.getPostID()).removeValue()
+                        FirebaseDatabase.getInstance().reference.child("Posts").child(post.getPostID()).removeValue()
+                    }
+                }
+                deleteLikes()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+    }
+
+    private fun deleteComments() {
+        println("Delete Comments")
+        val commentRef = FirebaseDatabase.getInstance().reference.child("Comments")
+        commentRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_Snapshot in snapshot.children)
+                {
+                    val comment = temp_Snapshot.getValue(Comment::class.java)
+                    if(comment?.getPublisher() == firebaseUser.uid.toString())
+                    {
+                        FirebaseDatabase.getInstance().reference.child("Comments").child(comment.getCommentID()).removeValue()
+                    }
+                }
+                deletePosts()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun uploadImageIntoFirebase(fullname : String,username: String,bio: String) {
