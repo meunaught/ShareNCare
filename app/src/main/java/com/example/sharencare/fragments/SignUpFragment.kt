@@ -136,7 +136,6 @@ class SignUpFragment : Fragment() {
         usersRef.child(currentUserID).setValue(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
-                FirebaseAuth.getInstance().signOut()
                 cometLogout()
                 FirebaseDatabase.getInstance().reference.child("Follow").child(currentUserID)
                     .child("Following").child(currentUserID).setValue(true)
@@ -145,6 +144,7 @@ class SignUpFragment : Fragment() {
                     .child("Followers").child(currentUserID).setValue(true)
 
                 Toast.makeText(context,"Account has been created successfully.",Toast.LENGTH_LONG).show()
+                FirebaseAuth.getInstance().signOut()
                 val newFragment : Fragment = SignInFragment()
                 val transaction : FragmentTransaction = requireFragmentManager().beginTransaction()
                 transaction.replace(R.id.frame_layout_activity_login,newFragment)

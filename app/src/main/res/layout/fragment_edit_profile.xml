@@ -1,82 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.editProfileFragment"
     android:orientation="vertical"
-    android:weightSum="22"
     >
-    <ProgressBar
-        android:id="@+id/progressBar_edit_profile_fragment"
-        style="?android:attr/progressBarStyleHorizontal"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminate="false"
-        android:max="100"
-        android:minHeight="10dp"
-        android:minWidth="200dp"
-        android:progress="1"
-        android:visibility="invisible"
-        />
+        android:orientation="vertical"
+        >
 
-    <ImageButton
-        android:id="@+id/image_btn_edit_profile_fragment"
-        android:layout_width="125dp"
-        android:layout_height="0dp"
-        android:src="@drawable/profile"
-        android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        android:backgroundTint="@color/white"
-        android:layout_weight="4"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:text="Change Image"
-        android:gravity="center"
-        android:textSize="15sp"
-        android:textColor="@color/purple_700"
-        />
-    <EditText
-        android:id="@+id/new_username_editText_edit_profile_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:hint="Enter new username"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        />
-    <EditText
-        android:id="@+id/new_fullname_editText_edit_profile_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:hint="Enter new full name"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        />
+        <ImageButton
+            android:id="@+id/image_btn_edit_profile_fragment"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:src="@drawable/profile"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:backgroundTint="@color/white"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Change Image"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/purple_700"
+            />
+        <EditText
+            android:id="@+id/new_username_editText_edit_profile_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter new username"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            />
+        <EditText
+            android:id="@+id/new_fullname_editText_edit_profile_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter new full name"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            />
 
-    <EditText
-        android:id="@+id/new_bio_editText_edit_profile_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:hint="Enter new Bio"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        />
+        <EditText
+            android:id="@+id/new_bio_editText_edit_profile_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter new Bio"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/update_btn_edit_profile_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            />
+
+    </LinearLayout>
+
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/update_btn_edit_profile_fragment"
+        android:id="@+id/deleteAccount_btn_edit_profile_fragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:text="Update"
+        android:layout_height="wrap_content"
+        android:text="Delete Account"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
+        android:gravity="center|bottom"
+        android:layout_gravity="center|bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
         />
 
-</LinearLayout>
+</RelativeLayout>
