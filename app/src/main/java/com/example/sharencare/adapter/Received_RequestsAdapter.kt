@@ -2,6 +2,7 @@ package com.example.sharencare.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,17 +13,22 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.sharencare.FcmNotificationsSender
+import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.example.sharencare.fragments.ProfileFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
 
 class Received_RequestsAdapter(private var mContext : Context,
-                           private var mUser : MutableList<User>,
-                           private var isFragment : Boolean = false) : RecyclerView.Adapter<Received_RequestsAdapter.ViewHolder>()
+                               private var mUser : MutableList<User>,
+                               private var isFragment : Boolean = false) : RecyclerView.Adapter<Received_RequestsAdapter.ViewHolder>()
 {
     private var firebaseuser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Received_RequestsAdapter.ViewHolder {
@@ -78,6 +84,7 @@ class Received_RequestsAdapter(private var mContext : Context,
                                             if (task.isSuccessful)
                                             {
                                                 saveNotification("4","",user.getUid())
+                                                retrieveUser("has accepted your follow request")
                                             }
                                         }
                                 }
@@ -137,6 +144,32 @@ class Received_RequestsAdapter(private var mContext : Context,
         }
     }
 
+    private fun retrieveUser(message : String) {
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users")
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_snapshot in snapshot.children)
+                {
+                    val user = temp_snapshot.getValue(User::class.java)
+                    if(user?.getUid() == firebaseuser?.uid.toString())
+                    {
+                        val sender = Html.fromHtml("<b>"+ user.getUsername() +"</b >" + "   "+ message)
+                        val notificationsSender  =  FcmNotificationsSender("/topics/all","ShareNCare"
+                            ,sender.toString(),mContext, MainActivity()
+                        )
+                        notificationsSender.SendNotifications()
+                        break;
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
     private fun saveNotification(type : String,postID: String,receiver: String) {
         val currentTime = System.currentTimeMillis().toString()
 
@@ -148,6 +181,7 @@ class Received_RequestsAdapter(private var mContext : Context,
         notiMap["postID"] = postID
         notiMap["receiver"] = receiver
         notiMap["seen"] = "false"
+        notiMap["notificationID"] = currentTime
 
         notiRef.child(currentTime).updateChildren(notiMap).addOnCompleteListener{ task->
             if(task.isSuccessful)

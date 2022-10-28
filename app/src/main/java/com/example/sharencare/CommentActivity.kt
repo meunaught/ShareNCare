@@ -3,6 +3,7 @@ package com.example.sharencare
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -99,6 +100,7 @@ class CommentActivity : AppCompatActivity() {
                 Picasso.get().load(R.drawable.heart_clicked).fit().centerInside().into(likeBtn)
                 saveLikeIntoFirebase(postID)
                 postCreator?.getPublisher()?.let { it1 -> saveNotification("1",postID, it1) }
+                retrieveUser("has liked your post")
             }
         }
         sendBtn?.setOnClickListener {
@@ -106,8 +108,34 @@ class CommentActivity : AppCompatActivity() {
             {
                 saveCommentIntoFirebase()
                 postCreator?.getPublisher()?.let { it1 -> saveNotification("2",postID, it1) }
+                retrieveUser("has commented on your post")
             }
         }
+    }
+
+    private fun retrieveUser(message : String) {
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users")
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_snapshot in snapshot.children)
+                {
+                    val user = temp_snapshot.getValue(User::class.java)
+                    if(user?.getUid() == firebaseUser?.uid.toString())
+                    {
+                        val sender = Html.fromHtml("<b>"+ user.getUsername() +"</b >" + "   "+ message)
+                        val notificationsSender  =  FcmNotificationsSender("/topics/all","ShareNCare"
+                            ,sender.toString(),application.applicationContext,MainActivity())
+                        notificationsSender.SendNotifications()
+                        break;
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun getComments() {
@@ -218,44 +246,44 @@ class CommentActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(temp_snapshot in snapshot.children){
                     val post = temp_snapshot.getValue(Post :: class.java)
-                        if(postID == post?.getPostID())
+                    if(postID == post?.getPostID())
+                    {
+                        postCreator = post
+                        setUpUser(post.getPublisher())
+                        if(post.getDescription().isEmpty())
                         {
-                            postCreator = post
-                            setUpUser(post.getPublisher())
-                            if(post.getDescription().isEmpty())
-                            {
-                                description?.layoutParams?.height = 0
-                            }
-                            else
-                            {
-                                description?.text = post.getDescription()
-                            }
-                            if(post.getPostImage().isEmpty())
-                            {
-                                postImage?.layoutParams?.height = 0
-                            }
-                            else
-                            {
-                                postImage?.let {
-                                    Glide.with(application).load(post.getPostImage()).fitCenter().diskCacheStrategy(
-                                        DiskCacheStrategy.ALL)
-                                        .error(R.drawable.profile)
-                                        .dontTransform().into(it)
-                                }
-                            }
-                            if(post.getPostPdf().isEmpty())
-                            {
-                                postPdf?.layoutParams?.height = 0
-                            }
-                            else
-                            {
-                                postPdf?.text = post.getPostPdfName()
-                                postPdfUrl = post.getPostPdf()
-                            }
-                            getLike()
-                            likeInfoLoading()
-                            break;
+                            description?.layoutParams?.height = 0
                         }
+                        else
+                        {
+                            description?.text = post.getDescription()
+                        }
+                        if(post.getPostImage().isEmpty())
+                        {
+                            postImage?.layoutParams?.height = 0
+                        }
+                        else
+                        {
+                            postImage?.let {
+                                Glide.with(application).load(post.getPostImage()).fitCenter().diskCacheStrategy(
+                                    DiskCacheStrategy.ALL)
+                                    .error(R.drawable.profile)
+                                    .dontTransform().into(it)
+                            }
+                        }
+                        if(post.getPostPdf().isEmpty())
+                        {
+                            postPdf?.layoutParams?.height = 0
+                        }
+                        else
+                        {
+                            postPdf?.text = post.getPostPdfName()
+                            postPdfUrl = post.getPostPdf()
+                        }
+                        getLike()
+                        likeInfoLoading()
+                        break;
+                    }
                 }
             }
 

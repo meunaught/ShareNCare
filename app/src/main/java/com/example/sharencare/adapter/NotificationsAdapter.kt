@@ -38,6 +38,10 @@ class NotificationsAdapter(private var mContext : Context,
         return mNoti.size
     }
 
+    override fun getItemId(position: Int): Long {
+        return mNoti[position].getNotificationID().hashCode().toLong()
+    }
+
     @SuppressLint("CommitPrefEdits")
     override fun onBindViewHolder(holder: NotificationsAdapter.ViewHolder, position: Int) {
         val notification = mNoti[position]
@@ -112,5 +116,3 @@ class NotificationsAdapter(private var mContext : Context,
         var username : String = ""
     }
 }
-
-

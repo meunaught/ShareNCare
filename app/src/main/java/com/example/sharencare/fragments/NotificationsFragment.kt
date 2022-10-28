@@ -65,7 +65,7 @@ class NotificationsFragment : Fragment() {
         notificationAdapter = context?.let { NotificationsAdapter(it,mNotifications as ArrayList<Notification>,true) }
         notificationAdapter?.setHasStableIds(true)
         recyclerview?.adapter = notificationAdapter
-        recyclerview?.setItemViewCacheSize(15)
+        recyclerview?.setItemViewCacheSize(10)
 
         val navView = (activity as MainActivity).navView
         var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
@@ -88,10 +88,10 @@ class NotificationsFragment : Fragment() {
                 mNotifications?.clear()
                 for(temp_snapshot in snapshot.children){
                     val notification = temp_snapshot.getValue(Notification :: class.java)
-                        if(firebaseUser.uid == notification?.getReceiver())
-                        {
-                            notification.let { mNotifications?.add(it) }
-                        }
+                    if(firebaseUser.uid == notification?.getReceiver())
+                    {
+                        notification.let { mNotifications?.add(it) }
+                    }
 
                     notificationAdapter?.notifyDataSetChanged()
                     setSeenNotifications()

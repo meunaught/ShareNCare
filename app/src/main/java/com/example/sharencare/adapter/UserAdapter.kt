@@ -2,6 +2,7 @@ package com.example.sharencare.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.sharencare.FcmNotificationsSender
+import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.example.sharencare.fragments.ProfileFragment
@@ -28,8 +31,8 @@ import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserAdapter(private var mContext : Context,
-                    private var mUser : List<User>,
-                    private var isFragment : Boolean = false) : RecyclerView.Adapter<UserAdapter.ViewHolder>()
+                  private var mUser : List<User>,
+                  private var isFragment : Boolean = false) : RecyclerView.Adapter<UserAdapter.ViewHolder>()
 {
     private var firebaseuser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserAdapter.ViewHolder {
@@ -83,6 +86,7 @@ class UserAdapter(private var mContext : Context,
                                             if (task.isSuccessful)
                                             {
                                                 saveNotification("3","",user.getUid())
+                                                retrieveUser("has sent you a friend request")
                                             }
                                         }
                                 }
@@ -137,6 +141,32 @@ class UserAdapter(private var mContext : Context,
                 }
             }
         }
+    }
+
+    private fun retrieveUser(message : String) {
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users")
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_snapshot in snapshot.children)
+                {
+                    val user = temp_snapshot.getValue(User::class.java)
+                    if(user?.getUid() == firebaseuser?.uid.toString())
+                    {
+                        val sender = Html.fromHtml("<b>"+ user.getUsername() +"</b >" + "   "+ message)
+                        val notificationsSender  =  FcmNotificationsSender("/topics/all","ShareNCare"
+                            ,sender.toString(),mContext, MainActivity()
+                        )
+                        notificationsSender.SendNotifications()
+                        break;
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun saveNotification(type : String,postID: String,receiver: String) {

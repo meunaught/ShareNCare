@@ -93,18 +93,19 @@ class HomeFragment : Fragment() {
         var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
 
         val notificationRef = FirebaseDatabase.getInstance().reference.child("Notifications")
-        notificationRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        notificationRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                counter = 0
                 for(temp_snapshot in snapshot.children)
                 {
                     val notification = temp_snapshot.getValue(Notification::class.java)
                     if((notification?.getReceiver() == firebaseUser?.uid)
                         && notification?.getSeen().equals("false")){
-                       counter++
+                        counter++
                         println(counter)
                     }
                     else{
-                        println("Same")
+
                     }
                 }
                 if(counter >0)
@@ -116,6 +117,7 @@ class HomeFragment : Fragment() {
                 else
                 {
                     badge_notifications?.isVisible = false
+                    println("Counter is 0")
                 }
             }
 
@@ -129,7 +131,7 @@ class HomeFragment : Fragment() {
     private fun checkFollowings() {
         followingList = ArrayList()
         val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser?.uid.toString())
-                .child("Following")
+            .child("Following")
         followingRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists())

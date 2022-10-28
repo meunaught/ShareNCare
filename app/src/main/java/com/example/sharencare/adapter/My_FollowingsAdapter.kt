@@ -21,8 +21,8 @@ import com.google.firebase.database.FirebaseDatabase
 import de.hdodenhof.circleimageview.CircleImageView
 
 class My_FollowingsAdapter(private var mContext : Context,
-                          private var mUser : MutableList<User>,
-                          private var isFragment : Boolean = false) : RecyclerView.Adapter<My_FollowingsAdapter.ViewHolder>()
+                           private var mUser : MutableList<User>,
+                           private var isFragment : Boolean = false) : RecyclerView.Adapter<My_FollowingsAdapter.ViewHolder>()
 {
     private var firebaseuser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): My_FollowingsAdapter.ViewHolder {
