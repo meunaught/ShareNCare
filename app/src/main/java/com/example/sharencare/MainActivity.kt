@@ -11,6 +11,9 @@ import com.cometchat.pro.core.CometChat
 import com.cometchat.pro.exceptions.CometChatException
 import com.example.sharencare.constants.AppConfig
 import com.example.sharencare.fragments.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private var selectedFragment : Fragment? = null
     var x : Int = 10
     var navView : BottomNavigationView ?= null
+    private var firebaseUser : FirebaseUser ?= null
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -50,14 +54,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        firebaseUser = FirebaseAuth.getInstance().currentUser
 
-        FirebaseMessaging.getInstance().subscribeToTopic("all")
+        setTopic()
 
         navView  = findViewById(R.id.nav_view)
         navView?.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout_activity_main,HomeFragment()).commit()
 
+    }
+
+    private fun setTopic() {
+        FirebaseMessaging.getInstance().subscribeToTopic(firebaseUser?.uid.toString())
     }
 
 }

@@ -199,7 +199,7 @@ class PostAdapter(private var mContext : Context,
             if(task.isSuccessful)
             {
                 System.out.println("Like saved successfully")
-                retrieveUser()
+                sendNotification(publisher)
             }
             else
             {
@@ -208,7 +208,7 @@ class PostAdapter(private var mContext : Context,
         }
     }
 
-    private fun retrieveUser() {
+    private fun sendNotification(publisher: String) {
         val userRef = FirebaseDatabase.getInstance().reference.child("Users")
         userRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -217,8 +217,10 @@ class PostAdapter(private var mContext : Context,
                     val user = temp_snapshot.getValue(User::class.java)
                     if(user?.getUid() == firebaseuser?.uid.toString())
                     {
+                        val token = "/topics/$publisher"
+                        println(token)
                         val sender = Html.fromHtml("<b>"+ user.getUsername() +"</b >" + "   "+ "has liked your post")
-                        val notificationsSender  =  FcmNotificationsSender("/topics/all","ShareNCare"
+                        val notificationsSender  =  FcmNotificationsSender(token,"ShareNCare"
                             ,sender.toString(),mContext,MainActivity())
                         notificationsSender.SendNotifications()
                         break;

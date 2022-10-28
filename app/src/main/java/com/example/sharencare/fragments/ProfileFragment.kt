@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.sharencare.EditProfileActivity
+import com.example.sharencare.FcmNotificationsSender
 import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.MyDiffCallBack
 import com.example.sharencare.Model.Notification
@@ -201,6 +203,7 @@ class ProfileFragment : Fragment() {
                                 {
                                     editProfile_btn_profile_fragment.text = "Request Sent"
                                     saveNotification("3","",profileId)
+                                    sendNotification("has sent you a follow request",profileId)
                                 }
                             }
                     }
@@ -241,6 +244,35 @@ class ProfileFragment : Fragment() {
         badgeSetForNotifications()
 
         return view
+    }
+
+    private fun sendNotification(message: String,receiver: String) {
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users")
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_snapshot in snapshot.children)
+                {
+                    val user = temp_snapshot.getValue(User::class.java)
+                    if(user?.getUid() == firebaseUser.uid.toString())
+                    {
+                        val token = "/topics/$receiver"
+                        val sender = Html.fromHtml("<b>"+ user.getUsername() +"</b >" + "   "+ message)
+                        val notificationsSender  = context?.let {
+                            FcmNotificationsSender(
+                                token, "ShareNCare", sender.toString(), it, MainActivity()
+                            )
+                        }
+                        notificationsSender?.SendNotifications()
+                        break;
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun badgeSetForNotifications() {
@@ -294,15 +326,17 @@ class ProfileFragment : Fragment() {
         notiMap["sender"] = firebaseUser.uid.toString()
         notiMap["postID"] = postID
         notiMap["receiver"] = receiver
+        notiMap["seen"] = "false"
+        notiMap["notificationID"] = currentTime
 
         notiRef.child(currentTime).updateChildren(notiMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
-                System.out.println("Sent Request saved successfully")
+                System.out.println("Received Request saved successfully")
             }
             else
             {
-                System.out.println("Sent Request didn't saved ")
+                System.out.println("Received Request didn't saved ")
             }
         }
     }

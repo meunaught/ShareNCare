@@ -13,6 +13,7 @@ import com.cometchat.pro.exceptions.CometChatException
 import com.example.sharencare.fragments.EditPasswordFragment
 import com.example.sharencare.fragments.editProfileFragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 
 class EditProfileActivity : AppCompatActivity() {
 
@@ -46,6 +47,9 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         logout_btn_activity_edit_profile.setOnClickListener {
+            val topic = FirebaseAuth.getInstance().currentUser?.uid.toString()
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
+
             FirebaseAuth.getInstance().signOut()
             cometLogout()
             val i = Intent(this, LoginActivity::class.java)

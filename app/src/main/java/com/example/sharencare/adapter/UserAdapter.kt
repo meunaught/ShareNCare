@@ -86,7 +86,7 @@ class UserAdapter(private var mContext : Context,
                                             if (task.isSuccessful)
                                             {
                                                 saveNotification("3","",user.getUid())
-                                                retrieveUser("has sent you a friend request")
+                                                retrieveUser("has sent you a friend request",user.getUid())
                                             }
                                         }
                                 }
@@ -143,7 +143,7 @@ class UserAdapter(private var mContext : Context,
         }
     }
 
-    private fun retrieveUser(message : String) {
+    private fun retrieveUser(message : String,receiver: String) {
         val userRef = FirebaseDatabase.getInstance().reference.child("Users")
         userRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -152,8 +152,9 @@ class UserAdapter(private var mContext : Context,
                     val user = temp_snapshot.getValue(User::class.java)
                     if(user?.getUid() == firebaseuser?.uid.toString())
                     {
+                        val token = "/topics/$receiver"
                         val sender = Html.fromHtml("<b>"+ user.getUsername() +"</b >" + "   "+ message)
-                        val notificationsSender  =  FcmNotificationsSender("/topics/all","ShareNCare"
+                        val notificationsSender  =  FcmNotificationsSender(token,"ShareNCare"
                             ,sender.toString(),mContext, MainActivity()
                         )
                         notificationsSender.SendNotifications()

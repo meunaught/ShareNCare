@@ -122,8 +122,9 @@ class CommentActivity : AppCompatActivity() {
                     val user = temp_snapshot.getValue(User::class.java)
                     if(user?.getUid() == firebaseUser?.uid.toString())
                     {
+                        val token = "/topics/" + postCreator?.getPublisher()
                         val sender = Html.fromHtml("<b>"+ user.getUsername() +"</b >" + "   "+ message)
-                        val notificationsSender  =  FcmNotificationsSender("/topics/all","ShareNCare"
+                        val notificationsSender  =  FcmNotificationsSender(token,"ShareNCare"
                             ,sender.toString(),application.applicationContext,MainActivity())
                         notificationsSender.SendNotifications()
                         break;
