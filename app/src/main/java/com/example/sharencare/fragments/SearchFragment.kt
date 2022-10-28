@@ -106,6 +106,9 @@ class SearchFragment : Fragment() {
     private fun badgeSetForNotifications() {
         var counter = 0
         val navView = (activity as MainActivity).navView
+        val menuItem = navView?.menu?.findItem(R.id.nav_search_button)
+        menuItem?.isChecked = true
+
         var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
 
         val notificationRef = FirebaseDatabase.getInstance().reference.child("Notifications")

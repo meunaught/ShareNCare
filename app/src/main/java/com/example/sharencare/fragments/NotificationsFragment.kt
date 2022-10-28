@@ -68,7 +68,9 @@ class NotificationsFragment : Fragment() {
         recyclerview?.setItemViewCacheSize(10)
 
         val navView = (activity as MainActivity).navView
-        var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
+        val menuItem = navView?.menu?.findItem(R.id.nav_notifications)
+        menuItem?.isChecked = true
+        val badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
         badge_notifications?.isVisible = false
 
         return view

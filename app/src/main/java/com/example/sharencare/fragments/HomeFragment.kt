@@ -90,7 +90,10 @@ class HomeFragment : Fragment() {
     private fun badgeSetForNotifications() {
         var counter = 0
         val navView = (activity as MainActivity).navView
-        var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
+        val menuItem = navView?.menu?.findItem(R.id.nav_home)
+        menuItem?.isChecked = true
+
+        val badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
 
         val notificationRef = FirebaseDatabase.getInstance().reference.child("Notifications")
         notificationRef.addValueEventListener(object : ValueEventListener {

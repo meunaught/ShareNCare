@@ -66,7 +66,7 @@ class UserAdapter(private var mContext : Context,
             preference.apply()
 
             (mContext as FragmentActivity).supportFragmentManager.beginTransaction().replace(
-                R.id.frame_layout_activity_main,ProfileFragment()).commit()
+                R.id.frame_layout_activity_main,ProfileFragment()).addToBackStack(null).commit()
         }
 
 

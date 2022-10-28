@@ -105,26 +105,26 @@ class ProfileFragment : Fragment() {
         toolbar.setOnMenuItemClickListener { item ->
             if (item.itemId == R.id.options_followers) {
                 (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(
-                    R.id.frame_layout_activity_main,My_followersFragment()).commit()
+                    R.id.frame_layout_activity_main,My_followersFragment()).addToBackStack(null).commit()
                 return@setOnMenuItemClickListener true
             }
             else if(item.itemId == R.id.options_following)
             {
                 (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(
-                    R.id.frame_layout_activity_main,My_FollowingsFragment()).commit()
+                    R.id.frame_layout_activity_main,My_FollowingsFragment()).addToBackStack(null).commit()
                 return@setOnMenuItemClickListener true
             }
 
             else if(item.itemId == R.id.options_request_sent)
             {
                 (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(
-                    R.id.frame_layout_activity_main,SentRequests()).commit()
+                    R.id.frame_layout_activity_main,SentRequests()).addToBackStack(null).commit()
                 return@setOnMenuItemClickListener true
             }
             else if(item.itemId == R.id.options_request_receive)
             {
                 (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(
-                    R.id.frame_layout_activity_main,ReceivedRequestsFragment()).commit()
+                    R.id.frame_layout_activity_main,ReceivedRequestsFragment()).addToBackStack(null).commit()
                 return@setOnMenuItemClickListener true
             }
             false
@@ -278,7 +278,9 @@ class ProfileFragment : Fragment() {
     private fun badgeSetForNotifications() {
         var counter = 0
         val navView = (activity as MainActivity).navView
-        var badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
+        val menuItem = navView?.menu?.findItem(R.id.nav_profile)
+        menuItem?.isChecked = true
+        val badge_notifications = navView?.getOrCreateBadge(R.id.nav_notifications)
 
         val notificationRef = FirebaseDatabase.getInstance().reference.child("Notifications")
         notificationRef.addValueEventListener(object : ValueEventListener {

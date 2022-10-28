@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         if(selectedFragment!=null)
         {
-            supportFragmentManager.beginTransaction().replace(R.id.frame_layout_activity_main,selectedFragment!!).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.frame_layout_activity_main,selectedFragment!!).addToBackStack(null).commit()
             return@OnNavigationItemSelectedListener true
         }
 
@@ -63,6 +63,17 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout_activity_main,HomeFragment()).commit()
 
+    }
+
+    override fun onBackPressed() {
+        if(supportFragmentManager.backStackEntryCount> 0)
+        {
+            supportFragmentManager.popBackStackImmediate()
+        }
+        else
+        {
+            super.onBackPressed()
+        }
     }
 
     private fun setTopic() {
