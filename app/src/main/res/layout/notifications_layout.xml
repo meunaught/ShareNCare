@@ -19,6 +19,7 @@
         android:paddingBottom="7dp"
         >
         <LinearLayout
+            android:id="@+id/linear_layout2_notifications_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

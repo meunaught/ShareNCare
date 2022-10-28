@@ -2,18 +2,24 @@ package com.example.sharencare.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.NonNull
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.sharencare.CommentActivity
 import com.example.sharencare.Model.Notification
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.example.sharencare.fragments.ProfileFragment
+import com.example.sharencare.fragments.ReceivedRequestsFragment
 import com.github.marlonlom.utilities.timeago.TimeAgo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -49,6 +55,40 @@ class NotificationsAdapter(private var mContext : Context,
 
         holder.itemView.setOnClickListener {
 
+        }
+
+        holder.linear_layout.setOnClickListener {
+            if(notification.getType() == "1")
+            {
+                val preference = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+                preference.putString("postID",notification.getPostID())
+                preference.apply()
+
+                mContext.startActivity(Intent(mContext, CommentActivity::class.java))
+            }
+            else if(notification.getType() == "2")
+            {
+                val preference = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+                preference.putString("postID",notification.getPostID())
+                preference.apply()
+
+                mContext.startActivity(Intent(mContext, CommentActivity::class.java))
+            }
+            else if(notification.getType() == "3")
+            {
+                (mContext as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                    R.id.frame_layout_activity_main, ReceivedRequestsFragment()
+                ).commit()
+            }
+            else if(notification.getType() == "4")
+            {
+                val preference = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+                preference.putString("profileId",notification.getSender())
+                preference.apply()
+
+                (mContext as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                    R.id.frame_layout_activity_main,ProfileFragment()).commit()
+            }
         }
         //setDescription(holder,notification)
     }
@@ -114,5 +154,6 @@ class NotificationsAdapter(private var mContext : Context,
         var profileImage : CircleImageView = itemView.findViewById(R.id.profileImage_notifications_layout)
         var timeAgo : TextView = itemView.findViewById(R.id.time_textview_notifications_layout)
         var username : String = ""
+        var linear_layout : LinearLayout = itemView.findViewById(R.id.linear_layout2_notifications_layout)
     }
 }
