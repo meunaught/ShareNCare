@@ -61,9 +61,9 @@ class CreatePostFragment : Fragment() {
     private var pdfName = ""
 
     private lateinit var pdfTextView : TextView
-    private lateinit var uploadImage_btn_create_post_fragment : AppCompatButton
     private lateinit var uploadPdf_btn_create_post_fragment : AppCompatButton
     private lateinit var post_btn_create_post_fragment : AppCompatButton
+    private lateinit var postImageView : ImageView
     private lateinit var image_view_create_post_fragment : ImageView
     private lateinit var editText_create_post_fragment : EditText
     private lateinit var storageReferenceImage : StorageReference
@@ -84,17 +84,17 @@ class CreatePostFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_create_post, container, false)
-        uploadImage_btn_create_post_fragment = view.findViewById(R.id.uploadImage_btn_create_post_fragment)
         uploadPdf_btn_create_post_fragment = view.findViewById(R.id.uploadPdf_btn_create_post_fragment)
         post_btn_create_post_fragment = view.findViewById(R.id.post_btn_create_post_fragment)
         image_view_create_post_fragment = view.findViewById(R.id.image_view_create_post_fragment)
         pdfTextView = view.findViewById(R.id.pdfTextView_create_post_fragment)
         editText_create_post_fragment = view.findViewById(R.id.editText_create_post_fragment)
+        postImageView = view.findViewById(R.id.image_view_create_post_fragment)
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
         storageReferenceImage = FirebaseStorage.getInstance().reference.child("Post Images")
         storageReferencePdf = FirebaseStorage.getInstance().reference.child("Post Pdfs")
 
-        uploadImage_btn_create_post_fragment.setOnClickListener {
+        postImageView.setOnClickListener {
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, pickImage)
         }

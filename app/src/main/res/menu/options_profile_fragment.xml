@@ -1,25 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/options_followers"
-        android:title= "Followers"
-        app:showAsAction="never"
-        />
-    <item
-        android:id="@+id/options_following"
-        android:title= "Following"
-        app:showAsAction="never"
-        />
-    <item
-        android:id="@+id/options_request_sent"
-        android:title= "Sent Requests"
-        app:showAsAction="never"
-        />
-    <item
-        android:id="@+id/options_request_receive"
-        android:title= "Follow Requests"
-        app:showAsAction="never"
-        />
+        android:title="options"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        >
+
+        <menu>
+            <item
+                android:id="@+id/options_followers"
+                android:title= "Followers"
+                app:showAsAction="never"
+                />
+
+            <item
+                android:id="@+id/options_following"
+                android:title= "Following"
+                app:showAsAction="never"
+                />
+
+            <item
+                android:id="@+id/options_request_sent"
+                android:title= "Sent Requests"
+                app:showAsAction="never"
+                />
+
+            <item
+                android:id="@+id/options_request_receive"
+                android:title= "Follow Requests"
+                app:showAsAction="never"
+                />
+
+        </menu>
+
+    </item>
 
 </menu>

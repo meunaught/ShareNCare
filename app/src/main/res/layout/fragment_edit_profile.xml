@@ -2,6 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.editProfileFragment"
@@ -12,16 +13,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
-
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_btn_edit_profile_fragment"
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:src="@drawable/profile"
             android:layout_gravity="center"
-            android:scaleType="fitCenter"
             android:backgroundTint="@color/white"
             />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,41 +29,101 @@
             android:text="Change Image"
             android:gravity="center"
             android:textSize="15sp"
-            android:textColor="@color/purple_700"
-            />
-        <EditText
-            android:id="@+id/new_username_editText_edit_profile_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter new username"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            />
-        <EditText
-            android:id="@+id/new_fullname_editText_edit_profile_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter new full name"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
+            android:textColor="@color/colorPurpleDark"
+            android:maxLines="1"
             />
 
-        <EditText
-            android:id="@+id/new_bio_editText_edit_profile_fragment"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usernameTextInputLayout_editProfile_fragment"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter new Bio"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            />
+            app:helperTextTextColor="@color/red"
+            app:startIconDrawable="@drawable/person_image"
+            app:boxCornerRadiusTopEnd="22dp"
+            app:boxCornerRadiusTopStart="22dp"
+            app:boxCornerRadiusBottomStart="22dp"
+            app:boxCornerRadiusBottomEnd="22dp"
+            app:boxStrokeWidth="2dp"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/new_username_editText_edit_profile_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:maxLines="1"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fullnameTextInputLayout_editProfile_fragment"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:helperTextTextColor="@color/red"
+            app:startIconDrawable="@drawable/person_image"
+            app:boxCornerRadiusTopEnd="22dp"
+            app:boxCornerRadiusTopStart="22dp"
+            app:boxCornerRadiusBottomStart="22dp"
+            app:boxCornerRadiusBottomEnd="22dp"
+            app:boxStrokeWidth="2dp"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/new_fullname_editText_edit_profile_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Full Name"
+                android:maxLines="1"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bioTextInputLayout_editProfile_fragment"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:helperTextTextColor="@color/red"
+            app:startIconDrawable="@drawable/person_image"
+            app:boxCornerRadiusTopEnd="22dp"
+            app:boxCornerRadiusTopStart="22dp"
+            app:boxCornerRadiusBottomStart="22dp"
+            app:boxCornerRadiusBottomEnd="22dp"
+            app:boxStrokeWidth="2dp"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/new_bio_editText_edit_profile_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Bio"
+                android:maxLines="1"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginTop="20dp"
             android:id="@+id/update_btn_edit_profile_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Update"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
+            android:background="@drawable/shape_buttons"
+            android:backgroundTint="@color/colorPurpleDark"
+            android:textColor="@color/white"
             />
 
     </LinearLayout>
@@ -76,10 +136,13 @@
         android:text="Delete Account"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:gravity="center|bottom"
-        android:layout_gravity="center|bottom"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/shape_buttons"
+        android:backgroundTint="@color/colorPurpleDark"
+        android:textColor="@color/white"
         />
 
 </RelativeLayout>

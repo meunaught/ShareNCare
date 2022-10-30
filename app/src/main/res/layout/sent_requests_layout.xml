@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
-    android:layout_marginStart="7dp"
-    android:layout_marginEnd="10dp"
-    app:cardElevation="15dp"
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="3dp"
+    app:cardElevation="10dp"
     >
+
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -42,6 +43,8 @@
                 android:layout_height="wrap_content"
                 android:text="username"
                 android:textSize="20sp"
+                android:textColor="@color/colorPurpleDark"
+                android:layout_marginStart="5dp"
                 />
             <TextView
                 android:id="@+id/fullname_textview_sent_requests_layout"
@@ -49,13 +52,16 @@
                 android:layout_height="wrap_content"
                 android:text="fullname"
                 android:textSize="20sp"
+                android:textColor="@color/colorPurpleDark"
+                android:layout_marginStart="5dp"
                 />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/follow_btn_sent_requests_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_700"
                 android:text="Remove Request"
+                android:background="@drawable/shape_buttons"
+                android:backgroundTint="@color/colorPurpleDark"
                 android:textColor="@color/white"
                 />
         </LinearLayout>

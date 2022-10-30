@@ -44,6 +44,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -68,7 +69,7 @@ class editProfileFragment : Fragment() {
     private var imageUrl = ""
     private var checker = false
     private lateinit var storageReference : StorageReference
-    private lateinit var image_btn_edit_profile_fragment : ImageButton
+    private lateinit var image_btn_edit_profile_fragment : CircleImageView
     private lateinit var update_btn_edit_profile_fragment : AppCompatButton
     private lateinit var new_fullname_editText_edit_profile_fragment : EditText
     private lateinit var new_username_editText_edit_profile_fragment : EditText

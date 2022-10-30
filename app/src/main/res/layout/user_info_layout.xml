@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="3dp"
+    app:cardElevation="10dp"
+    >
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -32,6 +43,8 @@
                 android:layout_height="wrap_content"
                 android:text="username"
                 android:textSize="20sp"
+                android:layout_marginStart="2dp"
+                android:textColor="@color/colorPurpleDark"
                 />
             <TextView
                 android:id="@+id/fullname_textview_user_info_layout"
@@ -39,13 +52,16 @@
                 android:layout_height="wrap_content"
                 android:text="fullname"
                 android:textSize="20sp"
+                android:layout_marginStart="2dp"
+                android:textColor="@color/colorPurpleDark"
                 />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/follow_btn_user_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_700"
                 android:text="follow"
+                android:background="@drawable/shape_buttons"
+                android:backgroundTint="@color/colorPurpleDark"
                 android:textColor="@color/white"
                 />
         </LinearLayout>
@@ -53,3 +69,5 @@
     </LinearLayout>
 
 </LinearLayout>
+
+</androidx.cardview.widget.CardView>

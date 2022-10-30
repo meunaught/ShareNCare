@@ -19,4 +19,5 @@
     <color name ="bottom_icon_selected_white">#fff</color>
     <color name ="bottom_icon_unselected_grey">#A18A8A</color>
     <color name ="bottom_navigation_background">#301934</color>
+    <color name="shade_color">#9F9C9C</color>
 </resources>
