@@ -147,18 +147,28 @@ class ProfileFragment : Fragment() {
         if(preferences != null)
         {
             this.profileId = preferences.getString("profileId","none").toString()
+            println("Not null" + profileId)
         }
         else
         {
             this.profileId = firebaseUser.uid
+            println("null" + profileId)
         }
 
         if(profileId == firebaseUser.uid)
         {
             editProfile_btn_profile_fragment.text = "Edit Profile"
             recyclerView?.suppressLayout(false)
+            println("Same id" + profileId)
         }
         else if(profileId == "Logout Has Been Done")
+        {
+            editProfile_btn_profile_fragment.text = "Edit Profile"
+            profileId = firebaseUser.uid
+            recyclerView?.suppressLayout(false)
+            println(profileId)
+        }
+        else if(profileId == "none")
         {
             editProfile_btn_profile_fragment.text = "Edit Profile"
             profileId = firebaseUser.uid
@@ -167,6 +177,7 @@ class ProfileFragment : Fragment() {
         else if(profileId != firebaseUser.uid)
         {
             checkIsFollowing()
+            println("Random id" + profileId)
         }
 
         editProfile_btn_profile_fragment.setOnClickListener{
