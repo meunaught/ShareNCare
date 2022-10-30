@@ -67,11 +67,11 @@ class EditProfileActivity : AppCompatActivity() {
     private fun cometLogout() {
         CometChat.logout(object : CometChat.CallbackListener<String>() {
             override fun onSuccess(p0: String?) {
-                Log.d(TAG, "Comet Logout completed successfully")
+                Log.d(TAG, "Comet Logout EditProfAct completed successfully")
             }
 
             override fun onError(p0: CometChatException?) {
-                Log.d(TAG, "Comet Logout failed with exception: " + p0?.message)
+                Log.d(TAG, "Comet Logout EditProfAct failed with exception: " + p0?.message)
             }
 
         })

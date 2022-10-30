@@ -3,6 +3,7 @@ package com.example.sharencare.fragments
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -18,6 +19,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.graphics.TypefaceCompat.clearCache
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -212,11 +214,12 @@ class editProfileFragment : Fragment() {
     private fun cometLogout() {
         CometChat.logout(object : CometChat.CallbackListener<String>() {
             override fun onSuccess(p0: String?) {
+                Log.d(TAG, "Comet Logout EditProFrag completed successfully")
             }
 
             override fun onError(p0: CometChatException?) {
+                Log.d(TAG, "Comet Logout EditProFrag failed with exception: " + p0?.message)
             }
-
         })
     }
 
@@ -467,8 +470,10 @@ class editProfileFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
             image_btn_edit_profile_fragment.setImageURI(imageUri)
+//            cometUserUpdate()
         }
     }
+
 
     companion object {
         /**

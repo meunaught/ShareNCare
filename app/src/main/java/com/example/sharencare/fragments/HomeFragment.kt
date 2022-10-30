@@ -1,8 +1,11 @@
 package com.example.sharencare.fragments
 
 import android.app.ProgressDialog;
+import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.cometchat.pro.core.CometChat
+import com.cometchat.pro.exceptions.CometChatException
 import com.cometchat.pro.uikit.ui_components.cometchat_ui.CometChatUI
+import com.cometchat.pro.uikit.ui_settings.UIKitSettings
 import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.Notification
 import com.example.sharencare.Model.Post
@@ -89,6 +95,8 @@ class HomeFragment : Fragment() {
         checkFollowings()
         message_btn_home_fragment = view.findViewById(R.id.message_btn_home_fragment)
         message_btn_home_fragment.setOnClickListener{
+            modifyCometUI()
+//            cometUserUpdate()
             startActivity(Intent(context, CometChatUI::class.java))
         }
 
@@ -216,6 +224,24 @@ class HomeFragment : Fragment() {
 
     }
 
+    private fun modifyCometUI() {
+        UIKitSettings.polls = false
+        UIKitSettings.sendVoiceNotes = false
+        UIKitSettings.blockUser = false
+//        UIKitSettings.userSettings = false
+    }
+
+    private fun cometUserUpdate() {
+        val user = com.cometchat.pro.models.User()
+        CometChat.updateCurrentUserDetails(user, object : CometChat.CallbackListener<com.cometchat.pro.models.User>() {
+            override fun onSuccess(p0: com.cometchat.pro.models.User) {
+                Log.d(TAG, "Comet user Update Success with" + p0.toString())
+            }
+            override fun onError(p0: CometChatException) {
+                p0.message?.let { Log.d(TAG, it) }
+            }
+        })
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

@@ -39,7 +39,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/cometchat_navigation_bottom" />
-
+            app:menu="@menu/cometchat_navigation_bottom"
+            app:itemTextColor="@drawable/bottom_nav_color"
+            app:backgroundTint="@color/bottom_navigation_background"
+            app:itemIconTint="@drawable/bottom_nav_color"
+            android:background="@drawable/round_corners"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

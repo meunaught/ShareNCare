@@ -30,4 +30,13 @@
     <color name="orange_200">#FFA500</color>
     <color name="green">#43FA36</color>
     <color name="optionsColor">#808080</color>
+
+
+    <color name="colorPurpleDark">#301934</color>
+    <color name ="bottom_text_selected_white">#fff</color>
+    <color name ="bottom_text_unselected_grey">#A18A8A</color>
+    <color name ="bottom_icon_selected_white">#fff</color>
+    <color name ="bottom_icon_unselected_grey">#A18A8A</color>
+    <color name ="bottom_navigation_background">#301934</color>
+    <color name="shade_color">#9F9C9C</color>
 </resources>

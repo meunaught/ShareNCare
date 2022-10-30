@@ -2,6 +2,7 @@ package com.example.sharencare.fragments
 
 import android.app.ProgressDialog
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -107,24 +108,36 @@ class SignInFragment : Fragment() {
         return view
     }
 
-
     private fun loginComet(uid: String) {
         val AUTH_KEY = AppConfig.AppDetails.AUTH_KEY
         if (CometChat.getLoggedInUser() == null) {
             CometChat.login(uid, AUTH_KEY, object : CometChat.CallbackListener<User?>() {
                 override fun onSuccess(user: User?) {
-                    Log.d(ContentValues.TAG, "Login Successful : "+user.toString())
+                    Log.d(TAG, "Login Successful : "+user.toString())
                 }
 
                 override fun onError(e: CometChatException) {
-                    Log.d(ContentValues.TAG, "Login failed with exception: " + e.message);
+                    Log.d(TAG, "Login failed with exception: " + e.message);
                 }
             })
         }
         else {
             //user logged in already
+            Log.d(TAG, "already logged in" + CometChat.getLoggedInUser().name)
+            cometLogout()
         }
 
+    }
+    private fun cometLogout() {
+        CometChat.logout(object : CometChat.CallbackListener<String>() {
+            override fun onSuccess(p0: String?) {
+                Log.d(TAG, "Comet Logout SigninFrag completed successfully")
+            }
+
+            override fun onError(p0: CometChatException?) {
+                Log.d(TAG, "Comet Logout SigninFrag failed with exception: " + p0?.message)
+            }
+        })
     }
 
     companion object {

@@ -2,6 +2,7 @@ package com.example.sharencare.fragments
 
 import android.app.ProgressDialog
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -182,13 +183,11 @@ class SignUpFragment : Fragment() {
     private fun cometLogout() {
         CometChat.logout(object : CometChat.CallbackListener<String>() {
             override fun onSuccess(p0: String?) {
-                Log.d(ContentValues.TAG, "Comet Logout Firebase completed successfully")
+                Log.d(TAG, "Comet Logout Firebase completed successfully")
             }
-
             override fun onError(p0: CometChatException?) {
-                Log.d(ContentValues.TAG, "Comet Logout Firebase failed with exception: " + p0?.message)
+                Log.d(TAG, "Comet Logout Firebase failed with exception: " + p0?.message)
             }
-
         })
     }
 

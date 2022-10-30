@@ -99,7 +99,6 @@ class My_followersFragment : Fragment() {
             }
         })
 
-
         return view
     }
 
