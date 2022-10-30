@@ -1,35 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.SignInFragment"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:gravity="center"
-    >
+    android:gravity="center">
 
-    <EditText
-        android:id="@+id/email_editText_signIn_fragment"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailTextInputLayout_signIn_fragment"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        />
+        app:helperTextTextColor="@color/red"
+        app:startIconDrawable="@drawable/email_image"
+        app:boxCornerRadiusTopEnd="22dp"
+        app:boxCornerRadiusTopStart="22dp"
+        app:boxCornerRadiusBottomStart="22dp"
+        app:boxCornerRadiusBottomEnd="22dp"
+        app:boxStrokeWidth="2dp"
+        >
 
-    <EditText
-        android:id="@+id/password_editText_signIn_fragment"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email_editText_signIn_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordTextInputLayout_signIn_fragment"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        />
+        app:helperTextTextColor="@color/red"
+        app:startIconDrawable="@drawable/password_image"
+        app:endIconMode="password_toggle"
+        app:boxCornerRadiusTopEnd="22dp"
+        app:boxCornerRadiusTopStart="22dp"
+        app:boxCornerRadiusBottomStart="22dp"
+        app:boxCornerRadiusBottomEnd="22dp"
+        app:boxStrokeWidth="2dp"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_editText_signIn_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signIn_btn_sign_in_fragment"
@@ -39,8 +69,9 @@
         android:text="Sign In"
         android:layout_marginEnd="15dp"
         android:layout_marginStart="15dp"
-        android:textSize="20sp"
+        android:background="@drawable/shape_buttons"
+        android:backgroundTint= "@color/colorPurpleDark"
+        android:textColor="@color/white"
         />
-
 
 </LinearLayout>

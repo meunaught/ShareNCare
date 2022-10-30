@@ -1,51 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".fragments.SignUpFragment"
     android:orientation="vertical"
     android:layout_gravity="center"
     android:gravity="center"
     >
 
-    <EditText
-        android:id="@+id/fullname_editText_signUp_fragment"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/fullnameTextInputLayout_signUp_fragment"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Full Name"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        />
+        app:helperTextTextColor="@color/red"
+        app:startIconDrawable="@drawable/person_image"
+        app:boxCornerRadiusTopEnd="22dp"
+        app:boxCornerRadiusTopStart="22dp"
+        app:boxCornerRadiusBottomStart="22dp"
+        app:boxCornerRadiusBottomEnd="22dp"
+        app:boxStrokeWidth="2dp"
+        >
 
-    <EditText
-        android:id="@+id/username_editText_signUp_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Username"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fullname_editText_signUp_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Full Name"
+            />
 
-    <EditText
-        android:id="@+id/email_editText_signUp_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:inputType="textEmailAddress"
-        />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/password_editText_signUp_fragment"
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/usernameTextInputLayout_signUp_fragment"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:inputType="textPassword"
-        />
+        app:helperTextTextColor="@color/red"
+        app:startIconDrawable="@drawable/person_image"
+        app:boxCornerRadiusTopEnd="22dp"
+        app:boxCornerRadiusTopStart="22dp"
+        app:boxCornerRadiusBottomStart="22dp"
+        app:boxCornerRadiusBottomEnd="22dp"
+        app:boxStrokeWidth="2dp"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/username_editText_signUp_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailTextInputLayout_signUp_fragment"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        app:helperTextTextColor="@color/red"
+        app:startIconDrawable="@drawable/email_image"
+        app:boxCornerRadiusTopEnd="22dp"
+        app:boxCornerRadiusTopStart="22dp"
+        app:boxCornerRadiusBottomStart="22dp"
+        app:boxCornerRadiusBottomEnd="22dp"
+        app:boxStrokeWidth="2dp"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email_editText_signUp_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordTextInputLayout_signUp_fragment"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        app:helperTextTextColor="@color/red"
+        app:startIconDrawable="@drawable/password_image"
+        app:boxCornerRadiusTopEnd="22dp"
+        app:boxCornerRadiusTopStart="22dp"
+        app:boxCornerRadiusBottomStart="22dp"
+        app:boxCornerRadiusBottomEnd="22dp"
+        app:boxStrokeWidth="2dp"
+        app:endIconMode="password_toggle"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_editText_signUp_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signUp_btn_sign_up_fragment"
@@ -55,7 +120,9 @@
         android:text="Sign Up"
         android:layout_marginEnd="15dp"
         android:layout_marginStart="15dp"
-        android:textSize="20sp"
+        android:background="@drawable/shape_buttons"
+        android:backgroundTint= "@color/colorPurpleDark"
+        android:textColor="@color/white"
         />
 
 

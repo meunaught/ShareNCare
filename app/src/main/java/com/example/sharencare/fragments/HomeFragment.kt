@@ -7,13 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.cometchat.pro.uikit.ui_components.cometchat_ui.CometChatUI
 import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.Notification
 import com.example.sharencare.Model.Post
+import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.example.sharencare.adapter.PostAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +26,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import de.hdodenhof.circleimageview.CircleImageView
+import org.webrtc.StatsReport
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -40,6 +46,8 @@ class HomeFragment : Fragment() {
     private var param2: String? = null
 
     private lateinit var message_btn_home_fragment : ImageButton
+    private lateinit var profileImage : CircleImageView
+    private lateinit var usernameTextView: TextView
     private var postAdapter : PostAdapter ?= null
     private var postList : MutableList<Post> ?= null
     private var followingList : MutableList<Post>?= null
@@ -62,6 +70,8 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_home, container, false)
         firebaseUser = FirebaseAuth.getInstance().currentUser
+        profileImage = view.findViewById(R.id.profileImage_home_fragment)
+        usernameTextView = view.findViewById(R.id.username_textview_home_fragment)
 
         var recyclerView : RecyclerView?= null
         recyclerView = view.findViewById(R.id.recycler_view_home_fragment)
@@ -83,6 +93,7 @@ class HomeFragment : Fragment() {
         }
 
         badgeSetForNotifications()
+        userInfo()
 
         return view
     }
@@ -129,6 +140,30 @@ class HomeFragment : Fragment() {
             }
         })
 
+    }
+
+    private fun userInfo(){
+        val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser?.uid.toString())
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists())
+                {
+                    val user = snapshot.getValue(User::class.java)
+                    usernameTextView.text = user?.getUsername().toString()
+                    context?.let {
+                        Glide.with(it).load(user?.getImage()).fitCenter().diskCacheStrategy(
+                            DiskCacheStrategy.ALL)
+                            .error(R.drawable.send_icon)
+                            .dontTransform().into(profileImage)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println(error)
+            }
+
+        })
     }
 
     private fun checkFollowings() {

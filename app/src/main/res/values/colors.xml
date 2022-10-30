@@ -13,4 +13,10 @@
     <color name="colorBlack"> #c2bdbf </color>
     <color name="colorBlue"> #5552FF </color>
     <color name = "colorGray"> #B2BEB5 </color>
+    <color name="colorPurpleDark">#301934</color>
+    <color name ="bottom_text_selected_white">#fff</color>
+    <color name ="bottom_text_unselected_grey">#A18A8A</color>
+    <color name ="bottom_icon_selected_white">#fff</color>
+    <color name ="bottom_icon_unselected_grey">#A18A8A</color>
+    <color name ="bottom_navigation_background">#301934</color>
 </resources>

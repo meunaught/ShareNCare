@@ -23,9 +23,12 @@
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@android:color/white"
                 app:labelVisibilityMode="labeled"
                 app:menu="@menu/bottom_nav_menu"
+                app:itemTextColor="@drawable/bottom_nav_color"
+                app:backgroundTint="@color/bottom_navigation_background"
+                app:itemIconTint="@drawable/bottom_nav_color"
+                android:background="@drawable/round_corners"
                 />
 
 

@@ -1,32 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity"
     android:orientation="vertical"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:weightSum="15"
     >
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linearLayout1_login_activity"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_centerVertical="true"
         android:orientation="vertical"
-        android:weightSum="16"
+        >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        >
+
+    </de.hdodenhof.circleimageview.CircleImageView>
+
+    <TextView
+        android:id="@+id/appNameTextView_login_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="@color/colorPurpleDark"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        >
+    </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1_login_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_centerVertical="true"
         >
 
         <LinearLayout
+            android:paddingBottom="5dp"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2"
-            android:layout_weight="2"
             android:layout_gravity="center"
             android:gravity="center"
+            android:paddingTop="5dp"
             >
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/signIn_btn_activity_login"
@@ -35,7 +63,10 @@
                 android:layout_weight="1"
                 android:text="Sign In"
                 android:layout_marginStart="15dp"
-
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/shape_buttons"
+                android:backgroundTint="@color/colorPurpleDark"
+                android:textColor="@color/white"
                 />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/signUp_btn_activity_login"
@@ -44,6 +75,10 @@
                 android:layout_weight="1"
                 android:text="Sign Up"
                 android:layout_marginEnd="15dp"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/shape_buttons"
+                android:backgroundTint="@color/colorPurpleDark"
+                android:textColor="@color/white"
                 />
 
         </LinearLayout>
@@ -52,21 +87,24 @@
             android:layout_marginTop="15dp"
             android:id="@+id/frame_layout_activity_login"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="12"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
+            android:layout_gravity="center"
+            android:foregroundGravity="center"
             />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/forgetPassword_btn_activity_login"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:text="Forget Password ?"
+            android:layout_height="wrap_content"
+            android:text="Forgot Password ?"
             android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
+            android:background="@drawable/shape_buttons"
+            android:backgroundTint="@color/colorPurpleDark"
+            android:textColor="@color/white"
             />
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
