@@ -1,16 +1,24 @@
 package com.example.sharencare.fragments
 
+import android.Manifest
+import android.app.DownloadManager
 import android.app.ProgressDialog;
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +34,9 @@ import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.example.sharencare.adapter.PostAdapter
+import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.SkeletonLayout
+import com.faltenreich.skeletonlayout.applySkeleton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -58,6 +69,8 @@ class HomeFragment : Fragment() {
     private var postList : MutableList<Post> ?= null
     private var followingList : MutableList<Post>?= null
     private var firebaseUser : FirebaseUser ?= null
+    private lateinit var skeleton: Skeleton
+    private lateinit var recyclerView: RecyclerView
 
     private var progressDialog : ProgressDialog ?= null
 
@@ -79,7 +92,6 @@ class HomeFragment : Fragment() {
         profileImage = view.findViewById(R.id.profileImage_home_fragment)
         usernameTextView = view.findViewById(R.id.username_textview_home_fragment)
 
-        var recyclerView : RecyclerView?= null
         recyclerView = view.findViewById(R.id.recycler_view_home_fragment)
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
@@ -87,9 +99,11 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager =linearLayoutManager
 
         postList = ArrayList()
-        postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>) }
+        postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>,(activity as MainActivity)) }
         postAdapter?.setHasStableIds(true)
-        recyclerView.adapter = postAdapter
+        skeleton = recyclerView.applySkeleton(R.layout.post)
+        skeleton.showSkeleton()
+//        recyclerView.adapter = postAdapter
         recyclerView.setItemViewCacheSize(25)
 
         checkFollowings()
@@ -105,6 +119,33 @@ class HomeFragment : Fragment() {
 
         return view
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == 1 &&  grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            println("Request Granted")
+
+            val fileName : String
+            val url : String
+            val preferences = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
+            if(preferences != null)
+            {
+                println("Preference is not null")
+                fileName = preferences.getString("fileName","none").toString()
+                url = preferences.getString("url","none").toString()
+                println(fileName)
+                val request : DownloadManager.Request = DownloadManager.Request(Uri.parse(url))
+                request.setTitle(fileName)
+                request.allowScanningByMediaScanner()
+                request.setAllowedOverMetered(true)
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileName)
+                val dm : DownloadManager?= context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
+                dm?.enqueue(request)
+            }
+        }
+    }
+
 
     private fun badgeSetForNotifications() {
         var counter = 0
@@ -200,11 +241,9 @@ class HomeFragment : Fragment() {
 
     private fun retrievePosts() {
         val postsRef = FirebaseDatabase.getInstance().reference.child("Posts")
-        postsRef.addValueEventListener(object : ValueEventListener{
+        postsRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 postList?.clear()
-                var newList : MutableList<Post>? = null
-                newList = ArrayList()
                 for(temp_snapshot in snapshot.children){
                     val post = temp_snapshot.getValue(Post :: class.java)
                     for(id in (followingList as ArrayList<*>)){
@@ -213,8 +252,9 @@ class HomeFragment : Fragment() {
                             postList?.add(post!!)
                         }
                     }
-                    postAdapter?.notifyDataSetChanged()
                 }
+                skeleton.showOriginal()
+                recyclerView.adapter = postAdapter
             }
 
             override fun onCancelled(error: DatabaseError) {

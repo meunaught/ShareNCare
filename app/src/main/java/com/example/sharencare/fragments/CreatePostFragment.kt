@@ -204,7 +204,6 @@ class CreatePostFragment : Fragment() {
             {
                 val downloadUrl = task.result
                 imageUrl = downloadUrl.toString()
-                //Toast.makeText(context,"Image has been uploaded successfully", Toast.LENGTH_LONG).show()
                 if(reference == true)
                 {
                     uploadPdfIntoFirebase();

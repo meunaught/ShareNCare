@@ -19,13 +19,13 @@
             android:id="@+id/app_bar_layout_comment_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/colorPurpleDark"
             >
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_comment_activity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+                android:background="@color/colorPurpleDark"
                 android:layout_marginTop="5dp"
                 >
                 <LinearLayout
@@ -44,7 +44,7 @@
                         android:maxLines="1"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black"
+                        android:textColor= "@color/white"
                         />
 
                 </LinearLayout>
@@ -104,7 +104,7 @@
                             android:textStyle="bold"
                             android:layout_marginLeft="5dp"
                             android:layout_marginTop="14dp"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPurpleDark"
                             />
 
                     </LinearLayout>
@@ -137,7 +137,7 @@
                         android:text="Pdf name here"
                         android:gravity="center"
                         android:layout_marginTop="10dp"
-                        android:background="@color/teal_700"
+                        android:background="@color/shade_color"
                         android:layout_gravity="center"
                         >
                     </TextView>
@@ -178,12 +178,12 @@
                             android:id="@+id/commentNumberTextView_comment_activity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Comments"
+                            android:text=""
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             android:gravity="center"
                             android:layout_gravity="center"
-                            android:textSize="7sp"
+                            android:textSize="12sp"
                             android:layout_marginStart="5dp"
                             >
                         </TextView>
@@ -205,16 +205,47 @@
 
                 </androidx.cardview.widget.CardView>
 
+                <androidx.cardview.widget.CardView
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:cardElevation="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:text="Comments "
+                    android:textColor="@color/colorPurpleDark"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="3dp"
+                    >
+
+                </TextView>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_comment_activity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
 
                     >
                 </androidx.recyclerview.widget.RecyclerView>
+
+                </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
@@ -226,6 +257,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/colorPurpleDark"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -233,24 +265,42 @@
             android:orientation="horizontal"
             android:weightSum="10"
             >
-        <EditText
-            android:id="@+id/editText_comment_activity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"
-            android:hint="Write a comment here"
-            android:textSize="15sp"
-            android:layout_marginStart="10dp"
-            >
-        </EditText>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailTextInputLayout_comment_activity"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                app:helperTextTextColor="@color/red"
+                app:boxCornerRadiusTopEnd="22dp"
+                app:boxCornerRadiusTopStart="22dp"
+                app:boxCornerRadiusBottomStart="22dp"
+                app:boxCornerRadiusBottomEnd="22dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                app:boxBackgroundColor="@color/white"
+                app:hintEnabled="false"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_comment_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Write your comment here"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
             android:id="@+id/sendImageBtn_comment_activity"
             android:layout_width="0dp"
             android:layout_height="25dp"
             android:layout_weight="1"
-            android:src="@drawable/send_icon"
-            android:scaleType="fitCenter"
+            android:src="@drawable/send_image_white"
+            android:scaleType="centerInside"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
             >

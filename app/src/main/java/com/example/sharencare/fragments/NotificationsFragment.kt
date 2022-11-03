@@ -11,6 +11,8 @@ import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.Notification
 import com.example.sharencare.R
 import com.example.sharencare.adapter.NotificationsAdapter
+import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.applySkeleton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -33,10 +35,11 @@ class NotificationsFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private var recyclerview : RecyclerView?= null
+    private lateinit var recyclerview : RecyclerView
     private var notificationAdapter : NotificationsAdapter? = null
     private var mNotifications : MutableList<Notification>?= null
     private lateinit var firebaseUser: FirebaseUser
+    private lateinit var skeleton: Skeleton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +67,8 @@ class NotificationsFragment : Fragment() {
         mNotifications = ArrayList()
         notificationAdapter = context?.let { NotificationsAdapter(it,mNotifications as ArrayList<Notification>,true) }
         notificationAdapter?.setHasStableIds(true)
-        recyclerview?.adapter = notificationAdapter
+        skeleton = recyclerview.applySkeleton(R.layout.notifications_layout)
+        skeleton.showSkeleton()
         recyclerview?.setItemViewCacheSize(10)
 
         val navView = (activity as MainActivity).navView
@@ -94,10 +98,10 @@ class NotificationsFragment : Fragment() {
                     {
                         notification.let { mNotifications?.add(it) }
                     }
-
-                    notificationAdapter?.notifyDataSetChanged()
-                    setSeenNotifications()
                 }
+                skeleton.showOriginal()
+                recyclerview.adapter = notificationAdapter
+                setSeenNotifications()
             }
 
             override fun onCancelled(error: DatabaseError) {

@@ -66,6 +66,7 @@ class ProfileFragment : Fragment() {
     private lateinit var username_textView_profile_fragment : TextView
     private lateinit var fullName_textView_profile_fragment : TextView
     private lateinit var bio_textView_profile_fragment : TextView
+    private lateinit var posts_textView_profile_fragment : TextView
     private lateinit var profile_picture_profile_fragment : ImageView
     private lateinit var scrollView : NestedScrollView
     private lateinit var toolbar: Toolbar
@@ -98,6 +99,7 @@ class ProfileFragment : Fragment() {
         fullName_textView_profile_fragment = view.findViewById(R.id.fullName_textView_profile_fragment)
         bio_textView_profile_fragment = view.findViewById(R.id.bio_textView_profile_fragment)
         profile_picture_profile_fragment = view.findViewById(R.id.profile_picture_profile_fragment)
+        posts_textView_profile_fragment = view.findViewById(R.id.posts_textView_profile_fragment)
         scrollView = view.findViewById(R.id.scrollView_profile_fragment)
         toolbar = view.findViewById(R.id.toolbar_profile_fragment)
 
@@ -137,7 +139,7 @@ class ProfileFragment : Fragment() {
         linearLayoutManager.stackFromEnd = true
         recyclerView?.layoutManager =linearLayoutManager
         postList = ArrayList()
-        postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>) }
+        postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>,(activity as MainActivity)) }
         postAdapter?.setHasStableIds(true)
         recyclerView?.adapter = postAdapter
         recyclerView?.setItemViewCacheSize(25)
@@ -521,6 +523,25 @@ class ProfileFragment : Fragment() {
         })
     }
 
+    private fun getPosts() {
+        var temp = 0
+        val postsRef = FirebaseDatabase.getInstance().reference.child("Posts")
+        postsRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(temp_snapshot in snapshot.children){
+                    val post = temp_snapshot.getValue(Post :: class.java)
+                    if(firebaseUser.uid == post?.getPublisher()){
+                        temp++
+                    }
+                    posts_textView_profile_fragment.text = temp.toString()
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
     override fun onStop() {
         super.onStop()
         val preference = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)?.edit()
@@ -536,6 +557,7 @@ class ProfileFragment : Fragment() {
 
         getFollowers()
         getFollowing()
+        getPosts()
         userInfo()
     }
 

@@ -45,6 +45,11 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.faltenreich.skeletonlayout.SkeletonLayout
+        android:id="@+id/skeleton_layout_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_notifications_fragment"
         android:layout_width="match_parent"
@@ -52,6 +57,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         />
+
+    </com.faltenreich.skeletonlayout.SkeletonLayout>
 
 
 </LinearLayout>

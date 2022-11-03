@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -109,6 +110,8 @@ class CommentActivity : AppCompatActivity() {
                 saveCommentIntoFirebase()
                 postCreator?.getPublisher()?.let { it1 -> saveNotification("2",postID, it1) }
                 retrieveUser("has commented on your post")
+                comment?.onEditorAction(EditorInfo.IME_ACTION_DONE)
+                comment?.text?.clear()
             }
         }
     }
@@ -144,16 +147,19 @@ class CommentActivity : AppCompatActivity() {
 
         commentRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+                var counter = 0
                 mComments?.clear()
                 for(temp_snapshot in snapshot.children){
                     val temp_comment = temp_snapshot.getValue(Comment :: class.java)
                     if( postID == temp_comment?.getPostID())
                     {
-                        mComments?.add(temp_comment)
-                        System.out.println(temp_comment.getCommentID() + " " + temp_comment.getPostID() + " "
-                                + temp_comment.getPublisher() + " " + temp_comment.getMessage())
+                        mComments?.add(0,temp_comment)
+                        counter++
                     }
-
+                    if(counter>0)
+                    {
+                        commentNumber?.text = counter.toString()
+                    }
                     commentAdapter?.notifyDataSetChanged()
                 }
             }

@@ -1,61 +1,46 @@
 package com.example.sharencare.adapter
 
-import kotlinx.coroutines.*
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Environment
+import android.provider.MediaStore
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.NonNull
-import androidx.appcompat.widget.AppCompatButton
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.startActivity
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.sharencare.*
+import com.example.sharencare.Model.Comment
 import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.example.sharencare.fragments.ProfileFragment
-import com.example.sharencare.fragments.SignInFragment
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.coroutines.launch
-import java.io.IOException
-import java.lang.Exception
-import java.net.MalformedURLException
-import java.net.URL
-import java.net.UnknownServiceException
-import kotlin.math.sign
+import kotlinx.coroutines.*
+
 
 class PostAdapter(private var mContext : Context,
-                  private var mPost : List<Post>) : RecyclerView.Adapter<PostAdapter.ViewHolder>()
+                  private var mPost : List<Post>,private var mainActivity: MainActivity) : RecyclerView.Adapter<PostAdapter.ViewHolder>()
 {
+
     private var firebaseuser: FirebaseUser? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostAdapter.ViewHolder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.post,parent,false)
@@ -136,28 +121,27 @@ class PostAdapter(private var mContext : Context,
 
         holder.postPdf.setOnClickListener {
             if(!post.getPostPdfName().isEmpty()){
-                Toast.makeText(mContext,"Long click to download the pdf file",Toast.LENGTH_SHORT).show()
+                val browserIntent = Intent(Intent.ACTION_VIEW)
+                browserIntent.setDataAndType(Uri.parse(post.getPostPdf()),"application/pdf")
+                println(post.getPostPdf())
+                val chooser = Intent.createChooser(browserIntent,post.getPostPdfName())
+                chooser.flags = Intent.FLAG_ACTIVITY_NEW_TASK // optional
+                mContext.startActivity(chooser)
             }
         }
-        holder.postPdf.setOnLongClickListener ( object : View.OnLongClickListener{
-            override fun onLongClick(p0: View?): Boolean {
-                downloadPdfFile(mContext,post.getPostPdfName(),post.getPostPdf())
-                return true
-            }
-        } )
 
         holder.postImage.setOnClickListener{
             if(!post.getPostImage().isEmpty()){
-                Toast.makeText(mContext,"Long click to download the image file",Toast.LENGTH_SHORT).show()
+                val browserIntent = Intent(Intent.ACTION_VIEW)
+                browserIntent.setDataAndType(Uri.parse(post.getPostImage()),
+                    "image/*"
+                )
+                println(post.getPostImage())
+                val chooser = Intent.createChooser(browserIntent,post.getPostImage())
+                chooser.flags = Intent.FLAG_ACTIVITY_NEW_TASK // optional
+                mContext.startActivity(chooser)
             }
         }
-
-        holder.postImage.setOnLongClickListener(object : View.OnLongClickListener{
-            override fun onLongClick(p0: View?): Boolean {
-                downloadImageFile(mContext,post.getPostImage(),post.getPostImage())
-                return true
-            }
-        })
 
         holder.username.setOnClickListener {
             val preference = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
@@ -180,6 +164,7 @@ class PostAdapter(private var mContext : Context,
         publisherInfo(holder.username,holder.profileImage,post.getPublisher())
         likeInfoLoading(post.getPostID(),holder)
         getLike(post.getPostID(),holder)
+        getComment(post.getPostID(),holder)
     }
 
     private fun saveNotification(type : String,postID: String,publisher: String) {
@@ -253,6 +238,33 @@ class PostAdapter(private var mContext : Context,
         })
     }
 
+    private fun getComment(postID: String,holder: ViewHolder)
+    {
+        val commentRef = FirebaseDatabase.getInstance().reference.child("Comments")
+
+        commentRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var counter = 0
+                for(temp_Snapshot in snapshot.children)
+                {
+                    val comment = temp_Snapshot.getValue(Comment::class.java)
+                    if(comment?.getPostID() == postID)
+                    {
+                        counter++
+                    }
+                }
+                if(counter>0)
+                {
+                    holder.commentNumber.text = counter.toString()
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
     private fun likeInfoLoading(postID: String,holder: ViewHolder) {
         val userRef =  firebaseuser?.uid.let { it1 ->
             FirebaseDatabase.getInstance().reference.child("Like")
@@ -307,87 +319,32 @@ class PostAdapter(private var mContext : Context,
     }
 
 
-    private fun loadImage(postImageUrl: String, postImage: ImageView) {
-        runBlocking {
-            launch {
-                val result = async(Dispatchers.IO) {
-                    val url = URL(postImageUrl)
-
-                    val options = BitmapFactory.Options().apply {
-                        inJustDecodeBounds = true
-                    }
-
-                    BitmapFactory.decodeStream(url.openStream(),null,options)
-                    val inSampleSizeVal = calculateInSampleSize(options,100,300)
-
-                    val finalOptions = BitmapFactory.Options().apply {
-                        inJustDecodeBounds  = true
-                        inSampleSize = inSampleSizeVal
-                    }
-
-                    return@async BitmapFactory.decodeStream(url.openStream(),null,finalOptions)
-                }
-                try {
-                    val bitmap = result.await()
-                    postImage.setImageBitmap(bitmap)
-                }
-                catch(e : IOException)
-                {
-                    System.out.println("Error")
-                }
-                catch (e: UnknownServiceException)
-                {
-                    System.out.println("Error2")
-                }
-                catch(e : MalformedURLException){
-                    System.out.println("Error")
-                }
-            }
-        }
-    }
-
-    fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
-        // Raw height and width of image
-        val (height: Int, width: Int) = options.run { outHeight to outWidth }
-        var inSampleSize = 1
-
-        if (height > reqHeight || width > reqWidth) {
-
-            val halfHeight: Int = height / 2
-            val halfWidth: Int = width / 2
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-
-        return inSampleSize
-    }
-
     private fun downloadImageFile(context: Context,fileName: String,url: String?){
-        val request : DownloadManager.Request = DownloadManager.Request(Uri.parse(url))
-        request.setTitle(fileName)
-        request.allowScanningByMediaScanner()
-        request.setAllowedOverMetered(true)
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileName)
-        val dm : DownloadManager?= context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
-        dm?.enqueue(request)
-    }
+        /*val homeFragment : HomeFragment = HomeFragment()
+        homeFragment.givePermissions(context,mainActivity,fileName,url)*/
+        val permissionArray = arrayOf<String>(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) !=
+            PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission
+                (context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            val preference = mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit()
+            preference.putString("fileName",fileName)
+            preference.putString("url",url)
+            preference.apply()
 
-    private fun downloadPdfFile(context: Context, fileName: String, url: String?)
-    {
-        val request : DownloadManager.Request = DownloadManager.Request(Uri.parse(url))
-        request.setTitle(fileName)
-        request.setMimeType("application/pdf")
-        request.allowScanningByMediaScanner()
-        request.setAllowedOverMetered(true)
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileName)
-        val dm : DownloadManager?= context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
-        dm?.enqueue(request)
+            ActivityCompat.requestPermissions(mainActivity, permissionArray, 1)
+            println("Request wanted")
+        }
+        else{
+            val request : DownloadManager.Request = DownloadManager.Request(Uri.parse(url))
+            request.setTitle(fileName)
+            request.allowScanningByMediaScanner()
+            request.setAllowedOverMetered(true)
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileName)
+            val dm : DownloadManager?= context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
+            dm?.enqueue(request)
+        }
     }
 
     private fun publisherInfo(username: TextView, profileImage: CircleImageView, publisher: String) {

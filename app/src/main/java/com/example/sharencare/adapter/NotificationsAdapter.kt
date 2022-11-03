@@ -29,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
 
-
 class NotificationsAdapter(private var mContext : Context,
                            private var mNoti : MutableList<Notification>,
                            private var isFragment : Boolean = false) : RecyclerView.Adapter<NotificationsAdapter.ViewHolder>()
@@ -97,7 +96,6 @@ class NotificationsAdapter(private var mContext : Context,
         if(notification.getType().equals("1"))
         {
             holder.messageTextView.text = Html.fromHtml("<b>"+ holder.username +"</b >" + "   "+ "has liked your post")
-            //System.out.println(notification.getNotificationID())
             val text = TimeAgo.using(notification.getNotificationID().toLong())
             holder.timeAgo.text = text.toString()
         }
