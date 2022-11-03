@@ -28,8 +28,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:src="@drawable/ic_new_call" />
+            android:layout_marginBottom="16dp" />
+<!--            android:src="@drawable/ic_new_call" />-->
     </RelativeLayout>
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

@@ -24,7 +24,7 @@
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/cometchat_call_history_item.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/cometchat_call_list_item.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/fragment_cometchat_all_call.xml" value="0.192481884057971" />
-        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/fragment_cometchat_calls.xml" value="0.33" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/fragment_cometchat_calls.xml" value="0.1" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/calls/layout/fragment_cometchat_missed_call.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/chats/layout/cometchat_conversation_list_item.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/chats/layout/conversation_shimmer.xml" value="0.192481884057971" />
@@ -61,6 +61,7 @@
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/drawable/round_corners.xml" value="0.1855" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/activity_screen.xml" value="0.192481884057971" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/cc_dialog.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/custom_toast.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/fragment_stickers_view.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/group_list_item.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/layouts/others/layout/image_dialog_view.xml" value="0.32563405797101447" />

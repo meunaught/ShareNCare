@@ -57,7 +57,7 @@
                     app:backgroundTint="@color/red"
                     android:layout_marginLeft="16dp"
                     app:cornerRadius="8dp"
-                    android:paddingLeft="32dp"
+                    android:paddingLeft="31dp"
                     android:paddingRight="32dp"
                     android:layout_height="wrap_content"/>
                 <com.google.android.material.button.MaterialButton
@@ -68,7 +68,7 @@
                     app:backgroundTint="@color/colorPrimary"
                     android:layout_marginLeft="16dp"
                     app:cornerRadius="8dp"
-                    android:paddingLeft="32dp"
+                    android:paddingLeft="31dp"
                     android:paddingRight="32dp"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
