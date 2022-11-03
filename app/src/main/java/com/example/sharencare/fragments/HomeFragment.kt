@@ -231,17 +231,6 @@ class HomeFragment : Fragment() {
 //        UIKitSettings.userSettings = false
     }
 
-    private fun cometUserUpdate() {
-        val user = com.cometchat.pro.models.User()
-        CometChat.updateCurrentUserDetails(user, object : CometChat.CallbackListener<com.cometchat.pro.models.User>() {
-            override fun onSuccess(p0: com.cometchat.pro.models.User) {
-                Log.d(TAG, "Comet user Update Success with" + p0.toString())
-            }
-            override fun onError(p0: CometChatException) {
-                p0.message?.let { Log.d(TAG, it) }
-            }
-        })
-    }
     companion object {
         /**
          * Use this factory method to create a new instance of

@@ -423,6 +423,7 @@ class editProfileFragment : Fragment() {
         usersRef.child(currentUserID).updateChildren(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
+                cometUserUpdate(fullname, imageUrl)
                 Log.d("myTag", "inside task succesful");
                 Toast.makeText(context,"Account has been updated successfully.",Toast.LENGTH_LONG).show()
             }
@@ -470,8 +471,21 @@ class editProfileFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
             image_btn_edit_profile_fragment.setImageURI(imageUri)
-//            cometUserUpdate()
         }
+    }
+
+    private fun cometUserUpdate(name : String, avatar : String) {
+        val user = com.cometchat.pro.models.User()
+        user.name = name
+        user.avatar = avatar
+        CometChat.updateCurrentUserDetails(user, object : CometChat.CallbackListener<com.cometchat.pro.models.User>() {
+            override fun onSuccess(p0: com.cometchat.pro.models.User) {
+                Log.d(TAG, "cometUser Updated" + p0.toString())
+            }
+            override fun onError(p0: CometChatException) {
+                p0.message?.let { Log.d(TAG, it) }
+            }
+        })
     }
 
 
