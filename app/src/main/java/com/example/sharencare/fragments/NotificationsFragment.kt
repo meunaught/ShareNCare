@@ -69,7 +69,7 @@ class NotificationsFragment : Fragment() {
         notificationAdapter?.setHasStableIds(true)
         skeleton = recyclerview.applySkeleton(R.layout.notifications_layout)
         skeleton.showSkeleton()
-        recyclerview?.setItemViewCacheSize(10)
+        recyclerview?.setItemViewCacheSize(25)
 
         val navView = (activity as MainActivity).navView
         val menuItem = navView?.menu?.findItem(R.id.nav_notifications)

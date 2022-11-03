@@ -28,7 +28,6 @@
                 android:id="@+id/profileImage_notifications_layout"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/profile"
                 android:layout_gravity="center"
                 android:foregroundGravity="center"
                 />
@@ -41,7 +40,6 @@
                     android:id="@+id/message_textview_notifications_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Message"
                     android:textSize="20sp"
                     android:textColor="@color/black"
                     android:layout_marginStart="15dp"
@@ -50,7 +48,6 @@
                     android:id="@+id/time_textview_notifications_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Time Ago"
                     android:textSize="12sp"
                     android:gravity="center|left"
                     android:textColor="@color/colorPurpleDark"

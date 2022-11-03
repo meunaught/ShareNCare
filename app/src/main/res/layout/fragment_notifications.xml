@@ -46,7 +46,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.faltenreich.skeletonlayout.SkeletonLayout
-        android:id="@+id/skeleton_layout_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

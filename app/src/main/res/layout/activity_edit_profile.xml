@@ -36,16 +36,6 @@
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     />
-                <ImageButton
-                    android:id="@+id/logout_btn_activity_edit_profile"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_baseline_login_24"
-                    android:layout_gravity="center"
-                    android:backgroundTint="@color/white"
-                    />
 
             </LinearLayout>
 

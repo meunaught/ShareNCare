@@ -47,6 +47,10 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.faltenreich.skeletonlayout.SkeletonLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView_profile_fragment"
         android:layout_width="match_parent"
@@ -236,5 +240,6 @@
 
 
     </androidx.core.widget.NestedScrollView>
+    </com.faltenreich.skeletonlayout.SkeletonLayout>
 
 </LinearLayout>

@@ -54,7 +54,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/send_icon"
+                    android:src="@drawable/send_icon_white"
                     android:layout_gravity="center"
                     android:backgroundTint="@color/colorPurpleDark"
                     />
@@ -110,12 +110,10 @@
                     android:id="@+id/username_textview_home_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Username"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPurpleDark"
                     android:layout_marginStart="10dp"
-
                     />
 
             </LinearLayout>

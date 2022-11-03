@@ -175,7 +175,6 @@ class editProfileFragment : Fragment() {
                 }
                 deleteComments()
             }
-
             override fun onCancelled(error: DatabaseError) {
 
             }

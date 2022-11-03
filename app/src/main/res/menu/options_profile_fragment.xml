@@ -10,27 +10,39 @@
 
         <menu>
             <item
+                android:icon="@drawable/followers"
                 android:id="@+id/options_followers"
                 android:title= "Followers"
-                app:showAsAction="never"
+                app:showAsAction="always"
+
                 />
 
             <item
+                android:icon="@drawable/following"
                 android:id="@+id/options_following"
                 android:title= "Following"
-                app:showAsAction="never"
+                app:showAsAction="always"
                 />
 
             <item
+                android:icon="@drawable/send"
                 android:id="@+id/options_request_sent"
                 android:title= "Sent Requests"
-                app:showAsAction="never"
+                app:showAsAction="always"
                 />
 
             <item
+                android:icon="@drawable/received_request"
                 android:id="@+id/options_request_receive"
                 android:title= "Follow Requests"
-                app:showAsAction="never"
+                app:showAsAction="always"
+                />
+
+            <item
+                android:title="Logout"
+                android:id="@+id/options_logout"
+                app:showAsAction="always"
+                android:icon="@drawable/exit3"
                 />
 
         </menu>

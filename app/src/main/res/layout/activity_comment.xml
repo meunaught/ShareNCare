@@ -116,6 +116,7 @@
                         android:textSize="15sp"
                         android:text="My name is shamik"
                         android:textColor="@color/black"
+                        android:layout_marginTop="3dp"
                         >
                     </TextView>
 
@@ -123,7 +124,6 @@
                         android:id="@+id/post_image_comment_activity"
                         android:layout_width="match_parent"
                         android:layout_height= "300dp"
-                        android:src="@drawable/profile"
                         android:layout_marginTop="10dp"
                         android:scaleType="fitCenter"
                         android:layout_marginBottom="10dp"
@@ -172,6 +172,7 @@
                             android:src="@drawable/heart_not_clicked"
                             android:backgroundTint="@color/white"
                             android:layout_toEndOf="@+id/likeTextView_postLayout"
+                            android:layout_gravity="center"
                             />
 
                         <TextView
@@ -194,9 +195,9 @@
                             android:layout_height="30dp"
                             android:src="@drawable/comment"
                             android:layout_toEndOf="@+id/post_image_like_btn"
-                            android:layout_marginTop="3dp"
                             android:layout_marginStart="6dp"
                             android:backgroundTint="@color/white"
+                            android:layout_gravity="center"
                             />
 
                     </LinearLayout>

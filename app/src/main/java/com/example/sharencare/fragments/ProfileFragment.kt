@@ -1,5 +1,6 @@
 package com.example.sharencare.fragments
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -22,15 +23,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.sharencare.EditProfileActivity
-import com.example.sharencare.FcmNotificationsSender
-import com.example.sharencare.MainActivity
+import com.cometchat.pro.core.CometChat
+import com.cometchat.pro.exceptions.CometChatException
+import com.example.sharencare.*
 import com.example.sharencare.Model.MyDiffCallBack
 import com.example.sharencare.Model.Notification
 import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
-import com.example.sharencare.R
 import com.example.sharencare.adapter.PostAdapter
+import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.SkeletonLayout
+import com.faltenreich.skeletonlayout.applySkeleton
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -39,6 +42,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -70,6 +74,7 @@ class ProfileFragment : Fragment() {
     private lateinit var profile_picture_profile_fragment : ImageView
     private lateinit var scrollView : NestedScrollView
     private lateinit var toolbar: Toolbar
+    private lateinit var skeleton: Skeleton
 
     private var postAdapter : PostAdapter?= null
     private var postList : MutableList<Post> ?= null
@@ -129,6 +134,18 @@ class ProfileFragment : Fragment() {
                     R.id.frame_layout_activity_main,ReceivedRequestsFragment()).addToBackStack(null).commit()
                 return@setOnMenuItemClickListener true
             }
+            else if(item.itemId == R.id.options_logout)
+            {
+                val topic = FirebaseAuth.getInstance().currentUser?.uid.toString()
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
+                FirebaseAuth.getInstance().signOut()
+                cometLogout()
+                val i = Intent(activity, LoginActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(i)
+                activity?.finish()
+            }
             false
         }
 
@@ -141,9 +158,9 @@ class ProfileFragment : Fragment() {
         postList = ArrayList()
         postAdapter = context?.let { PostAdapter(it,postList as ArrayList<Post>,(activity as MainActivity)) }
         postAdapter?.setHasStableIds(true)
-        recyclerView?.adapter = postAdapter
+        skeleton = recyclerView?.applySkeleton(R.layout.post)!!
+        skeleton.showSkeleton()
         recyclerView?.setItemViewCacheSize(25)
-
 
         val preferences = context?.getSharedPreferences("PREFS",Context.MODE_PRIVATE)
         if(preferences != null)
@@ -257,6 +274,20 @@ class ProfileFragment : Fragment() {
         badgeSetForNotifications()
 
         return view
+    }
+
+
+    private fun cometLogout() {
+        CometChat.logout(object : CometChat.CallbackListener<String>() {
+            override fun onSuccess(p0: String?) {
+                Log.d(ContentValues.TAG, "Comet Logout EditProfAct completed successfully")
+            }
+
+            override fun onError(p0: CometChatException?) {
+                Log.d(ContentValues.TAG, "Comet Logout EditProfAct failed with exception: " + p0?.message)
+            }
+
+        })
     }
 
     private fun sendNotification(message: String,receiver: String) {
@@ -374,6 +405,8 @@ class ProfileFragment : Fragment() {
                     ?.let { DiffUtil.calculateDiff(it) }
                 postAdapter?.setItems(newList)
                 postAdapter?.let { result?.dispatchUpdatesTo(it) }
+                skeleton.showOriginal()
+                recyclerView?.adapter = postAdapter
             }
 
             override fun onCancelled(error: DatabaseError) {
