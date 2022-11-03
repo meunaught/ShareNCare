@@ -58,7 +58,6 @@ class EditProfileActivity : AppCompatActivity() {
             startActivity(i)
             finish()
         }
-
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout_activity_edit_profile,
             editProfileFragment()
         ).commit()

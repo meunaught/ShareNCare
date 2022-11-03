@@ -110,32 +110,27 @@ class SignInFragment : Fragment() {
 
     private fun loginComet(uid: String) {
         val AUTH_KEY = AppConfig.AppDetails.AUTH_KEY
-        if (CometChat.getLoggedInUser() == null) {
-            CometChat.login(uid, AUTH_KEY, object : CometChat.CallbackListener<User?>() {
-                override fun onSuccess(user: User?) {
+        if(CometChat.getLoggedInUser() != null) {
+            cometLogout()
+        }
+        CometChat.login(uid, AUTH_KEY, object : CometChat.CallbackListener<User?>() {
+            override fun onSuccess(user: User?) {
                     Log.d(TAG, "Login Successful : "+user.toString())
-                }
-
-                override fun onError(e: CometChatException) {
+            }
+            override fun onError(e: CometChatException) {
                     Log.d(TAG, "Login failed with exception: " + e.message);
                 }
             })
-        }
-        else {
-            //user logged in already
-            Log.d(TAG, "already logged in" + CometChat.getLoggedInUser().name)
-            cometLogout()
-        }
-
     }
+
     private fun cometLogout() {
         CometChat.logout(object : CometChat.CallbackListener<String>() {
             override fun onSuccess(p0: String?) {
-                Log.d(TAG, "Comet Logout SigninFrag completed successfully")
+                Log.d(TAG, "Comet Logout EditProFrag completed successfully")
             }
 
             override fun onError(p0: CometChatException?) {
-                Log.d(TAG, "Comet Logout SigninFrag failed with exception: " + p0?.message)
+                Log.d(TAG, "Comet Logout EditProFrag failed with exception: " + p0?.message)
             }
         })
     }
