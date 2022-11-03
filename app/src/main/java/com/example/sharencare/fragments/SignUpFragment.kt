@@ -132,7 +132,7 @@ class SignUpFragment : Fragment() {
         userMap["email"] = email
         userMap["password"] = password
         userMap["bio"] = "Hi, I am using shareNcare app"
-        userMap["image"] = "https://firebasestorage.googleapis.com/v0/b/sharencare-54c4e.appspot.com/o/Default%20Images%2Fprofile.png?alt=media&token=ca02e7f0-b372-40c0-bc63-cfb0d38a2ae0"
+        userMap["image"] = AppConfig.AppDetails.demoAvatar
 
         usersRef.child(currentUserID).setValue(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
@@ -169,6 +169,7 @@ class SignUpFragment : Fragment() {
         val user = User()
         user.uid = uid
         user.name = name
+        user.avatar = AppConfig.AppDetails.demoAvatar
         CometChat.createUser(user, AUTH_KEY, object : CometChat.CallbackListener<User>() {
             override fun onSuccess(user: User) {
                 Log.d("createUser", user.toString())
