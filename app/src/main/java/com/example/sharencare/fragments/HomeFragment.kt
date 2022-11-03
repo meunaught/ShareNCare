@@ -268,7 +268,8 @@ class HomeFragment : Fragment() {
         UIKitSettings.polls = false
         UIKitSettings.sendVoiceNotes = false
         UIKitSettings.blockUser = false
-//        UIKitSettings.userSettings = false
+        UIKitSettings.userSettings = false
+        UIKitSettings.color = "#5C32C7"
     }
 
     companion object {
