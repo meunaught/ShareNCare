@@ -6,7 +6,14 @@
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/drawable/bottom_nav_color.xml" value="0.1855" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/activity_main.xml" value="0.1606962663975782" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/fragment_edit_profile.xml" value="0.33" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/fragment_home.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/fragment_my_followers.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/fragment_my_followings.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/fragment_profile.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/fragment_received_requests.xml" value="0.1606962663975782" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/my_followers_layout.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/my_followings_layout.xml" value="0.32563405797101447" />
+        <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/notifications_layout.xml" value="0.32563405797101447" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/app/src/main/res/layout/received_requests_layout.xml" value="0.1606962663975782" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/drawable/border.xml" value="0.2055" />
         <entry key="..\:/Users/ratingminus/AndroidStudioProjects/ShareNCare/uikit-kotlin/src/main/res/drawable/ic_call_outgoing_24dp.xml" value="0.2055" />

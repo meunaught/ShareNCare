@@ -31,6 +31,7 @@ import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
 import com.example.sharencare.adapter.PostAdapter
+import com.example.sharencare.async.deleteFriendApiCall
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -238,6 +239,8 @@ class ProfileFragment : Fragment() {
                             .child("Following").child(profileId).removeValue().addOnCompleteListener{task->
                                 if(task.isSuccessful)
                                 {
+                                    val uid = firebaseUser.uid.lowercase()
+                                    deleteFriendApiCall().execute(uid, profileId.lowercase())
                                     editProfile_btn_profile_fragment.text = "Follow"
                                 }
                             }
