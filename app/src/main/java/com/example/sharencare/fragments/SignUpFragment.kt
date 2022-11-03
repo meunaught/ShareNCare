@@ -137,7 +137,6 @@ class SignUpFragment : Fragment() {
         usersRef.child(currentUserID).setValue(userMap).addOnCompleteListener{ task->
             if(task.isSuccessful)
             {
-                cometLogout()
                 FirebaseDatabase.getInstance().reference.child("Follow").child(currentUserID)
                     .child("Following").child(currentUserID).setValue(true)
 
@@ -177,17 +176,6 @@ class SignUpFragment : Fragment() {
 
             override fun onError(e: CometChatException) {
                 Log.e("createUser", e.message.toString())
-            }
-        })
-    }
-
-    private fun cometLogout() {
-        CometChat.logout(object : CometChat.CallbackListener<String>() {
-            override fun onSuccess(p0: String?) {
-                Log.d(TAG, "Comet Logout Firebase completed successfully")
-            }
-            override fun onError(p0: CometChatException?) {
-                Log.d(TAG, "Comet Logout Firebase failed with exception: " + p0?.message)
             }
         })
     }

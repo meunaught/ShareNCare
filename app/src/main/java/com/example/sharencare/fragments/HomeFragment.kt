@@ -28,6 +28,7 @@ import com.cometchat.pro.core.CometChat
 import com.cometchat.pro.exceptions.CometChatException
 import com.cometchat.pro.uikit.ui_components.cometchat_ui.CometChatUI
 import com.cometchat.pro.uikit.ui_settings.UIKitSettings
+import com.cometchat.pro.uikit.ui_settings.enum.UserMode
 import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.Notification
 import com.example.sharencare.Model.Post
@@ -270,6 +271,7 @@ class HomeFragment : Fragment() {
         UIKitSettings.blockUser = false
         UIKitSettings.userSettings = false
         UIKitSettings.color = "#5C32C7"
+        UIKitSettings.userInMode = UserMode.FRIENDS
     }
 
     companion object {

@@ -133,16 +133,15 @@
         android:id="@+id/deleteAccount_btn_edit_profile_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Delete Account"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:background="@drawable/shape_buttons"
         android:backgroundTint="@color/colorPurpleDark"
-        android:textColor="@color/white"
-        />
+        android:gravity="center"
+        android:text="Delete Account"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

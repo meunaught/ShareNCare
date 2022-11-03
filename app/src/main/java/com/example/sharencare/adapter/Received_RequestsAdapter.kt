@@ -17,6 +17,7 @@ import com.example.sharencare.FcmNotificationsSender
 import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.example.sharencare.async.friendApiCall
 import com.example.sharencare.fragments.ProfileFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -85,6 +86,8 @@ class Received_RequestsAdapter(private var mContext : Context,
                                             {
                                                 saveNotification("4","",user.getUid())
                                                 retrieveUser("has accepted your follow request",user.getUid())
+                                                val uid = firebaseuser?.uid?.lowercase()
+                                                friendApiCall().execute(uid, user.getUid().lowercase())
                                             }
                                         }
                                 }
