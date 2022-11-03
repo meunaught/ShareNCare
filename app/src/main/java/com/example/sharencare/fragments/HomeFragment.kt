@@ -271,7 +271,7 @@ class HomeFragment : Fragment() {
         UIKitSettings.blockUser = false
         UIKitSettings.userSettings = false
         UIKitSettings.color = "#5C32C7"
-//        UIKitSettings.userInMode = UserMode.FRIENDS
+        UIKitSettings.userInMode = UserMode.FRIENDS
     }
 
     companion object {
