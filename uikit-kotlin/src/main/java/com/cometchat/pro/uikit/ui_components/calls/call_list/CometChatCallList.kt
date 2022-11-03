@@ -59,7 +59,9 @@ class CometChatCallList constructor() : Fragment() {
                 if (!p0) phoneAddIv?.visibility = View.GONE
             }
         })
-        phoneAddIv!!.setOnClickListener(View.OnClickListener { openUserListScreen() })
+        phoneAddIv!!.setOnClickListener{
+//            openUserListScreen()
+            }
         viewPager = v.findViewById(R.id.viewPager)
         tabLayout = v.findViewById(R.id.tabLayout)
         if (activity != null) {

@@ -139,7 +139,6 @@ class UIKitSettings(context: Context) {
         var conversationInMode: ConversationMode = ConversationMode.ALL_CHATS
         var groupInMode: GroupMode = GroupMode.ALL_GROUP
         var userInMode: UserMode = UserMode.ALL_USER
-
         var deleteConversation = true
 
 
