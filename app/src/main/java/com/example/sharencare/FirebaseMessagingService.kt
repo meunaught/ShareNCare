@@ -1,5 +1,6 @@
 package com.example.sharencare
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -16,6 +17,7 @@ import com.google.firebase.messaging.RemoteMessage
 
 class FirebaseMessagingService : FirebaseMessagingService() {
     var mNotificationManager: NotificationManager? = null
+    @SuppressLint("UnspecifiedImmutableFlag")
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
