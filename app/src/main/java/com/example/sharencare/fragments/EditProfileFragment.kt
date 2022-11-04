@@ -126,7 +126,6 @@ class editProfileFragment : Fragment() {
             }
         })
 
-
         update_btn_edit_profile_fragment.setOnClickListener {
             val fullname = new_fullname_editText_edit_profile_fragment.text.toString()
             val username = new_username_editText_edit_profile_fragment.text.toString()

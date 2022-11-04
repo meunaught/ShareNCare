@@ -69,7 +69,7 @@
             android:text="Pdf name here"
             android:gravity="center"
             android:layout_marginTop="10dp"
-            android:background="@color/teal_700"
+            android:background="@color/shade_color"
             android:layout_gravity="center"
             >
         </TextView>

@@ -235,7 +235,10 @@ class ProfileFragment : Fragment() {
                                 {
                                     editProfile_btn_profile_fragment.text = "Request Sent"
                                     saveNotification("3","",profileId)
-                                    sendNotification("has sent you a follow request",profileId)
+                                    if(profileId != firebaseUser?.uid.toString())
+                                    {
+                                        sendNotification("has sent you a follow request",profileId)
+                                    }
                                 }
                             }
                     }
@@ -391,6 +394,10 @@ class ProfileFragment : Fragment() {
 
 
     private fun saveNotification(type : String,postID: String,receiver: String) {
+        if(firebaseUser.uid.toString() == receiver)
+        {
+            return
+        }
         val currentTime = System.currentTimeMillis().toString()
 
         val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications")

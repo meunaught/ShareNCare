@@ -101,7 +101,10 @@ class CommentActivity : AppCompatActivity() {
                 Picasso.get().load(R.drawable.heart_clicked).fit().centerInside().into(likeBtn)
                 saveLikeIntoFirebase(postID)
                 postCreator?.getPublisher()?.let { it1 -> saveNotification("1",postID, it1) }
-                retrieveUser("has liked your post")
+                if(postCreator?.getPublisher() != firebaseUser?.uid.toString())
+                {
+                    retrieveUser("has liked your post")
+                }
             }
         }
         sendBtn?.setOnClickListener {
@@ -109,7 +112,10 @@ class CommentActivity : AppCompatActivity() {
             {
                 saveCommentIntoFirebase()
                 postCreator?.getPublisher()?.let { it1 -> saveNotification("2",postID, it1) }
-                retrieveUser("has commented on your post")
+                if(postCreator?.getPublisher() != firebaseUser?.uid.toString())
+                {
+                    retrieveUser("has commented on your post")
+                }
                 comment?.onEditorAction(EditorInfo.IME_ACTION_DONE)
                 comment?.text?.clear()
             }
@@ -194,6 +200,10 @@ class CommentActivity : AppCompatActivity() {
     }
 
     private fun saveNotification(type : String,postID: String,publisher: String) {
+        if(firebaseUser?.uid.toString() == publisher)
+        {
+            return
+        }
         val currentTime = System.currentTimeMillis().toString()
 
         val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications")

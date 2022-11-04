@@ -87,7 +87,10 @@ class UserAdapter(private var mContext : Context,
                                             if (task.isSuccessful)
                                             {
                                                 saveNotification("3","",user.getUid())
-                                                retrieveUser("has sent you a friend request",user.getUid())
+                                                if(user.getUid() != firebaseuser?.uid.toString())
+                                                {
+                                                    retrieveUser("has accepted your follow request",user.getUid())
+                                                }
                                             }
                                         }
                                 }
@@ -198,6 +201,10 @@ class UserAdapter(private var mContext : Context,
     }
 
     private fun saveNotification(type : String,postID: String,receiver: String) {
+        if(firebaseuser?.uid.toString() == receiver)
+        {
+            return
+        }
         val currentTime = System.currentTimeMillis().toString()
 
         val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications")

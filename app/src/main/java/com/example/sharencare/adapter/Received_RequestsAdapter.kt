@@ -85,7 +85,10 @@ class Received_RequestsAdapter(private var mContext : Context,
                                             if (task.isSuccessful)
                                             {
                                                 saveNotification("4","",user.getUid())
-                                                retrieveUser("has accepted your follow request",user.getUid())
+                                                if(user.getUid() != firebaseuser?.uid.toString())
+                                                {
+                                                    retrieveUser("has accepted your follow request",user.getUid())
+                                                }
                                                 val uid = firebaseuser?.uid?.lowercase()
                                                 friendApiCall().execute(uid, user.getUid().lowercase())
                                             }
@@ -175,6 +178,10 @@ class Received_RequestsAdapter(private var mContext : Context,
     }
 
     private fun saveNotification(type : String,postID: String,receiver: String) {
+        if(firebaseuser?.uid.toString() == receiver)
+        {
+            return
+        }
         val currentTime = System.currentTimeMillis().toString()
 
         val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications")

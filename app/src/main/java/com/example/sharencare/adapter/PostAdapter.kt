@@ -168,6 +168,10 @@ class PostAdapter(private var mContext : Context,
     }
 
     private fun saveNotification(type : String,postID: String,publisher: String) {
+        if(firebaseuser?.uid.toString() == publisher)
+        {
+            return
+        }
         val currentTime = System.currentTimeMillis().toString()
 
         val notiRef = FirebaseDatabase.getInstance().reference.child("Notifications").child(currentTime)
