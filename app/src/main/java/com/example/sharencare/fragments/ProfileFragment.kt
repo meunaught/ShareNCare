@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.AsyncTask.execute
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -31,6 +32,7 @@ import com.example.sharencare.Model.Notification
 import com.example.sharencare.Model.Post
 import com.example.sharencare.Model.User
 import com.example.sharencare.adapter.PostAdapter
+import com.example.sharencare.async.deleteFriendApiCall
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.SkeletonLayout
 import com.faltenreich.skeletonlayout.applySkeleton
@@ -255,6 +257,8 @@ class ProfileFragment : Fragment() {
                             .child("Following").child(profileId).removeValue().addOnCompleteListener{task->
                                 if(task.isSuccessful)
                                 {
+                                    val uid = firebaseUser.uid.lowercase()
+                                    deleteFriendApiCall().execute(uid, profileId.lowercase())
                                     editProfile_btn_profile_fragment.text = "Follow"
                                 }
                             }

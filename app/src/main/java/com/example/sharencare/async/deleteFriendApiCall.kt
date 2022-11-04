@@ -29,7 +29,7 @@ class deleteFriendApiCall: AsyncTask<String, Void, JSONObject>() {
             .addHeader("Accept", "application/json")
             .build()
         val response = client.newCall(request).execute()
-        Log.d("DeleteFriend", response.toString())
+        Log.d("deleteFriend", response.toString())
         return null
     }
 

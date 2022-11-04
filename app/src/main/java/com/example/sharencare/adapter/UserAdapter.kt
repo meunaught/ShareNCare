@@ -20,6 +20,7 @@ import com.example.sharencare.FcmNotificationsSender
 import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.example.sharencare.async.deleteFriendApiCall
 import com.example.sharencare.fragments.ProfileFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -109,7 +110,7 @@ class UserAdapter(private var mContext : Context,
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful)
                                             {
-
+                                                checkFollowBack(user.getUid())
                                             }
                                         }
                                 }
@@ -141,6 +142,37 @@ class UserAdapter(private var mContext : Context,
                 }
             }
         }
+    }
+
+    private fun checkFollowBack(receiverUid: String) {
+        println("inside followback")
+        val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseuser?.uid.toString())
+            .child("Followers")
+        followingRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                println("inside onDataChange")
+                var now = false
+                if(snapshot.exists())
+                {
+                    println("inside exists")
+                    for(temp_snapshot in snapshot.children){
+                        println("inside for")
+                        if (receiverUid == temp_snapshot.key) {
+                            println("inside if")
+                            now = true
+                            break
+                        }
+                    }
+                    if(!now) {
+                        val uid = firebaseuser?.uid?.lowercase()
+                        deleteFriendApiCall().execute(uid, receiverUid.lowercase())
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     private fun retrieveUser(message : String,receiver: String) {
