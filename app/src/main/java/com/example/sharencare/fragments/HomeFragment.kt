@@ -272,7 +272,7 @@ class HomeFragment : Fragment() {
         UIKitSettings.userSettings = false
         UIKitSettings.color = "#5C32C7"
         UIKitSettings.userInMode = UserMode.FRIENDS
-        UIKitSettings.passwordGroup = true
+        UIKitSettings.passwordGroup = false
     }
 
     companion object {
