@@ -20,6 +20,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.sharencare.MainActivity
 import com.example.sharencare.Model.Notification
@@ -267,6 +268,8 @@ class CreatePostFragment : Fragment() {
             {
                 progressDialog?.dismiss()
                 Toast.makeText(context,"Post has been created successfully.",Toast.LENGTH_LONG).show()
+                (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(
+                    R.id.frame_layout_activity_main,HomeFragment()).addToBackStack(null).commit()
             }
             else
             {

@@ -145,20 +145,15 @@ class UserAdapter(private var mContext : Context,
     }
 
     private fun checkFollowBack(receiverUid: String) {
-        println("inside followback")
         val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseuser?.uid.toString())
             .child("Followers")
         followingRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                println("inside onDataChange")
                 var now = false
                 if(snapshot.exists())
                 {
-                    println("inside exists")
                     for(temp_snapshot in snapshot.children){
-                        println("inside for")
                         if (receiverUid == temp_snapshot.key) {
-                            println("inside if")
                             now = true
                             break
                         }

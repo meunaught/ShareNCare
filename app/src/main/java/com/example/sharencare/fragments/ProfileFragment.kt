@@ -257,8 +257,7 @@ class ProfileFragment : Fragment() {
                             .child("Following").child(profileId).removeValue().addOnCompleteListener{task->
                                 if(task.isSuccessful)
                                 {
-                                    val uid = firebaseUser.uid.lowercase()
-                                    deleteFriendApiCall().execute(uid, profileId.lowercase())
+                                    checkFollowBack(profileId)
                                     editProfile_btn_profile_fragment.text = "Follow"
                                 }
                             }
@@ -280,6 +279,31 @@ class ProfileFragment : Fragment() {
         return view
     }
 
+    private fun checkFollowBack(receiverUid: String) {
+        val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser?.uid.toString())
+            .child("Followers")
+        followingRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var now = false
+                if(snapshot.exists())
+                {
+                    for(temp_snapshot in snapshot.children){
+                        if (receiverUid == temp_snapshot.key) {
+                            now = true
+                            break
+                        }
+                    }
+                    if(!now) {
+                        val uid = firebaseUser?.uid?.lowercase()
+                        deleteFriendApiCall().execute(uid, receiverUid.lowercase())
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
 
     private fun cometLogout() {
         CometChat.logout(object : CometChat.CallbackListener<String>() {

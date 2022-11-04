@@ -77,7 +77,7 @@ class NotificationsAdapter(private var mContext : Context,
             {
                 (mContext as FragmentActivity).supportFragmentManager.beginTransaction().replace(
                     R.id.frame_layout_activity_main, ReceivedRequestsFragment()
-                ).commit()
+                ).addToBackStack(null).commit()
             }
             else if(notification.getType() == "4")
             {
@@ -86,7 +86,7 @@ class NotificationsAdapter(private var mContext : Context,
                 preference.apply()
 
                 (mContext as FragmentActivity).supportFragmentManager.beginTransaction().replace(
-                    R.id.frame_layout_activity_main,ProfileFragment()).commit()
+                    R.id.frame_layout_activity_main,ProfileFragment()).addToBackStack(null).commit()
             }
         }
         //setDescription(holder,notification)

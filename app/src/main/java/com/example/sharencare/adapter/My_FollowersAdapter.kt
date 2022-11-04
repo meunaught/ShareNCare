@@ -14,10 +14,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.sharencare.Model.User
 import com.example.sharencare.R
+import com.example.sharencare.async.deleteFriendApiCall
 import com.example.sharencare.fragments.ProfileFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
 
 class My_FollowersAdapter(private var mContext : Context,
@@ -77,6 +81,7 @@ class My_FollowersAdapter(private var mContext : Context,
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful)
                                             {
+                                                checkFollowBack(user.getUid())
                                                 holder.followButton.text = "Follower Removed"
                                             }
                                         }
@@ -86,6 +91,32 @@ class My_FollowersAdapter(private var mContext : Context,
                 }
             }
         }
+    }
+
+    private fun checkFollowBack(receiverUid: String) {
+        val followingRef = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseuser?.uid.toString())
+            .child("Following")
+        followingRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var now = false
+                if(snapshot.exists())
+                {
+                    for(temp_snapshot in snapshot.children){
+                        if (receiverUid == temp_snapshot.key) {
+                            now = true
+                            break
+                        }
+                    }
+                    if(!now) {
+                        val uid = firebaseuser?.uid?.lowercase()
+                        deleteFriendApiCall().execute(uid, receiverUid.lowercase())
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     class ViewHolder(@NonNull itemView : View) : RecyclerView.ViewHolder(itemView)
