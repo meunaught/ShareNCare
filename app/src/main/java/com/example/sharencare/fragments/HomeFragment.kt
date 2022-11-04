@@ -203,7 +203,7 @@ class HomeFragment : Fragment() {
                     context?.let {
                         Glide.with(it).load(user?.getImage()).fitCenter().diskCacheStrategy(
                             DiskCacheStrategy.ALL)
-                            .error(R.drawable.send_icon)
+                            .error(R.drawable.profile)
                             .dontTransform().into(profileImage)
                     }
                 }

@@ -30,7 +30,7 @@ open class FcmNotificationsSender(
             val notiObject = JSONObject()
             notiObject.put("title", title)
             notiObject.put("body", body)
-            notiObject.put("icon", R.drawable.ic_launcher_round) // enter icon that exists in drawable only
+            notiObject.put("icon", R.drawable.app_logo) // enter icon that exists in drawable only
             mainObj.put("notification", notiObject)
 
             val request: JsonObjectRequest = object : JsonObjectRequest(

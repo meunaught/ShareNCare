@@ -88,10 +88,27 @@ class SignInFragment : Fragment() {
                     userAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener{ task->
                         if(task.isSuccessful)
                         {
-                            userAuth.uid?.let { it1 -> loginComet(it1) }
-                            progressDialog?.dismiss()
-                            startActivity(Intent(context,MainActivity::class.java))
-                            this.activity?.finish()
+                            val verification = userAuth.currentUser?.isEmailVerified
+                            if(verification == true)
+                            {
+                                userAuth.uid?.let { it1 -> loginComet(it1) }
+                                progressDialog?.dismiss()
+                                startActivity(Intent(context,MainActivity::class.java))
+                                this.activity?.finish()
+                            }
+                            else
+                            {
+                                userAuth.currentUser?.sendEmailVerification()?.addOnSuccessListener{
+                                    Toast.makeText(context,"Please verify your email before you sign in",Toast.LENGTH_LONG).show()
+                                    userAuth.signOut()
+                                    progressDialog?.dismiss()
+                                }?.addOnFailureListener{
+                                    val message = it.toString()
+                                    Toast.makeText(context,"Error : $message",Toast.LENGTH_LONG).show()
+                                    userAuth.signOut()
+                                    progressDialog?.dismiss()
+                                }
+                            }
                         }
                         else
                         {

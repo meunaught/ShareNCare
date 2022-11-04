@@ -106,8 +106,15 @@ class SignUpFragment : Fragment() {
                 userAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener{ task->
                     if(task.isSuccessful)
                     {
-                        saveUserIntoFirebase(fullname,username,email,password)
-                        userAuth.uid?.let { createCometuser(it, fullname) }
+                        userAuth.currentUser?.sendEmailVerification()?.addOnSuccessListener{
+                            saveUserIntoFirebase(fullname,username,email,password)
+                            userAuth.uid?.let { createCometuser(it, fullname) }
+                        }?.addOnFailureListener{
+                            val message = it.toString()
+                            Toast.makeText(context,"Error : $message",Toast.LENGTH_LONG).show()
+                            userAuth.signOut()
+                            progressDialog?.dismiss()
+                        }
                     }
                     else
                     {
@@ -143,7 +150,7 @@ class SignUpFragment : Fragment() {
                 FirebaseDatabase.getInstance().reference.child("Follow").child(currentUserID)
                     .child("Followers").child(currentUserID).setValue(true)
 
-                Toast.makeText(context,"Account has been created successfully.",Toast.LENGTH_LONG).show()
+                Toast.makeText(context,"Account has been created successfully.Please verify it before you sign in",Toast.LENGTH_LONG).show()
                 FirebaseAuth.getInstance().signOut()
                 val newFragment : Fragment = SignInFragment()
                 val transaction : FragmentTransaction = requireFragmentManager().beginTransaction()
