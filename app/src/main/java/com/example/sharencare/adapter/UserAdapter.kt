@@ -89,7 +89,7 @@ class UserAdapter(private var mContext : Context,
                                                 saveNotification("3","",user.getUid())
                                                 if(user.getUid() != firebaseuser?.uid.toString())
                                                 {
-                                                    retrieveUser("has accepted your follow request",user.getUid())
+                                                    retrieveUser("has sent you a follow request",user.getUid())
                                                 }
                                             }
                                         }

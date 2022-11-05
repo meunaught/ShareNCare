@@ -49,7 +49,11 @@ class FirebaseMessagingService : FirebaseMessagingService() {
         }
         val resultIntent = Intent(this, LoginActivity::class.java)
         val pendingIntent =
-            PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_MUTABLE)
+            } else {
+                PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            }
         val title_text = Html.fromHtml("<b>"+ remoteMessage.notification!!.title +"</b >")
         builder.setContentTitle(title_text.toString())
         builder.setContentText(remoteMessage.notification!!.body)
