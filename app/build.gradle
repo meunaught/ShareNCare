@@ -68,4 +68,6 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation "com.github.marlonlom:timeago:4.0.3"
     implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.facebook.react:react-native:0.61.3!!'
+
 }

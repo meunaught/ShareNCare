@@ -92,4 +92,8 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$activityKtxVersion"
     def fragmentKtxVersion = "1.4.0-alpha06"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+
+//    implementation "com.facebook.react:react-native-webrtc:1.84.0-jitsi-5105369"
+    implementation 'com.facebook.react:react-native:0.61.3!!'
+
 }

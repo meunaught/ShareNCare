@@ -9,6 +9,7 @@ dependencyResolutionManagement {
         }
     }
 }
+
 rootProject.name = "ShareNCare"
 include ':app'
 include ':uikit-kotlin'
